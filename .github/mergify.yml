@@ -57,4 +57,27 @@ pull_request_rules:
       - check-success='lint (1.17.x, ubuntu-latest)'
       - check-success='lint (1.16.x, macos-latest)'
       - check-success='lint (1.17.x, macos-latest)'
-      - check-success='Analyze (go)
+      - check-success='Analyze (go)'
+      - label!=work-in-progress
+      - -draft
+    actions:
+      merge:
+        method: squash
+
+  # ===============================================================================
+  # AUTHOR
+  # ===============================================================================
+
+  - name: Auto-Assign Author
+    conditions:
+      - "#assignee=0"
+    actions:
+      assign:
+        add_users:
+          - "{{author}}"
+
+  # ===============================================================================
+  # ALERTS
+  # ===============================================================================
+
+  - name: No
