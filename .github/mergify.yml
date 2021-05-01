@@ -80,4 +80,27 @@ pull_request_rules:
   # ALERTS
   # ===============================================================================
 
-  - name: No
+  - name: Notify on merge
+    conditions:
+      - merged
+      - label=automerge
+    actions:
+      comment:
+        message: "✅ @{{author}}: **{{title}}** has been merged successfully."
+  - name: Alert on merge conflict
+    conditions:
+      - conflict
+      - label=automerge
+    actions:
+      comment:
+        message: "🆘 @{{author}}: `{{head}}` has conflicts with `{{base}}` that must be resolved."
+      label:
+        add:
+          - conflict
+  - name: Alert on tests failure for automerge
+    conditions:
+      - label=automerge
+      - status-failure=commit
+    actions:
+      comment:
+        mess
