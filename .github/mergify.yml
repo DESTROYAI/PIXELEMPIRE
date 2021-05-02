@@ -103,4 +103,21 @@ pull_request_rules:
       - status-failure=commit
     actions:
       comment:
-        mess
+        message: "🆘 @{{author}}: unable to merge due to CI failure."
+
+  - name: remove conflict label if not needed
+    conditions:
+      - -conflict
+    actions:
+      label:
+        remove:
+          - conflict
+
+  # ===============================================================================
+  # LABELS
+  # ===============================================================================
+  # Automatically add labels when PRs match certain patterns
+  #
+  # NOTE:
+  # - single quotes for regex to avoid accidental escapes
+  # - Mergify leverages Python regular expressions to match rul
