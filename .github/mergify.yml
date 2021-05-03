@@ -133,4 +133,24 @@ pull_request_rules:
   # - test:      test related changes
   # ===============================================================================
 
-  - name: Hotfix l
+  - name: Hotfix label
+    conditions:
+      - "head~=(?i)^hotfix" # if the PR branch starts with hotfix/
+    actions:
+      label:
+        add: ["hot-fix"]
+  - name: Bug / Fix label
+    conditions:
+      - "head~=(?i)^(bug)?fix" # if the PR branch starts with (bug)?fix/
+    actions:
+      label:
+        add: [ "bug-P3" ]
+  - name: Documentation label
+    conditions:
+      - "head~=(?i)^docs" # if the PR branch starts with docs/
+    actions:
+      label:
+        add: [ "documentation" ]
+  - name: Feature label
+    conditions:
+      - "head~=(?i)^feat(ure)?" # if the PR branch starts wi
