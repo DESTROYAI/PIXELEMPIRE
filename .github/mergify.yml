@@ -120,4 +120,17 @@ pull_request_rules:
   #
   # NOTE:
   # - single quotes for regex to avoid accidental escapes
-  # - Mergify leverages Python regular expressions to match rul
+  # - Mergify leverages Python regular expressions to match rules.
+  #
+  # Semantic commit messages
+  # - chore:     updating grunt tasks etc.; no production code change
+  # - docs:      changes to the documentation
+  # - feat:      feature or story
+  # - enhancement: an improvement to an existing feature
+  # - feat:      new feature for the user, not a new feature for build script
+  # - fix:       bug fix for the user, not a fix to a build script
+  # - idea:      general idea or suggestion
+  # - test:      test related changes
+  # ===============================================================================
+
+  - name: Hotfix l
