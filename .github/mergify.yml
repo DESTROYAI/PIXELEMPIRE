@@ -174,4 +174,26 @@ pull_request_rules:
       - "head~=(?i)^question" # if the PR branch starts with question/
     actions:
       label:
-        add: ["qu
+        add: ["question"]
+  - name: Test label
+    conditions:
+      - "head~=(?i)^test" # if the PR branch starts with test/
+    actions:
+      label:
+        add: ["test"]
+  - name: Idea label
+    conditions:
+      - "head~=(?i)^idea" # if the PR branch starts with idea/
+    actions:
+      label:
+        add: ["idea"]
+
+  # ===============================================================================
+  # STALE BRANCHES
+  # ===============================================================================
+
+  - name: Close stale pull request
+    conditions:
+      - or:
+        - base=master
+       
