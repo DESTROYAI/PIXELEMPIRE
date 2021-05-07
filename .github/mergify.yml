@@ -153,4 +153,25 @@ pull_request_rules:
         add: [ "documentation" ]
   - name: Feature label
     conditions:
-      - "head~=(?i)^feat(ure)?" # if the PR branch starts wi
+      - "head~=(?i)^feat(ure)?" # if the PR branch starts with feat(ure)?/
+    actions:
+      label:
+        add: ["feature"]
+  - name: Enhancement label
+    conditions:
+      - "head~=(?i)^enhancement?" # if the PR branch starts with enhancement/
+    actions:
+      label:
+        add: ["enhancement"]
+  - name: Chore label
+    conditions:
+      - "head~=(?i)^chore" # if the PR branch starts with chore/
+    actions:
+      label:
+        add: ["update"]
+  - name: Question label
+    conditions:
+      - "head~=(?i)^question" # if the PR branch starts with question/
+    actions:
+      label:
+        add: ["qu
