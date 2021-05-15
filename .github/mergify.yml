@@ -196,4 +196,24 @@ pull_request_rules:
     conditions:
       - or:
         - base=master
-       
+        - base=v1
+      - -closed
+      - updated-at<21 days ago
+    actions:
+      close:
+        message: |
+          This pull request looks stale. Feel free to reopen it if you think it's a mistake.
+      label:
+        add: [ "stale" ]
+  # ===============================================================================
+  # BRANCHES
+  # ===============================================================================
+
+  - name: Delete head branch after merge
+    conditions:
+      - merged
+    actions:
+      delete_head_branch:
+
+  #- name: automatic update for PR marked as “Ready-to-Go“
+  #  conditions
