@@ -9,4 +9,25 @@ on:
       - 'v1'
   pull_request:
     branches:
-      -
+      - master
+      - 'v1'
+
+jobs:
+  golangci:
+    strategy:
+      matrix:
+        go-version: [1.16.x, 1.17.x]
+        os: [macos-latest, ubuntu-latest]
+    name: lint
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
+          version: latest
+  build:
+    strategy:
+      matrix:
+        go-version: [ 1.16.x, 1
