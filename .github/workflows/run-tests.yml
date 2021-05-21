@@ -1,0 +1,12 @@
+name: Go
+
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - master
+      - 'v1'
+  pull_request:
+    branches:
+      -
