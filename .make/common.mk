@@ -23,3 +23,25 @@ ifdef HAS_GIT
 		VERSION_SHORT=$(shell git describe --tags --always --abbrev=0)
 		export REPO_NAME, REPO_OWNER, VERSION_SHORT
 	endif
+endif
+
+## Set the distribution folder
+ifndef DISTRIBUTIONS_DIR
+	override DISTRIBUTIONS_DIR=./dist
+endif
+export DISTRIBUTIONS_DIR
+
+help: ## Show this help message
+	@egrep -h '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
+
+release:: ## Full production release (creates release in Github)
+	@test $(github_token)
+	@export GITHUB_TOKEN=$(github_token) && goreleaser --rm-dist
+
+release-test: ## Full production test release (everything except deploy)
+	@goreleaser --skip-publish --rm-dist
+
+release-snap: ## Test the full release (build binaries)
+	@goreleaser --snapshot --skip-publish --rm-dist
+
+replace-ve
