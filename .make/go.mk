@@ -46,4 +46,24 @@ lint: ## Run the golangci-lint application (install if not found)
 	@echo "running golangci-lint..."
 	@GOGC=20 ./bin/golangci-lint run
 
-test: ## Runs vet, lint and ALL te
+test: ## Runs vet, lint and ALL tests
+	@$(MAKE) lint
+	@echo "running tests..."
+	@go test ./... -v
+
+test-unit:
+	@go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+
+test-short: ## Runs vet, lint and tests (excludes integration tests)
+	@$(MAKE) lint
+	@echo "running tests (short)..."
+	@go test ./... -v -test.short
+
+test-ci: ## Runs all tests via CI (exports coverage)
+	@$(MAKE) lint
+	@echo "running tests (CI)..."
+	@go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+
+test-ci-no-race: ## Runs all tests via CI (no race) (exports coverage)
+	@$(MAKE) lint
+	@echo "running tests (C
