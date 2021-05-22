@@ -44,4 +44,19 @@ release-test: ## Full production test release (everything except deploy)
 release-snap: ## Test the full release (build binaries)
 	@goreleaser --snapshot --skip-publish --rm-dist
 
-replace-ve
+replace-version: ## Replaces the version in HTML/JS (pre-deploy)
+	@test $(version)
+	@test "$(path)"
+	@find $(path) -name "*.html" -type f -exec sed -i '' -e "s/{{version}}/$(version)/g" {} \;
+	@find $(path) -name "*.js" -type f -exec sed -i '' -e "s/{{version}}/$(version)/g" {} \;
+
+tag: ## Generate a new tag and push (tag version=0.0.0)
+	@test $(version)
+	@git tag -a v$(version) -m "Pending full release..."
+	@git push origin v$(version)
+	@git fetch --tags -f
+
+tag-remove: ## Remove a tag if found (tag-remove version=0.0.0)
+	@test $(version)
+	@git tag -d v$(version)
+	@git
