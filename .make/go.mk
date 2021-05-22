@@ -32,4 +32,18 @@ godocs: ## Sync the latest tag with GoDocs
 	@test $(REPO_OWNER)
 	@test $(REPO_NAME)
 	@test $(VERSION_SHORT)
-	@curl https://proxy.golan
+	@curl https://proxy.golang.org/$(GIT_DOMAIN)/$(REPO_OWNER)/$(REPO_NAME)/@v/$(VERSION_SHORT).info
+
+install: ## Install the application
+	@go build -o $$GOPATH/bin/$(BINARY_NAME)
+
+install-go: ## Install the application (Using Native Go)
+	@go install $(GIT_DOMAIN)/$(REPO_OWNER)/$(REPO_NAME)
+
+lint: ## Run the golangci-lint application (install if not found)
+	@echo "downloading golangci-lint..."
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- v1.45.2
+	@echo "running golangci-lint..."
+	@GOGC=20 ./bin/golangci-lint run
+
+test: ## Runs vet, lint and ALL te
