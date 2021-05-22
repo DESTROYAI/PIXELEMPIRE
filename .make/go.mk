@@ -66,4 +66,19 @@ test-ci: ## Runs all tests via CI (exports coverage)
 
 test-ci-no-race: ## Runs all tests via CI (no race) (exports coverage)
 	@$(MAKE) lint
-	@echo "running tests (C
+	@echo "running tests (CI - no race)..."
+	@go test ./... -coverprofile=coverage.txt -covermode=atomic
+
+test-ci-short: ## Runs unit tests via CI (exports coverage)
+	@$(MAKE) lint
+	@echo "running tests (CI - unit tests only)..."
+	@go test ./... -test.short -race -coverprofile=coverage.txt -covermode=atomic
+
+uninstall: ## Uninstall the application (and remove files)
+	@test $(BINARY_NAME)
+	@test $(GIT_DOMAIN)
+	@test $(REPO_OWNER)
+	@test $(REPO_NAME)
+	@go clean -i $(GIT_DOMAIN)/$(REPO_OWNER)/$(REPO_NAME)
+	@rm -rf $$GOPATH/src/$(GIT_DOMAIN)/$(REPO_OWNER)/$(REPO_NAME)
+	@rm -rf 
