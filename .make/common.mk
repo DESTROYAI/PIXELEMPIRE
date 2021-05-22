@@ -59,4 +59,14 @@ tag: ## Generate a new tag and push (tag version=0.0.0)
 tag-remove: ## Remove a tag if found (tag-remove version=0.0.0)
 	@test $(version)
 	@git tag -d v$(version)
-	@git
+	@git push --delete origin v$(version)
+	@git fetch --tags
+
+tag-update: ## Update an existing tag to current commit (tag-update version=0.0.0)
+	@test $(version)
+	@git push --force origin HEAD:refs/tags/v$(version)
+	@git fetch --tags -f
+
+update-releaser:  ## Update the goreleaser application
+	@brew update
+	@brew upgrade goreleaser
