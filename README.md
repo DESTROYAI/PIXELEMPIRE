@@ -45,4 +45,16 @@ View the generated [documentation](https://pkg.go.dev/github.com/libsv/go-bt)
 
 [![GoDoc](https://godoc.org/github.com/libsv/go-bt?status.svg&style=flat)](https://pkg.go.dev/github.com/libsv/go-bt)
 
-For more information around the tech
+For more information around the technical aspects of Bitcoin, please see the updated [Bitcoin Wiki](https://wiki.bitcoinsv.io/index.php/Main_Page)
+
+<br/>
+
+### Features
+
+- Full featured Bitcoin transactions and transaction manipulation/functionality
+- Auto-fee calculations for change outputs
+- Transaction fee calculation and related checks
+- Interfaced signing/unlocking of transaction inputs for easy adaptation/custimisation and extendability for any use case
+- Bitcoin Transaction [Script](bscript) functionality
+  - Bitcoin script engine ([interpreter](bscript/interpreter))
+  - P
