@@ -22,4 +22,27 @@
 - [Examples & Tests](#examples--tests)
 - [Benchmarks](#benchmarks)
 - [Code Standards](#code-standards)
--
+- [Usage](#usage)
+- [Maintainers](#maintainers)
+- [Contributing](#contributing)
+- [License](#license)
+
+<br/>
+
+## Installation
+
+**go-bt** requires a [supported release of Go](https://golang.org/doc/devel/release.html#policy).
+
+```shell script
+go get -u github.com/libsv/go-bt
+```
+
+<br/>
+
+## Documentation
+
+View the generated [documentation](https://pkg.go.dev/github.com/libsv/go-bt)
+
+[![GoDoc](https://godoc.org/github.com/libsv/go-bt?status.svg&style=flat)](https://pkg.go.dev/github.com/libsv/go-bt)
+
+For more information around the tech
