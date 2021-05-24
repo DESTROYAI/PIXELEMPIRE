@@ -81,4 +81,14 @@ uninstall: ## Uninstall the application (and remove files)
 	@test $(REPO_NAME)
 	@go clean -i $(GIT_DOMAIN)/$(REPO_OWNER)/$(REPO_NAME)
 	@rm -rf $$GOPATH/src/$(GIT_DOMAIN)/$(REPO_OWNER)/$(REPO_NAME)
-	@rm -rf 
+	@rm -rf $$GOPATH/bin/$(BINARY_NAME)
+
+update:  ## Update all project dependencies
+	@go get -u ./... && go mod tidy
+
+update-linter: ## Update the golangci-lint package (macOS only)
+	@brew upgrade golangci-lint
+
+vet: ## Run the Go vet application
+	@echo "running go vet..."
+	@go vet -v ./...
