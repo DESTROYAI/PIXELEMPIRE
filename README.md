@@ -72,4 +72,26 @@ For more information around the technical aspects of Bitcoin, please see the upd
 
 [goreleaser](https://github.com/goreleaser/goreleaser) for easy binary or library deployment to Github and can be installed via: `brew install goreleaser`.
 
-The [.goreleaser.yml](.goreleaser.yml) file is used to configure [goreleaser](https://git
+The [.goreleaser.yml](.goreleaser.yml) file is used to configure [goreleaser](https://github.com/goreleaser/goreleaser).
+
+Use `make release-snap` to create a snapshot version of the release, and finally `make release` to ship to production.
+</details>
+
+<details>
+<summary><strong><code>Makefile Commands</code></strong></summary>
+<br/>
+
+View all `makefile` commands
+
+```shell script
+make help
+```
+
+List of all current commands:
+
+```text
+all                  Runs multiple commands
+clean                Remove previous builds and any test cache data
+clean-mods           Remove all the Go mod cache
+coverage             Shows the test coverage
+godocs               Sync the 
