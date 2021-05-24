@@ -57,4 +57,19 @@ For more information around the technical aspects of Bitcoin, please see the upd
 - Interfaced signing/unlocking of transaction inputs for easy adaptation/custimisation and extendability for any use case
 - Bitcoin Transaction [Script](bscript) functionality
   - Bitcoin script engine ([interpreter](bscript/interpreter))
-  - P
+  - P2PKH (base58 addresses)
+  - Data (OP_RETURN)
+  - [BIP276](https://github.com/moneybutton/bips/blob/master/bip-0276.mediawiki)
+
+#### Coming Soon! (18 months<sup>TM</sup>)
+
+- Complete SigHash Flag Capability
+- MultiSig functionality
+
+<details>
+<summary><strong><code>Library Deployment</code></strong></summary>
+<br/>
+
+[goreleaser](https://github.com/goreleaser/goreleaser) for easy binary or library deployment to Github and can be installed via: `brew install goreleaser`.
+
+The [.goreleaser.yml](.goreleaser.yml) file is used to configure [goreleaser](https://git
