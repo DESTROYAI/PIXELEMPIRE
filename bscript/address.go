@@ -84,3 +84,50 @@ func NewAddressFromPublicKeyHash(hash []byte, mainnet bool) (*Address, error) {
 	bb := make([]byte, 1)
 	if !mainnet {
 		bb[0] = 111
+	}
+	//nolint: makezero // we need to set up the array with 1
+	bb = append(bb, hash...)
+
+	return &Address{
+		AddressString: Base58EncodeMissingChecksum(bb),
+		PublicKeyHash: hex.EncodeToString(hash),
+	}, nil
+}
+
+// NewAddressFromPublicKey takes a bec public key and returns an Address struct pointer.
+// If mainnet parameter is true it will return a mainnet address (starting with a 1).
+// Otherwise, (mainnet is false) it will return a testnet address (starting with an m or n).
+func NewAddressFromPublicKey(pubKey *bec.PublicKey, mainnet bool) (*Address, error) {
+	hash := crypto.Hash160(pubKey.SerialiseCompressed())
+
+	// regtest := 111
+	// mainnet: 0
+
+	bb := make([]byte, 1)
+	if !mainnet {
+		bb[0] = 111
+	}
+	//nolint: makezero // we need to set up the array with 1
+	bb = append(bb, hash...)
+
+	return &Address{
+		AddressString: Base58EncodeMissingChecksum(bb),
+		PublicKeyHash: hex.EncodeToString(hash),
+	}, nil
+}
+
+// Base58EncodeMissingChecksum appends a checksum to a byte sequence
+// then encodes into base58 encoding.
+func Base58EncodeMissingChecksum(input []byte) string {
+	b := make([]byte, 0, len(input)+4)
+	b = append(b, input[:]...)
+	ckSum := checksum(b)
+	b = append(b, ckSum[:]...)
+	return base58.Encode(b)
+}
+
+func checksum(input []byte) (ckSum [4]byte) {
+	h := crypto.Sha256d(input)
+	copy(ckSum[:], h[:4])
+	return
+}
