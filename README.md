@@ -94,4 +94,13 @@ all                  Runs multiple commands
 clean                Remove previous builds and any test cache data
 clean-mods           Remove all the Go mod cache
 coverage             Shows the test coverage
-godocs               Sync the 
+godocs               Sync the latest tag with GoDocs
+help                 Show this help message
+install              Install the application
+install-go           Install the application (Using Native Go)
+lint                 Run the golangci-lint application (install if not found)
+release              Full production release (creates release in Github)
+release              Runs common.release then runs godocs
+release-snap         Test the full release (build binaries)
+release-test         Full production test release (everything except deploy)
+replace-version      Replaces the version
