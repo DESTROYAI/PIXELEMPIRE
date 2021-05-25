@@ -140,4 +140,34 @@ make test-short
 
 <br/>
 
-## Benchma
+## Benchmarks
+
+Run the Go [benchmarks](tx_test.go):
+
+```shell script
+make bench
+```
+
+<br/>
+
+## Code Standards
+
+Read more about this Go project's [code standards](.github/CODE_STANDARDS.md).
+
+<br/>
+
+## Usage
+
+View the [examples](examples)
+
+<br/>
+
+## Contributing
+
+View the [contributing guidelines](.github/CONTRIBUTING.md) and please follow the [code of conduct](.github/CODE_OF_CONDUCT.md).
+
+### How can I help?
+
+All kinds of contributions are welcome :raised_hands:!
+The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:.
+You can also support t
