@@ -103,4 +103,13 @@ release              Full production release (creates release in Github)
 release              Runs common.release then runs godocs
 release-snap         Test the full release (build binaries)
 release-test         Full production test release (everything except deploy)
-replace-version      Replaces the version
+replace-version      Replaces the version in HTML/JS (pre-deploy)
+tag                  Generate a new tag and push (tag version=0.0.0)
+tag-remove           Remove a tag if found (tag-remove version=0.0.0)
+tag-update           Update an existing tag to current commit (tag-update version=0.0.0)
+test                 Runs vet, lint and ALL tests
+test-ci              Runs all tests via CI (exports coverage)
+test-ci-no-race      Runs all tests via CI (no race) (exports coverage)
+test-ci-short        Runs unit tests via CI (exports coverage)
+test-short           Runs vet, lint and tests (excludes integration tests)
+uninstall            
