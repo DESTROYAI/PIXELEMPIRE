@@ -36,4 +36,29 @@ func (a *a25) set58(s []byte) error {
 		if c < 0 {
 			return ErrEncodingBadChar
 		}
-		for
+		for j := 24; j >= 0; j-- {
+			c += 58 * int(a[j])
+			a[j] = byte(c % 256)
+			c /= 256
+		}
+		if c > 0 {
+			return ErrEncodingTooLong
+		}
+	}
+	return nil
+}
+
+// ValidateAddress checks if an address string is a valid BitCoin address (ex. P2PKH, BIP276).
+// Checks both mainnet and testnet.
+func ValidateAddress(address string) (bool, error) {
+	if strings.HasPrefix(address, "bitcoin-script:") {
+		if _, err := DecodeBIP276(address); err != nil {
+			return false, fmt.Errorf("bitcoin-script invalid [%w]", err)
+		}
+		return true, nil
+	}
+
+	return validA58([]byte(address))
+}
+
+func validA58(
