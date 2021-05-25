@@ -112,4 +112,32 @@ test-ci              Runs all tests via CI (exports coverage)
 test-ci-no-race      Runs all tests via CI (no race) (exports coverage)
 test-ci-short        Runs unit tests via CI (exports coverage)
 test-short           Runs vet, lint and tests (excludes integration tests)
-uninstall            
+uninstall            Uninstall the application (and remove files)
+update-linter        Update the golangci-lint package (macOS only)
+vet                  Run the Go vet application
+```
+
+</details>
+
+<br/>
+
+## Examples & Tests
+
+All unit tests and [examples](examples) run via [Github Actions](https://github.com/libsv/go-bt/actions) and
+uses [Go version 1.16.x](https://golang.org/doc/go1.16). View the [configuration file](.github/workflows/run-tests.yml).
+
+Run all tests (including integration tests)
+
+```shell script
+make test
+```
+
+Run tests (excluding integration tests)
+
+```shell script
+make test-short
+```
+
+<br/>
+
+## Benchma
