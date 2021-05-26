@@ -61,4 +61,18 @@ func ValidateAddress(address string) (bool, error) {
 	return validA58([]byte(address))
 }
 
-func validA58(
+func validA58(a58 []byte) (bool, error) {
+	var a a25
+	if err := a.set58(a58); err != nil {
+		return false, err
+	}
+	if a[0] != 0 && a[0] != 0x6f {
+		return false, ErrEncodingInvalidVersion
+	}
+
+	if a.embeddedChecksum() != a.computeChecksum() {
+		return false, ErrEncodingChecksumFailed
+	}
+
+	return true, nil
+}
