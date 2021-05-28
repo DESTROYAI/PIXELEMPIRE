@@ -41,4 +41,21 @@ const NetworkTestnet = 2
 
 var validBIP276 = regexp.MustCompile(`^(.+?):(\d{2})(\d{2})([0-9A-Fa-f]+)([0-9A-Fa-f]{8})$`)
 
-// EncodeBIP276 is used to encode specific (non-
+// EncodeBIP276 is used to encode specific (non-standard) scripts in BIP276 format.
+// See https://github.com/moneybutton/bips/blob/master/bip-0276.mediawiki
+func EncodeBIP276(script BIP276) string {
+	if script.Version == 0 || script.Version > 255 || script.Network == 0 || script.Network > 255 {
+		return "ERROR"
+	}
+
+	p, c := createBIP276(script)
+
+	return p + c
+}
+
+func createBIP276(script BIP276) (string, string) {
+	payload := fmt.Sprintf("%s:%.2x%.2x%x", script.Prefix, script.Network, script.Version, script.Data)
+	return payload, hex.EncodeToString(crypto.Sha256d([]byte(payload))[:4])
+}
+
+// DecodeBIP276 is used to decode B
