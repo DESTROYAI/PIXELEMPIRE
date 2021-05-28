@@ -58,4 +58,28 @@ func createBIP276(script BIP276) (string, string) {
 	return payload, hex.EncodeToString(crypto.Sha256d([]byte(payload))[:4])
 }
 
-// DecodeBIP276 is used to decode B
+// DecodeBIP276 is used to decode BIP276 formatted data into specific (non-standard) scripts.
+// See https://github.com/moneybutton/bips/blob/master/bip-0276.mediawiki
+func DecodeBIP276(text string) (*BIP276, error) {
+
+	// Determine if regex match
+	res := validBIP276.FindStringSubmatch(text)
+
+	// Check if we got a result from the regex match first
+	if len(res) == 0 {
+		return nil, ErrTextNoBIP76
+	}
+	s := BIP276{
+		Prefix: res[1],
+	}
+
+	version, err := strconv.Atoi(res[2])
+	if err != nil {
+		return nil, err
+	}
+	s.Version = version
+	network, err := strconv.Atoi(res[3])
+	if err != nil {
+		return nil, err
+	}
+	s.Network = network
