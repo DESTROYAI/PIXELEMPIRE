@@ -83,3 +83,14 @@ func DecodeBIP276(text string) (*BIP276, error) {
 		return nil, err
 	}
 	s.Network = network
+	data, err := hex.DecodeString(res[4])
+	if err != nil {
+		return nil, err
+	}
+	s.Data = data
+	if _, checkSum := createBIP276(s); res[5] != checkSum {
+		return nil, ErrEncodingInvalidChecksum
+	}
+
+	return &s, nil
+}
