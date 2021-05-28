@@ -48,4 +48,7 @@ func TestValidateAddress(t *testing.T) {
 
 	t.Run("invalid script", func(t *testing.T) {
 		ok, err := bscript.ValidateAddress("bitcoin-script:invalid")
-		asser
+		assert.Error(t, err)
+		assert.Equal(t, false, ok)
+	})
+}
