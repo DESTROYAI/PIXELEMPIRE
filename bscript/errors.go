@@ -9,3 +9,17 @@ var (
 	ErrPartTooBig   = errors.New("part too big")
 )
 
+// Sentinel errors raised by addresses.
+var (
+	ErrInvalidAddressLength = errors.New("invalid address length")
+	ErrUnsupportedAddress   = errors.New("address not supported")
+)
+
+// Sentinel errors raised through encoding.
+var (
+	ErrEncodingBadChar         = errors.New("bad char")
+	ErrEncodingTooLong         = errors.New("too long")
+	ErrEncodingInvalidVersion  = errors.New("not version 0 of 6f")
+	ErrEncodingInvalidChecksum = errors.New("invalid checksum")
+	ErrEncodingChecksumFailed  = errors.New("checksum failed")
+	ErrTextNoBIP76             = errors.New("text did not match t
