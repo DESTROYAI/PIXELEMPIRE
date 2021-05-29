@@ -30,4 +30,31 @@ func (a *afterGenesisConfig) AfterGenesis() bool {
 }
 
 func (b *beforeGenesisConfig) AfterGenesis() bool {
-	return fals
+	return false
+}
+
+func (a *afterGenesisConfig) MaxStackSize() int {
+	return math.MaxInt32
+}
+
+func (b *beforeGenesisConfig) MaxStackSize() int {
+	return MaxStackSizeBeforeGenesis
+}
+
+func (a *afterGenesisConfig) MaxScriptSize() int {
+	return math.MaxInt32
+}
+
+func (b *beforeGenesisConfig) MaxScriptSize() int {
+	return MaxScriptSizeBeforeGenesis
+}
+
+func (a *afterGenesisConfig) MaxScriptElementSize() int {
+	return math.MaxInt32
+}
+
+func (b *beforeGenesisConfig) MaxScriptElementSize() int {
+	return MaxScriptElementSizeBeforeGenesis
+}
+
+func (a *afterGenesisConfig) MaxScriptNumberLength() int {
