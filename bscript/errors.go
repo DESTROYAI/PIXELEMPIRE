@@ -22,4 +22,14 @@ var (
 	ErrEncodingInvalidVersion  = errors.New("not version 0 of 6f")
 	ErrEncodingInvalidChecksum = errors.New("invalid checksum")
 	ErrEncodingChecksumFailed  = errors.New("checksum failed")
-	ErrTextNoBIP76             = errors.New("text did not match t
+	ErrTextNoBIP76             = errors.New("text did not match the bip276 format")
+)
+
+// Sentinel errors raised by the package.
+var (
+	ErrInvalidPKLen      = errors.New("invalid public key length")
+	ErrInvalidOpCode     = errors.New("invalid opcode data")
+	ErrEmptyScript       = errors.New("script is empty")
+	ErrNotP2PKH          = errors.New("not a P2PKH")
+	ErrInvalidOpcodeType = errors.New("use AppendPushData for push data funcs")
+)
