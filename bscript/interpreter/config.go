@@ -58,3 +58,25 @@ func (b *beforeGenesisConfig) MaxScriptElementSize() int {
 }
 
 func (a *afterGenesisConfig) MaxScriptNumberLength() int {
+	return 750 * 1000 // 750 * 1Kb
+}
+
+func (b *beforeGenesisConfig) MaxScriptNumberLength() int {
+	return MaxScriptNumberLengthBeforeGenesis
+}
+
+func (a *afterGenesisConfig) MaxOps() int {
+	return math.MaxInt32
+}
+
+func (b *beforeGenesisConfig) MaxOps() int {
+	return MaxOpsBeforeGenesis
+}
+
+func (a *afterGenesisConfig) MaxPubKeysPerMultiSig() int {
+	return math.MaxInt32
+}
+
+func (b *beforeGenesisConfig) MaxPubKeysPerMultiSig() int {
+	return MaxPubKeysPerMultiSigBeforeGenesis
+}
