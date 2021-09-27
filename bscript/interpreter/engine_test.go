@@ -100,4 +100,32 @@ func TestCheckErrorCondition(t *testing.T) {
 		Outputs: []*bt.Output{{
 			Satoshis: 1000000000,
 		}},
-		LockTime: 0
+		LockTime: 0,
+	}
+
+	lscript, err := bscript.NewFromASM("OP_NOP OP_NOP OP_NOP OP_NOP OP_NOP OP_NOP OP_NOP OP_NOP OP_NOP OP_NOP OP_TRUE")
+	if err != nil {
+		t.Errorf("failed to created locking script %e", err)
+	}
+	txOut := &bt.Output{
+		LockingScript: lscript,
+	}
+
+	vm := &thread{
+		scriptParser: &DefaultOpcodeParser{},
+		cfg:          &beforeGenesisConfig{},
+	}
+
+	err = vm.apply(&execOpts{
+		previousTxOut: txOut,
+		inputIdx:      0,
+		tx:            tx,
+	})
+	if err != nil {
+		t.Errorf("failed to configure thread %v", err)
+	}
+
+	var done bool
+	for i := 0; i < len(*lscript); i++ {
+		done, err = vm.Step()
+		if er
