@@ -46,4 +46,30 @@ func TestBadPC(t *testing.T) {
 		LockTime: 0,
 	}
 
-	lsc
+	lscript, err := bscript.NewFromASM("OP_NOP")
+	if err != nil {
+		t.Errorf("failed to created locking script %e", err)
+	}
+	txOut := &bt.Output{
+		LockingScript: lscript,
+	}
+
+	for _, test := range tests {
+		vm := &thread{
+			scriptParser: &DefaultOpcodeParser{},
+			cfg:          &beforeGenesisConfig{},
+		}
+		err := vm.apply(&execOpts{
+			previousTxOut: txOut,
+			tx:            tx,
+			inputIdx:      0,
+		})
+		if err != nil {
+			t.Errorf("Failed to create script: %v", err)
+		}
+
+		// set to after all scripts
+		vm.scriptIdx = test.script
+		vm.scriptOff = test.off
+
+		_, err = vm.St
