@@ -72,4 +72,32 @@ func TestBadPC(t *testing.T) {
 		vm.scriptIdx = test.script
 		vm.scriptOff = test.off
 
-		_, err = vm.St
+		_, err = vm.Step()
+		if err == nil {
+			t.Errorf("Step with invalid pc (%v) succeeds!", test)
+			continue
+		}
+
+		if err == nil {
+			t.Errorf("DisasmPC with invalid pc (%v) succeeds!",
+				test)
+		}
+	}
+}
+
+// TestCheckErrorCondition tests to execute early test in CheckErrorCondition()
+// since most code paths are tested elsewhere.
+func TestCheckErrorCondition(t *testing.T) {
+	t.Parallel()
+
+	tx := &bt.Tx{
+		Version: 1,
+		Inputs: []*bt.Input{{
+			PreviousTxOutIndex: 0,
+			UnlockingScript:    &bscript.Script{},
+			SequenceNumber:     4294967295,
+		}},
+		Outputs: []*bt.Output{{
+			Satoshis: 1000000000,
+		}},
+		LockTime: 0
