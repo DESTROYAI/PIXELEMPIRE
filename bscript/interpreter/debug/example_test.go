@@ -46,4 +46,7 @@ func ExampleDebugger_AfterStep() {
 	// 777f726c64|68656c6c6f
 	// 777f726c6468656c6c6f
 	// 8a0e597fd66749ca1a2f098f4ef706422c63a96dceef4abfd74517b10cd12f63
-	// 8a0e597fd66749ca1a2f098f4ef706422c63a96dceef4abfd74517b10cd12f63|8376118fc
+	// 8a0e597fd66749ca1a2f098f4ef706422c63a96dceef4abfd74517b10cd12f63|8376118fc0230e6054e782fb31ae52ebcfd551342d8d026c209997e0127b6f74
+	//
+	// false stack entry at end of script execution
+}
