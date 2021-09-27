@@ -128,4 +128,26 @@ func TestCheckErrorCondition(t *testing.T) {
 	var done bool
 	for i := 0; i < len(*lscript); i++ {
 		done, err = vm.Step()
-		if er
+		if err != nil {
+			t.Fatalf("failed to step %dth time: %v", i, err)
+		}
+		if done && i != len(*lscript)-1 {
+			t.Fatalf("finished early on %dth time", i)
+		}
+	}
+	err = vm.CheckErrorCondition(false)
+	if err != nil {
+		t.Errorf("unexpected error %v on final check", err)
+	}
+}
+
+func TestValidateParams(t *testing.T) {
+	tests := map[string]struct {
+		params execOpts
+		expErr error
+	}{
+		"valid tx/previous out checksig script": {
+			params: execOpts{
+				tx: func() *bt.Tx {
+					tx := bt.NewTx()
+					err := tx.From("ae81577c1a2434929a1224cf19aa63e167d88029965e2ca6de24de
