@@ -162,4 +162,25 @@ func TestValidateParams(t *testing.T) {
 				}(),
 				previousTxOut: func() *bt.Output {
 					cbLockingScript, err := bscript.NewFromHexString("76a91454807ccc44c0eec0b0e187b3ce0e137e9c6cd65d88ac")
-					ass
+					assert.NoError(t, err)
+
+					return &bt.Output{LockingScript: cbLockingScript, Satoshis: 0}
+				}(),
+			},
+		},
+		"valid tx/previous out non-checksig script": {
+			params: execOpts{
+				tx: func() *bt.Tx {
+					tx := bt.NewTx()
+					err := tx.From("ae81577c1a2434929a1224cf19aa63e167d88029965e2ca6de24defff014d031", 0, "52529387", 0)
+					assert.NoError(t, err)
+
+					txUnlockingScript, err := bscript.NewFromASM("OP_4")
+					assert.NoError(t, err)
+
+					tx.Inputs[0].UnlockingScript = txUnlockingScript
+
+					return tx
+				}(),
+				previousTxOut: func() *bt.Output {
+					cbLockingScript, 
