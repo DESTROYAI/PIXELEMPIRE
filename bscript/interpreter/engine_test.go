@@ -183,4 +183,22 @@ func TestValidateParams(t *testing.T) {
 					return tx
 				}(),
 				previousTxOut: func() *bt.Output {
-					cbLockingScript, 
+					cbLockingScript, err := bscript.NewFromASM("OP_2 OP_2 OP_ADD OP_EQUAL")
+					assert.NoError(t, err)
+
+					return &bt.Output{LockingScript: cbLockingScript, Satoshis: 0}
+				}(),
+			},
+		},
+		"valid locking/unlocking script non-checksig": {
+			params: execOpts{
+				lockingScript: func() *bscript.Script {
+					script, err := bscript.NewFromHexString("52529387")
+					assert.NoError(t, err)
+					return script
+				}(),
+				unlockingScript: func() *bscript.Script {
+					script, err := bscript.NewFromHexString("54")
+					assert.NoError(t, err)
+					return script
+		
