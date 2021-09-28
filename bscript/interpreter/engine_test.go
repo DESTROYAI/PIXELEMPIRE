@@ -201,4 +201,15 @@ func TestValidateParams(t *testing.T) {
 					script, err := bscript.NewFromHexString("54")
 					assert.NoError(t, err)
 					return script
-		
+				}(),
+			},
+		},
+		"valid locking/unlocking script with check-sig": {
+			params: execOpts{
+				lockingScript: func() *bscript.Script {
+					script, err := bscript.NewFromHexString("76a91454807ccc44c0eec0b0e187b3ce0e137e9c6cd65d88ac")
+					assert.NoError(t, err)
+					return script
+				}(),
+				unlockingScript: func() *bscript.Script {
+					script, err := bscript.NewFromHexString("483045022100a4d9da733aeb29f9ba94dcaa578e71662cf29dd9742ce4b022c098211f4fdb06022041d24db4eda239fa15a12cf91229f6c352adab3c1c10091fc2aa517fe0f487c54121
