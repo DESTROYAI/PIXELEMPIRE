@@ -265,4 +265,20 @@ func TestValidateParams(t *testing.T) {
 					assert.NoError(t, err)
 					return script
 				}(),
-				previousTxOut: func() 
+				previousTxOut: func() *bt.Output {
+					script, err := bscript.NewFromHexString("76a91454807ccc44c0eec0b0e187b3ce0e137e9c6cd65d88ac")
+					assert.NoError(t, err)
+
+					return &bt.Output{LockingScript: script, Satoshis: 0}
+				}(),
+			},
+			expErr: errors.New("no unlocking script provided"),
+		},
+		"invalid locking/unlocking script with checksig": {
+			params: execOpts{
+				lockingScript: func() *bscript.Script {
+					script, err := bscript.NewFromHexString("76a91454807ccc44c0eec0b0e187b3ce0e137e9c6cd65d88ac")
+					assert.NoError(t, err)
+					return script
+				}(),
+				unlockingScript: func()
