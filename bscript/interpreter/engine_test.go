@@ -292,4 +292,15 @@ func TestValidateParams(t *testing.T) {
 		"provided locking script that differs from previous txout's errors": {
 			params: execOpts{
 				lockingScript: func() *bscript.Script {
-					script, err := bscript.N
+					script, err := bscript.NewFromHexString("52529387")
+					assert.NoError(t, err)
+					return script
+				}(),
+				unlockingScript: func() *bscript.Script {
+					script, err := bscript.NewFromHexString("483045022100a4d9da733aeb29f9ba94dcaa578e71662cf29dd9742ce4b022c098211f4fdb06022041d24db4eda239fa15a12cf91229f6c352adab3c1c10091fc2aa517fe0f487c5412102454c535854802e5eaeaf5cbecd20e0aa508486063b71194dfde34744f19f1a5d")
+					assert.NoError(t, err)
+					return script
+				}(),
+				tx: func() *bt.Tx {
+					tx := bt.NewTx()
+					err := tx.From("ae81577c1a2434929a1224cf19aa63e167d88029965e2ca6de24defff014
