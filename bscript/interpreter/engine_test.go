@@ -314,4 +314,20 @@ func TestValidateParams(t *testing.T) {
 					return tx
 				}(),
 				previousTxOut: func() *bt.Output {
-					script, err := bscript.NewFromHexString("76a91454807ccc44c0eec0b
+					script, err := bscript.NewFromHexString("76a91454807ccc44c0eec0b0e187b3ce0e137e9c6cd65d88ac")
+					assert.NoError(t, err)
+
+					return &bt.Output{LockingScript: script, Satoshis: 0}
+				}(),
+			},
+			expErr: errors.New("locking script does not match the previous outputs locking script"),
+		},
+		"provided unlocking script that differs from tx input's errors": {
+			params: execOpts{
+				lockingScript: func() *bscript.Script {
+					script, err := bscript.NewFromHexString("76a91454807ccc44c0eec0b0e187b3ce0e137e9c6cd65d88ac")
+					assert.NoError(t, err)
+					return script
+				}(),
+				unlockingScript: func() *bscript.Script {
+					scr
