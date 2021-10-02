@@ -442,4 +442,27 @@ func TestInvalidFlagCombinations(t *testing.T) {
 			flags:         test,
 		})
 		if !errs.IsErrorCode(err, errs.ErrInvalidFlags) {
-		
+			t.Fatalf("TestInvalidFlagCombinations #%d unexpected "+
+				"error: %v", i, err)
+		}
+	}
+}
+
+// TestCheckPubKeyEncoding ensures the internal checkPubKeyEncoding function
+// works as expected.
+func TestCheckPubKeyEncoding(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name    string
+		key     []byte
+		isValid bool
+	}{
+		{
+			name: "uncompressed ok",
+			key: hexToBytes("0411db93e1dcdb8a016b49840f8c53bc1eb68" +
+				"a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf" +
+				"9744464f82e160bfa9b8b64f9d4c03f999b8643f656b" +
+				"412a3"),
+			isValid: true,
+		},
