@@ -370,4 +370,29 @@ func TestValidateParams(t *testing.T) {
 					return tx
 				}(),
 				previousTxOut: func() *bt.Output {
-					cbLockingScript, err :
+					cbLockingScript, err := bscript.NewFromHexString("76a91454807ccc44c0eec0b0e187b3ce0e137e9c6cd65d88ac")
+					assert.NoError(t, err)
+
+					return &bt.Output{LockingScript: cbLockingScript, Satoshis: 0}
+				}(),
+				inputIdx: 5,
+			},
+			expErr: errors.New("transaction input index 5 is negative or >= 1"),
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			_, err := createThread(&test.params)
+
+			if test.expErr != nil {
+				assert.Error(t, err)
+				assert.EqualError(t, err, test.expErr.Error())
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+// TestInvalidFlagCombina
