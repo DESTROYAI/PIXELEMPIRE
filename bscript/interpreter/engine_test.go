@@ -417,4 +417,29 @@ func TestInvalidFlagCombinations(t *testing.T) {
 			SequenceNumber:     4294967295,
 		}},
 		Outputs: []*bt.Output{{
-			Satoshis: 1000000000
+			Satoshis: 1000000000,
+		}},
+		LockTime: 0,
+	}
+
+	lscript, err := bscript.NewFromASM("OP_NOP")
+	if err != nil {
+		t.Errorf("failed to created locking script %e", err)
+	}
+	txOut := &bt.Output{
+		LockingScript: lscript,
+	}
+
+	for i, test := range tests {
+		vm := &thread{
+			scriptParser: &DefaultOpcodeParser{},
+			cfg:          &beforeGenesisConfig{},
+		}
+		err := vm.apply(&execOpts{
+			tx:            tx,
+			inputIdx:      0,
+			previousTxOut: txOut,
+			flags:         test,
+		})
+		if !errs.IsErrorCode(err, errs.ErrInvalidFlags) {
+		
