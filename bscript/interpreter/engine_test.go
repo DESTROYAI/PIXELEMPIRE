@@ -466,3 +466,31 @@ func TestCheckPubKeyEncoding(t *testing.T) {
 				"412a3"),
 			isValid: true,
 		},
+		{
+			name: "compressed ok",
+			key: hexToBytes("02ce0b14fb842b1ba549fdd675c98075f12e9" +
+				"c510f8ef52bd021a9a1f4809d3b4d"),
+			isValid: true,
+		},
+		{
+			name: "compressed ok",
+			key: hexToBytes("032689c7c2dab13309fb143e0e8fe39634252" +
+				"1887e976690b6b47f5b2a4b7d448e"),
+			isValid: true,
+		},
+		{
+			name: "hybrid",
+			key: hexToBytes("0679be667ef9dcbbac55a06295ce870b07029" +
+				"bfcdb2dce28d959f2815b16f81798483ada7726a3c46" +
+				"55da4fbfc0e1108a8fd17b448a68554199c47d08ffb1" +
+				"0d4b8"),
+			isValid: false,
+		},
+		{
+			name:    "empty",
+			key:     nil,
+			isValid: false,
+		},
+	}
+
+	vm :=
