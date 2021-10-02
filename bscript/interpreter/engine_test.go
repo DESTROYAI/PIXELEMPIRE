@@ -395,4 +395,26 @@ func TestValidateParams(t *testing.T) {
 	}
 }
 
-// TestInvalidFlagCombina
+// TestInvalidFlagCombinations ensures the script engine returns the expected
+// error when disallowed flag combinations are specified.
+func TestInvalidFlagCombinations(t *testing.T) {
+	t.Parallel()
+
+	tests := []scriptflag.Flag{
+		scriptflag.VerifyCleanStack,
+	}
+
+	uscript, err := bscript.NewFromASM("OP_NOP")
+	if err != nil {
+		t.Errorf("failed to create unlocking script %e", err)
+	}
+
+	tx := &bt.Tx{
+		Version: 1,
+		Inputs: []*bt.Input{{
+			PreviousTxOutIndex: 0,
+			UnlockingScript:    uscript,
+			SequenceNumber:     4294967295,
+		}},
+		Outputs: []*bt.Output{{
+			Satoshis: 1000000000
