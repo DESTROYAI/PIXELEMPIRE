@@ -553,4 +553,25 @@ func TestCheckSignatureEncoding(t *testing.T) {
 				"fdf3f4f7732e9d624c6c61548ab5fb8cd41032018152" +
 				"2ec8eca07de4860a4acdd12909d831cc56cbbac46220" +
 				"82221a8768d1d09"),
-			isV
+			isValid: false,
+		},
+		{
+			name: "short len",
+			sig: hexToBytes("304302204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd41022018152" +
+				"2ec8eca07de4860a4acdd12909d831cc56cbbac46220" +
+				"82221a8768d1d09"),
+			isValid: false,
+		},
+		{
+			name: "long len",
+			sig: hexToBytes("304502204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd41022018152" +
+				"2ec8eca07de4860a4acdd12909d831cc56cbbac46220" +
+				"82221a8768d1d09"),
+			isValid: false,
+		},
+		{
+			name: "long X",
+			sig: hexToBytes("304402424e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f773
