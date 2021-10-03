@@ -513,4 +513,26 @@ func TestCheckPubKeyEncoding(t *testing.T) {
 func TestCheckSignatureEncoding(t *testing.T) {
 	t.Parallel()
 
-	t
+	tests := []struct {
+		name    string
+		sig     []byte
+		isValid bool
+	}{
+		{
+			name: "valid signature",
+			sig: hexToBytes("304402204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd41022018152" +
+				"2ec8eca07de4860a4acdd12909d831cc56cbbac46220" +
+				"82221a8768d1d09"),
+			isValid: true,
+		},
+		{
+			name:    "empty.",
+			sig:     nil,
+			isValid: false,
+		},
+		{
+			name: "bad magic",
+			sig: hexToBytes("314402204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd41022018152" +
+				"2ec8eca07de4860a4acdd12
