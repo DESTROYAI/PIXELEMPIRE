@@ -493,4 +493,24 @@ func TestCheckPubKeyEncoding(t *testing.T) {
 		},
 	}
 
-	vm :=
+	vm := thread{flags: scriptflag.VerifyStrictEncoding}
+	for _, test := range tests {
+		err := vm.checkPubKeyEncoding(test.key)
+		if err != nil && test.isValid {
+			t.Errorf("checkSignatureEncoding test '%s' failed "+
+				"when it should have succeeded: %v", test.name,
+				err)
+		} else if err == nil && !test.isValid {
+			t.Errorf("checkSignatureEncoding test '%s' succeeded "+
+				"when it should have failed", test.name)
+		}
+	}
+
+}
+
+// TestCheckSignatureEncoding ensures the internal checkSignatureEncoding
+// function works as expected.
+func TestCheckSignatureEncoding(t *testing.T) {
+	t.Parallel()
+
+	t
