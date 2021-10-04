@@ -574,4 +574,23 @@ func TestCheckSignatureEncoding(t *testing.T) {
 		{
 			name: "long X",
 			sig: hexToBytes("304402424e45e16932b8af514961a1d3a1a25" +
-				"fdf3f4f773
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd41022018152" +
+				"2ec8eca07de4860a4acdd12909d831cc56cbbac46220" +
+				"82221a8768d1d09"),
+			isValid: false,
+		},
+		{
+			name: "long Y",
+			sig: hexToBytes("304402204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd41022118152" +
+				"2ec8eca07de4860a4acdd12909d831cc56cbbac46220" +
+				"82221a8768d1d09"),
+			isValid: false,
+		},
+		{
+			name: "short Y",
+			sig: hexToBytes("304402204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd41021918152" +
+				"2ec8eca07de4860a4acdd12909d831cc56cbbac46220" +
+				"82221a8768d1d09"),
+			i
