@@ -614,4 +614,22 @@ func TestCheckSignatureEncoding(t *testing.T) {
 		{
 			name: "X == N ",
 			sig: hexToBytes("30440220fffffffffffffffffffffffffffff" +
-				"ffebaaedce6af48a03bbfd25e
+				"ffebaaedce6af48a03bbfd25e8cd0364142022018152" +
+				"2ec8eca07de4860a4acdd12909d831cc56cbbac46220" +
+				"82221a8768d1d09"),
+			isValid: false,
+		},
+		{
+			name: "Y == N",
+			sig: hexToBytes("304402204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd410220fffff" +
+				"ffffffffffffffffffffffffffebaaedce6af48a03bb" +
+				"fd25e8cd0364141"),
+			isValid: false,
+		},
+		{
+			name: "Y > N",
+			sig: hexToBytes("304402204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd410220fffff" +
+				"ffffffffffffffffffffffffffebaaedce6af48a03bb" +
+				"fd25e8c
