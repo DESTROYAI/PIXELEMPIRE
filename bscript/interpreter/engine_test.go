@@ -632,4 +632,24 @@ func TestCheckSignatureEncoding(t *testing.T) {
 			sig: hexToBytes("304402204e45e16932b8af514961a1d3a1a25" +
 				"fdf3f4f7732e9d624c6c61548ab5fb8cd410220fffff" +
 				"ffffffffffffffffffffffffffebaaedce6af48a03bb" +
-				"fd25e8c
+				"fd25e8cd0364142"),
+			isValid: false,
+		},
+		{
+			name: "0 len X",
+			sig: hexToBytes("302402000220181522ec8eca07de4860a4acd" +
+				"d12909d831cc56cbbac4622082221a8768d1d09"),
+			isValid: false,
+		},
+		{
+			name: "0 len Y",
+			sig: hexToBytes("302402204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd410200"),
+			isValid: false,
+		},
+		{
+			name: "extra R padding",
+			sig: hexToBytes("30450221004e45e16932b8af514961a1d3a1a" +
+				"25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181" +
+				"522ec8eca07de4860a4acdd12909d831cc56cbbac462" +
+				"2
