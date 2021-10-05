@@ -672,3 +672,34 @@ func TestCheckSignatureEncoding(t *testing.T) {
 			t.Errorf("checkSignatureEncoding test '%s' failed "+
 				"when it should have succeeded: %v", test.name,
 				err)
+		} else if err == nil && !test.isValid {
+			t.Errorf("checkSignatureEncoding test '%s' succeeded "+
+				"when it should have failed", test.name)
+		}
+	}
+}
+
+func TestCheckHashTypeEncoding(t *testing.T) {
+	var SigHashBug sighash.Flag = 0x20
+	encodingTests := []struct {
+		SigHash     sighash.Flag
+		EngineFlags scriptflag.Flag
+		ShouldFail  bool
+	}{
+		{
+			sighash.All,
+			scriptflag.VerifyStrictEncoding,
+			false,
+		},
+		{
+			sighash.None,
+			scriptflag.VerifyStrictEncoding,
+			false,
+		},
+		{
+			sighash.Single,
+			scriptflag.VerifyStrictEncoding,
+			false,
+		},
+		{
+			sighash.All | 
