@@ -652,4 +652,23 @@ func TestCheckSignatureEncoding(t *testing.T) {
 			sig: hexToBytes("30450221004e45e16932b8af514961a1d3a1a" +
 				"25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181" +
 				"522ec8eca07de4860a4acdd12909d831cc56cbbac462" +
-				"2
+				"2082221a8768d1d09"),
+			isValid: false,
+		},
+		{
+			name: "extra S padding",
+			sig: hexToBytes("304502204e45e16932b8af514961a1d3a1a25" +
+				"fdf3f4f7732e9d624c6c61548ab5fb8cd41022100181" +
+				"522ec8eca07de4860a4acdd12909d831cc56cbbac462" +
+				"2082221a8768d1d09"),
+			isValid: false,
+		},
+	}
+
+	vm := thread{flags: scriptflag.VerifyStrictEncoding}
+	for _, test := range tests {
+		err := vm.checkSignatureEncoding(test.sig)
+		if err != nil && test.isValid {
+			t.Errorf("checkSignatureEncoding test '%s' failed "+
+				"when it should have succeeded: %v", test.name,
+				err)
