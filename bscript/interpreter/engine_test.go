@@ -733,4 +733,29 @@ func TestCheckHashTypeEncoding(t *testing.T) {
 		},
 		{
 			sighash.All | sighash.AnyOneCanPay | sighash.ForkID,
-			scr
+			scriptflag.VerifyStrictEncoding,
+			true,
+		},
+		{
+			sighash.None | sighash.AnyOneCanPay | sighash.ForkID,
+			scriptflag.VerifyStrictEncoding,
+			true,
+		},
+		{
+			sighash.Single | sighash.AnyOneCanPay | sighash.ForkID,
+			scriptflag.VerifyStrictEncoding,
+			true,
+		},
+
+		{
+			sighash.All | sighash.ForkID,
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			false,
+		},
+		{
+			sighash.None | sighash.ForkID,
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			false,
+		},
+		{
+			sighash.Single | sighash.ForkID,
