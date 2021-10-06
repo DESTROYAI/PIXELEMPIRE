@@ -780,4 +780,28 @@ func TestCheckHashTypeEncoding(t *testing.T) {
 
 		{
 			sighash.All,
-	
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			true,
+		},
+		{
+			sighash.None,
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			true,
+		},
+		{
+			sighash.Single,
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			true,
+		},
+		{
+			sighash.All | sighash.AnyOneCanPay,
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			true,
+		},
+		{
+			sighash.None | sighash.AnyOneCanPay,
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			true,
+		},
+		{
+			sighash.Single | sighash.AnyOneCanPa
