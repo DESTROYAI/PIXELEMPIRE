@@ -804,4 +804,27 @@ func TestCheckHashTypeEncoding(t *testing.T) {
 			true,
 		},
 		{
-			sighash.Single | sighash.AnyOneCanPa
+			sighash.Single | sighash.AnyOneCanPay,
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			true,
+		},
+		{
+			sighash.Single | sighash.AnyOneCanPay | sighash.ForkID | SigHashBug,
+			scriptflag.VerifyStrictEncoding | scriptflag.VerifyBip143SigHash,
+			true,
+		},
+	}
+
+	for i, test := range encodingTests {
+		e := thread{flags: test.EngineFlags}
+		err := e.checkHashTypeEncoding(test.SigHash)
+		if test.ShouldFail && err == nil {
+			t.Errorf("Expected test %d to fail", i)
+		} else if !test.ShouldFail && err != nil {
+			t.Errorf("Expected test %d not to fail", i)
+		}
+	}
+}
+
+func TestEngine_WithState(t *testing.T) {
+	tests := map[string]s
