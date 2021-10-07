@@ -864,4 +864,26 @@ func TestEngine_WithState(t *testing.T) {
 					return []ParsedScript{parsedUScript, parsedLScript}
 				}(),
 				Genesis: struct {
-					AfterGenesis
+					AfterGenesis bool
+					EarlyReturn  bool
+				}{
+					AfterGenesis: true,
+				},
+			},
+		},
+		"start at operation": {
+			lscript: "5253958852529387",
+			uscript: "5456",
+			state: &State{
+				ScriptIdx: 1,
+				OpcodeIdx: 6,
+				DataStack: func() [][]byte {
+					return [][]byte{{4}, {2}, {2}}
+				}(),
+				AltStack:             [][]byte{},
+				CondStack:            []int{},
+				ElseStack:            [][]byte{},
+				Flags:                scriptflag.UTXOAfterGenesis | scriptflag.EnableSighashForkID,
+				LastCodeSeparatorIdx: 0,
+				NumOps:               8,
+				SavedFirstSta
