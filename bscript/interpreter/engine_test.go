@@ -905,4 +905,26 @@ func TestEngine_WithState(t *testing.T) {
 				Genesis: struct {
 					AfterGenesis bool
 					EarlyReturn  bool
-	
+				}{
+					AfterGenesis: true,
+				},
+			},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			lscript, err := bscript.NewFromHexString(test.lscript)
+			assert.NoError(t, err)
+			uscript, err := bscript.NewFromHexString(test.uscript)
+			assert.NoError(t, err)
+
+			assert.NoError(t, NewEngine().Execute(
+				WithScripts(lscript, uscript),
+				WithForkID(),
+				WithAfterGenesis(),
+				WithState(test.state),
+			))
+		})
+	}
+}
