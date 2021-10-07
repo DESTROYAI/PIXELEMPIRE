@@ -827,4 +827,23 @@ func TestCheckHashTypeEncoding(t *testing.T) {
 }
 
 func TestEngine_WithState(t *testing.T) {
-	tests := map[string]s
+	tests := map[string]struct {
+		lscript string
+		uscript string
+		state   *State
+	}{
+		"start midway": {
+			lscript: "5253958852529387",
+			uscript: "5456",
+			state: &State{
+				ScriptIdx: 1,
+				OpcodeIdx: 1,
+				DataStack: func() [][]byte {
+					return [][]byte{{4}, {6}, {2}}
+				}(),
+				AltStack:             [][]byte{},
+				CondStack:            []int{},
+				ElseStack:            [][]byte{},
+				Flags:                scriptflag.UTXOAfterGenesis | scriptflag.EnableSighashForkID,
+				LastCodeSeparatorIdx: 0,
+				NumOps:               3,
