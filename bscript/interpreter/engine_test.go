@@ -847,3 +847,21 @@ func TestEngine_WithState(t *testing.T) {
 				Flags:                scriptflag.UTXOAfterGenesis | scriptflag.EnableSighashForkID,
 				LastCodeSeparatorIdx: 0,
 				NumOps:               3,
+				SavedFirstStack:      [][]byte{},
+				Scripts: func() []ParsedScript {
+					lscript, err := bscript.NewFromHexString("5253958852529387")
+					assert.NoError(t, err)
+					uscript, err := bscript.NewFromHexString("5456")
+					assert.NoError(t, err)
+
+					var parser DefaultOpcodeParser
+					parsedLScript, err := parser.Parse(lscript)
+					assert.NoError(t, err)
+
+					parsedUScript, err := parser.Parse(uscript)
+					assert.NoError(t, err)
+
+					return []ParsedScript{parsedUScript, parsedLScript}
+				}(),
+				Genesis: struct {
+					AfterGenesis
