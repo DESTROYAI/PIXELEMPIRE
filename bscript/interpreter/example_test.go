@@ -75,4 +75,22 @@ func ExampleEngine_Execute_error() {
 	if err := interpreter.NewEngine().Execute(
 		interpreter.WithTx(tx, inputIdx, prevOutput),
 		interpreter.WithForkID(),
-		interpreter.WithAfterGenesis()
+		interpreter.WithAfterGenesis(),
+	); err != nil {
+		fmt.Println(err)
+		return
+	}
+	// Output:
+	// OP_EQUALVERIFY failed
+}
+
+func ExampleEngine_Execute_concurrent() {
+	type execution struct {
+		tx        *bt.Tx
+		inputIdx  int
+		prevTxOut *bt.Output
+	}
+
+	var ee []execution
+
+	tx, err := bt.NewTxFromString("0200000003a9bc457fdc6a54d99300fb137b23714d860c350a9d19ff0f571e694a419ff3a0010000006b48304502210086c83beb2b2663e4709a583d261d75be538aedcafa7766bd983e5c8db2f8b2fc02201a88b178624ab0ad1748b37c875f885930166237c88f5af78ee4e61d337f935f412103e8be830d98bb3b007a0343ee5c36daa48796ae8bb57946b1e87378ad6e8a090dfeffffff0092bb9a47e27bf6
