@@ -62,4 +62,17 @@ func ExampleEngine_Execute_error() {
 		return
 	}
 
-	prevTx, err := bt.NewTxFromString("0200000001424408c9d997772e56112c731b6dc6f050cb3847c5570cea12f30bfbc7df0a010000000049483045022100fe759b2cd7f
+	prevTx, err := bt.NewTxFromString("0200000001424408c9d997772e56112c731b6dc6f050cb3847c5570cea12f30bfbc7df0a010000000049483045022100fe759b2cd7f25bce4fcda4c8366891b0d9289dc5bac1cf216909c89dc324437a02204aa590b6e82764971df4fe741adf41ece4cde607cb6443edceba831060213d3641feffffff02408c380c010000001976a914f761fc0927a43f4fab5740ef39f05b1fb7786f5288ac0065cd1d000000001976a914805096c5167877a5799977d46fb9dee5891dc3cb88ac66000000")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// Use incorrect output for input
+	inputIdx := 1
+	prevOutput := prevTx.OutputIdx(0)
+
+	if err := interpreter.NewEngine().Execute(
+		interpreter.WithTx(tx, inputIdx, prevOutput),
+		interpreter.WithForkID(),
+		interpreter.WithAfterGenesis()
