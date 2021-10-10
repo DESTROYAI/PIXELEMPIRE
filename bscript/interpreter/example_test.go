@@ -142,4 +142,21 @@ func ExampleEngine_Execute_concurrent() {
 
 			outputASM, err := exec.prevTxOut.LockingScript.ToASM()
 			if err != nil {
-				return er
+				return err
+			}
+
+			fmt.Println(inputASM)
+			fmt.Println(outputASM)
+			return vm.Execute(interpreter.WithTx(exec.tx, exec.inputIdx, exec.prevTxOut))
+		})
+	}
+
+	if err := errs.Wait(); err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// Unordered output:
+	// 304402206579610b3a845e7ffa58203c686ca86ed3f2f946454bcb5f78e960c8ec34617702206cf0f168267acbca0acdc7fe38311fd94fd821868891aa1da150fe0de6e0ff6c41 03bb0164c11476e32287120301be5aca1310b0f72579f83e88cf6e10e42f6f78f1
+	// OP_DUP OP_HASH160 a0416fb58b878bfaede66f83bb0e8c9fe0b0619c OP_EQUALVERIFY OP_CHECKSIG
+	// 304502210086c83beb2b2663e470
