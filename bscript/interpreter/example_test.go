@@ -117,4 +117,29 @@ func ExampleEngine_Execute_concurrent() {
 		return
 	}
 
-	prevTx2, err := bt.NewTxFromString("02000000016fc96646b49acbe283ca81813da5ce0cf6b34a79dda74d515eaf68236ac7e2ba000000006a47304402205c1a6ba8018fa5d8c8952d37e4e21b731ac09edb491a2f475133021e348a1e5c02205acba3d90d31738a192593b66940ca119fd7a2e018c198b28d432db68e182034412103e72d6d9988b7fffcdef654e3c40c1227539b90a89dc5f42cd3d850e74ad94503feffffff025e266bee000000001976a9143355c640863b680e977d3608075ee5749f98106188ac0065cd1d000000001976a914a0416fb58b878bfaede66f83bb0e8c9fe0b0619c88ac66
+	prevTx2, err := bt.NewTxFromString("02000000016fc96646b49acbe283ca81813da5ce0cf6b34a79dda74d515eaf68236ac7e2ba000000006a47304402205c1a6ba8018fa5d8c8952d37e4e21b731ac09edb491a2f475133021e348a1e5c02205acba3d90d31738a192593b66940ca119fd7a2e018c198b28d432db68e182034412103e72d6d9988b7fffcdef654e3c40c1227539b90a89dc5f42cd3d850e74ad94503feffffff025e266bee000000001976a9143355c640863b680e977d3608075ee5749f98106188ac0065cd1d000000001976a914a0416fb58b878bfaede66f83bb0e8c9fe0b0619c88ac66000000")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	ee = append(ee, execution{
+		tx:        tx2,
+		inputIdx:  0,
+		prevTxOut: prevTx2.OutputIdx(int(tx2.InputIdx(0).PreviousTxOutIndex)),
+	})
+
+	vm := interpreter.NewEngine()
+	errs, _ := errgroup.WithContext(context.TODO())
+	for _, e := range ee {
+		exec := e
+		errs.Go(func() error {
+			input := exec.tx.InputIdx(exec.inputIdx)
+			inputASM, err := input.UnlockingScript.ToASM()
+			if err != nil {
+				return err
+			}
+
+			outputASM, err := exec.prevTxOut.LockingScript.ToASM()
+			if err != nil {
+				return er
