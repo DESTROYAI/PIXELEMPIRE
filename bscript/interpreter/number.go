@@ -29,4 +29,20 @@ import (
 // method to get the serialised representation (including values that overflow).
 //
 // Then, whenever data is interpreted as an integer, it is converted to this
-// type by using the NewNumber function which wi
+// type by using the NewNumber function which will return an error if the
+// number is out of range or not minimally encoded depending on parameters.
+// Since all numeric opcodes involve pulling data from the stack and
+// interpreting it as an integer, it provides the required behaviour.
+type scriptNumber struct {
+	val          *big.Int
+	afterGenesis bool
+}
+
+var zero = big.NewInt(0)
+var one = big.NewInt(1)
+
+// makeScriptNumber interprets the passed serialised bytes as an encoded integer
+// and returns the result as a Number.
+//
+// Since the consensus rules dictate that serialised bytes interpreted as integers
+// a
