@@ -45,4 +45,12 @@ var one = big.NewInt(1)
 // and returns the result as a Number.
 //
 // Since the consensus rules dictate that serialised bytes interpreted as integers
-// a
+// are only allowed to be in the range determined by a maximum number of bytes,
+// on a per opcode basis, an error will be returned when the provided bytes
+// would result in a number outside that range.  In particular, the range for
+// the vast majority of opcodes dealing with numeric values are limited to 4
+// bytes and therefore will pass that value to this function resulting in an
+// allowed range of [-2^31 + 1, 2^31 - 1].
+//
+// The requireMinimal flag causes an error to be returned if additional checks
+// on the encoding determine it is not 
