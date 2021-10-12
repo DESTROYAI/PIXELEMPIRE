@@ -74,4 +74,32 @@ func makeScriptNumber(bb []byte, scriptNumLen int, requireMinimal, afterGenesis 
 			errs.ErrNumberTooBig,
 			"numeric value encoded as %x is %d bytes which exceeds the max allowed of %d",
 			bb, len(bb), scriptNumLen,
-		
+		)
+	}
+
+	// Enforce minimal encoded if requested.
+	if requireMinimal {
+		if err := checkMinimalDataEncoding(bb); err != nil {
+			return &scriptNumber{
+				val:          big.NewInt(0),
+				afterGenesis: false,
+			}, err
+		}
+	}
+
+	// Zero is encoded as an empty byte slice.
+	if len(bb) == 0 {
+		return &scriptNumber{
+			afterGenesis: afterGenesis,
+			val:          big.NewInt(0),
+		}, nil
+	}
+
+	// Decode from little endian.
+	//
+	// The following is the equivalent of:
+	//    var v int64
+	//    for i, b := range bb {
+	//        v |= int64(b) << uint8(8*i)
+	//    }
+	v := new(b
