@@ -53,4 +53,14 @@ var one = big.NewInt(1)
 // allowed range of [-2^31 + 1, 2^31 - 1].
 //
 // The requireMinimal flag causes an error to be returned if additional checks
-// on the encoding determine it is not 
+// on the encoding determine it is not represented with the smallest possible
+// number of bytes or is the negative 0 encoding, [0x80].  For example, consider
+// the number 127.  It could be encoded as [0x7f], [0x7f 0x00],
+// [0x7f 0x00 0x00 ...], etc.  All forms except [0x7f] will return an error with
+// requireMinimal enabled.
+//
+// The scriptNumLen is the maximum number of bytes the encoded value can be
+// before an errs.ErrStackNumberTooBig is returned.  This effectively limits the
+// range of allowed values.
+// WARNING:  Great care should be taken if passing a value larger than
+// defaultScriptNumLen, whi
