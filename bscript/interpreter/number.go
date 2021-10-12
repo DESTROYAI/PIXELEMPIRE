@@ -102,4 +102,20 @@ func makeScriptNumber(bb []byte, scriptNumLen int, requireMinimal, afterGenesis 
 	//    for i, b := range bb {
 	//        v |= int64(b) << uint8(8*i)
 	//    }
-	v := new(b
+	v := new(big.Int)
+	for i, b := range bb {
+		v.Or(v, new(big.Int).Lsh(new(big.Int).SetBytes([]byte{b}), uint(8*i)))
+	}
+
+	// When the most significant byte of the input bytes has the sign bit
+	// set, the result is negative.  So, remove the sign bit from the result
+	// and make it negative.
+	//
+	// The following is the equivalent of:
+	//    if bb[len(bb)-1]&0x80 != 0 {
+	//        v &= ^(int64(0x80) << uint8(8*(len(bb)-1)))
+	//        return -v, nil
+	//    }
+	if bb[len(bb)-1]&0x80 != 0 {
+		// The maximum length of bb has already been determined to be 4
+		// above, so uint8 is enough to cover the max 
