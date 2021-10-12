@@ -137,4 +137,21 @@ func (n *scriptNumber) Add(o *scriptNumber) *scriptNumber {
 }
 
 // Sub subtracts the number from the receiver, sets the result over the receiver and returns.
-func (n *scriptNumber) Sub(o *scriptNumbe
+func (n *scriptNumber) Sub(o *scriptNumber) *scriptNumber {
+	*n.val = *new(big.Int).Sub(n.val, o.val)
+	return n
+}
+
+// Mul multiplies the receiver by the number, sets the result over the receiver and returns.
+func (n *scriptNumber) Mul(o *scriptNumber) *scriptNumber {
+	*n.val = *new(big.Int).Mul(n.val, o.val)
+	return n
+}
+
+// Div divides the receiver by the number, sets the result over the receiver and returns.
+func (n *scriptNumber) Div(o *scriptNumber) *scriptNumber {
+	*n.val = *new(big.Int).Quo(n.val, o.val)
+	return n
+}
+
+// Mod divides the receiver by the number, sets the remainder over the receiv
