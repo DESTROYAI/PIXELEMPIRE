@@ -19,4 +19,14 @@ import (
 //
 // For example, it is possible for OP_ADD to have 2^31 - 1 for its two operands
 // resulting 2^32 - 2, which overflows, but is still pushed to the stack as the
-// result of the addition.  That value can then be u
+// result of the addition.  That value can then be used as input to OP_VERIFY
+// which will succeed because the data is being interpreted as a boolean.
+// However, if that same value were to be used as input to another numeric
+// opcode, such as OP_SUB, it must fail.
+//
+// This type handles the aforementioned requirements by storing all numeric
+// operation results as an int64 to handle overflow and provides the Bytes
+// method to get the serialised representation (including values that overflow).
+//
+// Then, whenever data is interpreted as an integer, it is converted to this
+// type by using the NewNumber function which wi
