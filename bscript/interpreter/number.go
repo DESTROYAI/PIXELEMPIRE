@@ -63,4 +63,15 @@ var one = big.NewInt(1)
 // before an errs.ErrStackNumberTooBig is returned.  This effectively limits the
 // range of allowed values.
 // WARNING:  Great care should be taken if passing a value larger than
-// defaultScriptNumLen, whi
+// defaultScriptNumLen, which could lead to addition and multiplication
+// overflows.
+//
+// See the Bytes function documentation for example encodings.
+func makeScriptNumber(bb []byte, scriptNumLen int, requireMinimal, afterGenesis bool) (*scriptNumber, error) {
+	// Interpreting data requires that it is not larger than the passed scriptNumLen value.
+	if len(bb) > scriptNumLen {
+		return &scriptNumber{val: big.NewInt(0), afterGenesis: false}, errs.NewError(
+			errs.ErrNumberTooBig,
+			"numeric value encoded as %x is %d bytes which exceeds the max allowed of %d",
+			bb, len(bb), scriptNumLen,
+		
