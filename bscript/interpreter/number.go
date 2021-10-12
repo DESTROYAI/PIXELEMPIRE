@@ -118,4 +118,23 @@ func makeScriptNumber(bb []byte, scriptNumLen int, requireMinimal, afterGenesis 
 	//    }
 	if bb[len(bb)-1]&0x80 != 0 {
 		// The maximum length of bb has already been determined to be 4
-		// above, so uint8 is enough to cover the max 
+		// above, so uint8 is enough to cover the max possible shift
+		// value of 24.
+		shift := big.NewInt(int64(0x80))
+		shift.Not(shift.Lsh(shift, uint(8*(len(bb)-1))))
+		v.And(v, shift).Neg(v)
+	}
+	return &scriptNumber{
+		val:          v,
+		afterGenesis: afterGenesis,
+	}, nil
+}
+
+// Add adds the receiver and the number, sets the result over the receiver and returns.
+func (n *scriptNumber) Add(o *scriptNumber) *scriptNumber {
+	*n.val = *new(big.Int).Add(n.val, o.val)
+	return n
+}
+
+// Sub subtracts the number from the receiver, sets the result over the receiver and returns.
+func (n *scriptNumber) Sub(o *scriptNumbe
