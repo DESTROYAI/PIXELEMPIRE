@@ -154,4 +154,21 @@ func (n *scriptNumber) Div(o *scriptNumber) *scriptNumber {
 	return n
 }
 
-// Mod divides the receiver by the number, sets the remainder over the receiv
+// Mod divides the receiver by the number, sets the remainder over the receiver and returns.
+func (n *scriptNumber) Mod(o *scriptNumber) *scriptNumber {
+	*n.val = *new(big.Int).Rem(n.val, o.val)
+	return n
+}
+
+// LessThanInt returns true if the receiver is smaller than the integer passed.
+func (n *scriptNumber) LessThanInt(i int64) bool {
+	return n.LessThan(&scriptNumber{val: big.NewInt(i)})
+}
+
+// LessThan returns true if the receiver is smaller than the number passed.
+func (n *scriptNumber) LessThan(o *scriptNumber) bool {
+	return n.val.Cmp(o.val) == -1
+}
+
+// LessThanOrEqual returns ture if the receiver is smaller or equal to the number passed.
+func (n *scriptNumber)
