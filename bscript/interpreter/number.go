@@ -186,4 +186,24 @@ func (n *scriptNumber) GreaterThan(o *scriptNumber) bool {
 }
 
 // GreaterThanOrEqual returns true if the receiver is larger or equal to the number passed.
-func (n *scriptNumber) Gr
+func (n *scriptNumber) GreaterThanOrEqual(o *scriptNumber) bool {
+	return n.val.Cmp(o.val) > -1
+}
+
+// EqualInt returns true if the receiver is equal to the integer passed.
+func (n *scriptNumber) EqualInt(i int64) bool {
+	return n.Equal(&scriptNumber{val: big.NewInt(i)})
+}
+
+// Equal returns true if the receiver is equal to the number passed.
+func (n *scriptNumber) Equal(o *scriptNumber) bool {
+	return n.val.Cmp(o.val) == 0
+}
+
+// IsZero return strue if hte receiver equals zero.
+func (n *scriptNumber) IsZero() bool {
+	return n.val.Cmp(zero) == 0
+}
+
+// Incr increment the receiver by one.
+func (n *scriptNumber) Incr() *scriptNumber
