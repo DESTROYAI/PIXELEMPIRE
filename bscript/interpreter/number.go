@@ -171,4 +171,19 @@ func (n *scriptNumber) LessThan(o *scriptNumber) bool {
 }
 
 // LessThanOrEqual returns ture if the receiver is smaller or equal to the number passed.
-func (n *scriptNumber)
+func (n *scriptNumber) LessThanOrEqual(o *scriptNumber) bool {
+	return n.val.Cmp(o.val) < 1
+}
+
+// GreaterThanInt returns true if the receiver is larger than the integer passed.
+func (n *scriptNumber) GreaterThanInt(i int64) bool {
+	return n.GreaterThan(&scriptNumber{val: big.NewInt(i)})
+}
+
+// GreaterThan returns true if the receiver is larger than the number passed.
+func (n *scriptNumber) GreaterThan(o *scriptNumber) bool {
+	return n.val.Cmp(o.val) == 1
+}
+
+// GreaterThanOrEqual returns true if the receiver is larger or equal to the number passed.
+func (n *scriptNumber) Gr
