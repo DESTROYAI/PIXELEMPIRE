@@ -230,4 +230,16 @@ func (n *scriptNumber) Abs() *scriptNumber {
 }
 
 // Int returns the receivers value as an int.
-func (n *scriptNu
+func (n *scriptNumber) Int() int {
+	return int(n.val.Int64())
+}
+
+// Int32 returns the Number clamped to a valid int32.  That is to say
+// when the script number is higher than the max allowed int32, the max int32
+// value is returned and vice versa for the minimum value.  Note that this
+// behaviour is different from a simple int32 cast because that truncates
+// and the consensus rules dictate numbers which are directly cast to integers
+// provide this behaviour.
+//
+// In practice, for most opcodes, the number should never be out of range since
+// it will have been created with makeSc
