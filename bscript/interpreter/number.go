@@ -206,4 +206,28 @@ func (n *scriptNumber) IsZero() bool {
 }
 
 // Incr increment the receiver by one.
-func (n *scriptNumber) Incr() *scriptNumber
+func (n *scriptNumber) Incr() *scriptNumber {
+	*n.val = *new(big.Int).Add(n.val, one)
+	return n
+}
+
+// Decr decrement the receiver by one.
+func (n *scriptNumber) Decr() *scriptNumber {
+	*n.val = *new(big.Int).Sub(n.val, one)
+	return n
+}
+
+// Neg sets the receiver to the negative of the receiver.
+func (n *scriptNumber) Neg() *scriptNumber {
+	*n.val = *new(big.Int).Neg(n.val)
+	return n
+}
+
+// Abs sets the receiver to the absolute value of hte receiver.
+func (n *scriptNumber) Abs() *scriptNumber {
+	*n.val = *new(big.Int).Abs(n.val)
+	return n
+}
+
+// Int returns the receivers value as an int.
+func (n *scriptNu
