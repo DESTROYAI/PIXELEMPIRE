@@ -242,4 +242,21 @@ func (n *scriptNumber) Int() int {
 // provide this behaviour.
 //
 // In practice, for most opcodes, the number should never be out of range since
-// it will have been created with makeSc
+// it will have been created with makeScriptNumber using the defaultScriptLen
+// value, which rejects them.  In case something in the future ends up calling
+// this function against the result of some arithmetic, which IS allowed to be
+// out of range before being reinterpreted as an integer, this will provide the
+// correct behaviour.
+func (n *scriptNumber) Int32() int32 {
+	v := n.val.Int64()
+	if v > math.MaxInt32 {
+		return math.MaxInt32
+	}
+	if v < math.MinInt32 {
+		return math.MinInt32
+	}
+	return int32(v)
+}
+
+// Int64 returns the Number clamped to a valid int64.  That is to say
+// when the s
