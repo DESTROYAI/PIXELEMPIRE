@@ -259,4 +259,13 @@ func (n *scriptNumber) Int32() int32 {
 }
 
 // Int64 returns the Number clamped to a valid int64.  That is to say
-// when the s
+// when the script number is higher than the max allowed int64, the max int64
+// value is returned and vice versa for the minimum value.  Note that this
+// behaviour is different from a simple int64 cast because that truncates
+// and the consensus rules dictate numbers which are directly cast to integers
+// provide this behaviour.
+//
+// In practice, for most opcodes, the number should never be out of range since
+// it will have been created with makeScriptNumber using the defaultScriptLen
+// value, which rejects them.  In case something in the future ends up calling
+// this function again
