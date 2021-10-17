@@ -268,4 +268,25 @@ func (n *scriptNumber) Int32() int32 {
 // In practice, for most opcodes, the number should never be out of range since
 // it will have been created with makeScriptNumber using the defaultScriptLen
 // value, which rejects them.  In case something in the future ends up calling
-// this function again
+// this function against the result of some arithmetic, which IS allowed to be
+// out of range before being reinterpreted as an integer, this will provide the
+// correct behaviour.
+func (n *scriptNumber) Int64() int64 {
+	if n.GreaterThanInt(math.MaxInt64) {
+		return math.MaxInt64
+	}
+	if n.LessThanInt(math.MinInt64) {
+		return math.MinInt64
+	}
+	return n.val.Int64()
+}
+
+// Set the value of the receiver.
+func (n *scriptNumber) Set(i int64) *scriptNumber {
+	*n.val = *new(big.Int).SetInt64(i)
+	return n
+}
+
+// Bytes returns the number serialised as a little endian with a sign bit.
+//
+// Example en
