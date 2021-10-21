@@ -315,4 +315,24 @@ func (n *scriptNumber) Bytes() []byte {
 		n.Neg()
 	}
 
-	var b
+	var bb []byte
+	if !n.afterGenesis {
+		v := n.val.Int64()
+		if v > math.MaxInt32 {
+			bb = big.NewInt(int64(math.MaxInt32)).Bytes()
+		} else if v < math.MinInt32 {
+			bb = big.NewInt(int64(math.MinInt32)).Bytes()
+		}
+	}
+	if bb == nil {
+		bb = n.val.Bytes()
+	}
+
+	// Encode to little endian.  The maximum number of encoded bytes is len(bb)+1
+	// (8 bytes for max int64 plus a potential byte for sign extension).
+	//
+	// The following is the equivalent of:
+	//    result := make([]byte, 0, len(bb)+1)
+	//    for n > 0 {
+	//        result = append(result, byte(n&0xff))
+	//        n 
