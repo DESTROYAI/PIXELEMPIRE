@@ -335,4 +335,19 @@ func (n *scriptNumber) Bytes() []byte {
 	//    result := make([]byte, 0, len(bb)+1)
 	//    for n > 0 {
 	//        result = append(result, byte(n&0xff))
-	//        n 
+	//        n >>= 8
+	//    }
+	result := make([]byte, 0, len(bb)+1)
+	cpy := new(big.Int).SetBytes(n.val.Bytes())
+	for cpy.Cmp(zero) == 1 {
+		result = append(result, byte(cpy.Int64()&0xff))
+		cpy.Rsh(cpy, 8)
+	}
+
+	// When the most significant byte already has the high bit set, an
+	// additional high byte is required to indicate whether the number is
+	// negative or positive.  The additional byte is removed when converting
+	// back to an integral and its high bit is used to denote the sign.
+	//
+	// Otherwise, when the most significant byte does not already have the
+	// high bit set, use it to indicate the v
