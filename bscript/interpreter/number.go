@@ -350,4 +350,40 @@ func (n *scriptNumber) Bytes() []byte {
 	// back to an integral and its high bit is used to denote the sign.
 	//
 	// Otherwise, when the most significant byte does not already have the
-	// high bit set, use it to indicate the v
+	// high bit set, use it to indicate the value is negative, if needed.
+	if result[len(result)-1]&0x80 != 0 {
+		extraByte := byte(0x00)
+		if isNegative {
+			extraByte = 0x80
+		}
+		result = append(result, extraByte)
+	} else if isNegative {
+		result[len(result)-1] |= 0x80
+	}
+
+	return result
+}
+
+func minimallyEncode(data []byte) []byte {
+	if len(data) == 0 {
+		return data
+	}
+
+	last := data[len(data)-1]
+	if last&0x7f != 0 {
+		return data
+	}
+
+	if len(data) == 1 {
+		return []byte{}
+	}
+
+	if data[len(data)-2]&0x80 != 0 {
+		return data
+	}
+
+	for i := len(data) - 1; i > 0; i-- {
+		if data[i-1] != 0 {
+			if data[i-1]&0x80 != 0 {
+				data[i] = last
+				
