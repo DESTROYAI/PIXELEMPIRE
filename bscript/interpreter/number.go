@@ -386,4 +386,30 @@ func minimallyEncode(data []byte) []byte {
 		if data[i-1] != 0 {
 			if data[i-1]&0x80 != 0 {
 				data[i] = last
-				
+				i++
+			} else {
+				data[i-1] |= last
+			}
+
+			return data[:i]
+		}
+	}
+
+	return []byte{}
+}
+
+// checkMinimalDataEncoding returns whether the passed byte array adheres
+// to the minimal encoding requirements.
+func checkMinimalDataEncoding(v []byte) error {
+	if len(v) == 0 {
+		return nil
+	}
+
+	// Check that the number is encoded with the minimum possible
+	// number of bytes.
+	//
+	// If the most-significant-byte - excluding the sign bit - is zero
+	// then we're not minimal.  Note how this test also rejects the
+	// negative-zero encoding, [0x80].
+	if v[len(v)-1]&0x7f == 0 {
+		/
