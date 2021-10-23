@@ -412,4 +412,15 @@ func checkMinimalDataEncoding(v []byte) error {
 	// then we're not minimal.  Note how this test also rejects the
 	// negative-zero encoding, [0x80].
 	if v[len(v)-1]&0x7f == 0 {
-		/
+		// One exception: if there's more than one byte and the most
+		// significant bit of the second-most-significant-byte is set
+		// it would conflict with the sign bit.  An example of this case
+		// is +-255, which encode to 0xff00 and 0xff80 respectively.
+		// (big-endian).
+		if len(v) == 1 || v[len(v)-2]&0x80 == 0 {
+			return errs.NewError(errs.ErrMinimalData, "numeric value encoded as %x is not minimally encoded", v)
+		}
+	}
+
+	return nil
+}
