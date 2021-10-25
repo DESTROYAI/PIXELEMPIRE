@@ -62,4 +62,11 @@ var opcodeArray = [256]opcode{
 	bscript.OpDATA20:    {bscript.OpDATA20, "OP_DATA_20", 21, opcodePushData},
 	bscript.OpDATA21:    {bscript.OpDATA21, "OP_DATA_21", 22, opcodePushData},
 	bscript.OpDATA22:    {bscript.OpDATA22, "OP_DATA_22", 23, opcodePushData},
-	
+	bscript.OpDATA23:    {bscript.OpDATA23, "OP_DATA_23", 24, opcodePushData},
+	bscript.OpDATA24:    {bscript.OpDATA24, "OP_DATA_24", 25, opcodePushData},
+	bscript.OpDATA25:    {bscript.OpDATA25, "OP_DATA_25", 26, opcodePushData},
+	bscript.OpDATA26:    {bscript.OpDATA26, "OP_DATA_26", 27, opcodePushData},
+	bscript.OpDATA27:    {bscript.OpDATA27, "OP_DATA_27", 28, opcodePushData},
+	bscript.OpDATA28:    {bscript.OpDATA28, "OP_DATA_28", 29, opcodePushData},
+	bscript.OpDATA29:    {bscript.OpDATA29, "OP_DATA_29", 30, opcodePushData},
+	bscript.OpDATA30:    {bscript.Op
