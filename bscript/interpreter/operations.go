@@ -36,4 +36,14 @@ func (o opcode) Name() string {
 }
 
 // opcodeArray associates an opcode with its respective function, and defines them in order as to
-// be corre
+// be correctly placed in an array
+var opcodeArray = [256]opcode{
+	// Data push opcodes.
+	bscript.OpFALSE:     {bscript.OpFALSE, "OP_0", 1, opcodeFalse},
+	bscript.OpDATA1:     {bscript.OpDATA1, "OP_DATA_1", 2, opcodePushData},
+	bscript.OpDATA2:     {bscript.OpDATA2, "OP_DATA_2", 3, opcodePushData},
+	bscript.OpDATA3:     {bscript.OpDATA3, "OP_DATA_3", 4, opcodePushData},
+	bscript.OpDATA4:     {bscript.OpDATA4, "OP_DATA_4", 5, opcodePushData},
+	bscript.OpDATA5:     {bscript.OpDATA5, "OP_DATA_5", 6, opcodePushData},
+	bscript.OpDATA6:     {bscript.OpDATA6, "OP_DATA_6", 7, opcodePushData},
+	bscript.OpDATA7:     {bscript.
