@@ -148,4 +148,13 @@ var opcodeArray = [256]opcode{
 	bscript.OpENDIF:               {bscript.OpENDIF, "OP_ENDIF", 1, opcodeEndif},
 	bscript.OpVERIFY:              {bscript.OpVERIFY, "OP_VERIFY", 1, opcodeVerify},
 	bscript.OpRETURN:              {bscript.OpRETURN, "OP_RETURN", 1, opcodeReturn},
-	bscript.OpCHECKLOCKTIMEVERIFY: {bscript.OpCHECKLOCKTIMEVERIFY, "OP_CHECKLOCKTIMEVERIFY", 1, 
+	bscript.OpCHECKLOCKTIMEVERIFY: {bscript.OpCHECKLOCKTIMEVERIFY, "OP_CHECKLOCKTIMEVERIFY", 1, opcodeCheckLockTimeVerify},
+	bscript.OpCHECKSEQUENCEVERIFY: {bscript.OpCHECKSEQUENCEVERIFY, "OP_CHECKSEQUENCEVERIFY", 1, opcodeCheckSequenceVerify},
+
+	// Stack opcodes.
+	bscript.OpTOALTSTACK:   {bscript.OpTOALTSTACK, "OP_TOALTSTACK", 1, opcodeToAltStack},
+	bscript.OpFROMALTSTACK: {bscript.OpFROMALTSTACK, "OP_FROMALTSTACK", 1, opcodeFromAltStack},
+	bscript.Op2DROP:        {bscript.Op2DROP, "OP_2DROP", 1, opcode2Drop},
+	bscript.Op2DUP:         {bscript.Op2DUP, "OP_2DUP", 1, opcode2Dup},
+	bscript.Op3DUP:         {bscript.Op3DUP, "OP_3DUP", 1, opcode3Dup},
+	bscript.Op2OVER:        {bs
