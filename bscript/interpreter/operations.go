@@ -142,4 +142,10 @@ var opcodeArray = [256]opcode{
 	bscript.OpVER:                 {bscript.OpVER, "OP_VER", 1, opcodeReserved},
 	bscript.OpIF:                  {bscript.OpIF, "OP_IF", 1, opcodeIf},
 	bscript.OpNOTIF:               {bscript.OpNOTIF, "OP_NOTIF", 1, opcodeNotIf},
-	bscript.OpVERIF:               {bscri
+	bscript.OpVERIF:               {bscript.OpVERIF, "OP_VERIF", 1, opcodeVerConditional},
+	bscript.OpVERNOTIF:            {bscript.OpVERNOTIF, "OP_VERNOTIF", 1, opcodeVerConditional},
+	bscript.OpELSE:                {bscript.OpELSE, "OP_ELSE", 1, opcodeElse},
+	bscript.OpENDIF:               {bscript.OpENDIF, "OP_ENDIF", 1, opcodeEndif},
+	bscript.OpVERIFY:              {bscript.OpVERIFY, "OP_VERIFY", 1, opcodeVerify},
+	bscript.OpRETURN:              {bscript.OpRETURN, "OP_RETURN", 1, opcodeReturn},
+	bscript.OpCHECKLOCKTIMEVERIFY: {bscript.OpCHECKLOCKTIMEVERIFY, "OP_CHECKLOCKTIMEVERIFY", 1, 
