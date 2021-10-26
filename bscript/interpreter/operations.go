@@ -132,4 +132,14 @@ var opcodeArray = [256]opcode{
 	bscript.Op10:        {bscript.Op10, "OP_10", 1, opcodeN},
 	bscript.Op11:        {bscript.Op11, "OP_11", 1, opcodeN},
 	bscript.Op12:        {bscript.Op12, "OP_12", 1, opcodeN},
-	bscript.Op13:      
+	bscript.Op13:        {bscript.Op13, "OP_13", 1, opcodeN},
+	bscript.Op14:        {bscript.Op14, "OP_14", 1, opcodeN},
+	bscript.Op15:        {bscript.Op15, "OP_15", 1, opcodeN},
+	bscript.Op16:        {bscript.Op16, "OP_16", 1, opcodeN},
+
+	// Control opcodes.
+	bscript.OpNOP:                 {bscript.OpNOP, "OP_NOP", 1, opcodeNop},
+	bscript.OpVER:                 {bscript.OpVER, "OP_VER", 1, opcodeReserved},
+	bscript.OpIF:                  {bscript.OpIF, "OP_IF", 1, opcodeIf},
+	bscript.OpNOTIF:               {bscript.OpNOTIF, "OP_NOTIF", 1, opcodeNotIf},
+	bscript.OpVERIF:               {bscri
