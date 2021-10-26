@@ -123,4 +123,13 @@ var opcodeArray = [256]opcode{
 	bscript.OpTRUE:      {bscript.OpTRUE, "OP_1", 1, opcodeN},
 	bscript.Op2:         {bscript.Op2, "OP_2", 1, opcodeN},
 	bscript.Op3:         {bscript.Op3, "OP_3", 1, opcodeN},
-	bscript.
+	bscript.Op4:         {bscript.Op4, "OP_4", 1, opcodeN},
+	bscript.Op5:         {bscript.Op5, "OP_5", 1, opcodeN},
+	bscript.Op6:         {bscript.Op6, "OP_6", 1, opcodeN},
+	bscript.Op7:         {bscript.Op7, "OP_7", 1, opcodeN},
+	bscript.Op8:         {bscript.Op8, "OP_8", 1, opcodeN},
+	bscript.Op9:         {bscript.Op9, "OP_9", 1, opcodeN},
+	bscript.Op10:        {bscript.Op10, "OP_10", 1, opcodeN},
+	bscript.Op11:        {bscript.Op11, "OP_11", 1, opcodeN},
+	bscript.Op12:        {bscript.Op12, "OP_12", 1, opcodeN},
+	bscript.Op13:      
