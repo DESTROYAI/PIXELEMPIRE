@@ -157,4 +157,12 @@ var opcodeArray = [256]opcode{
 	bscript.Op2DROP:        {bscript.Op2DROP, "OP_2DROP", 1, opcode2Drop},
 	bscript.Op2DUP:         {bscript.Op2DUP, "OP_2DUP", 1, opcode2Dup},
 	bscript.Op3DUP:         {bscript.Op3DUP, "OP_3DUP", 1, opcode3Dup},
-	bscript.Op2OVER:        {bs
+	bscript.Op2OVER:        {bscript.Op2OVER, "OP_2OVER", 1, opcode2Over},
+	bscript.Op2ROT:         {bscript.Op2ROT, "OP_2ROT", 1, opcode2Rot},
+	bscript.Op2SWAP:        {bscript.Op2SWAP, "OP_2SWAP", 1, opcode2Swap},
+	bscript.OpIFDUP:        {bscript.OpIFDUP, "OP_IFDUP", 1, opcodeIfDup},
+	bscript.OpDEPTH:        {bscript.OpDEPTH, "OP_DEPTH", 1, opcodeDepth},
+	bscript.OpDROP:         {bscript.OpDROP, "OP_DROP", 1, opcodeDrop},
+	bscript.OpDUP:          {bscript.OpDUP, "OP_DUP", 1, opcodeDup},
+	bscript.OpNIP:          {bscript.OpNIP, "OP_NIP", 1, opcodeNip},
+	bscript.OpOVER:  
