@@ -175,4 +175,14 @@ var opcodeArray = [256]opcode{
 	// Splice opcodes.
 	bscript.OpCAT:     {bscript.OpCAT, "OP_CAT", 1, opcodeCat},
 	bscript.OpSPLIT:   {bscript.OpSPLIT, "OP_SPLIT", 1, opcodeSplit},
-	bscript.OpNUM2BIN: {bs
+	bscript.OpNUM2BIN: {bscript.OpNUM2BIN, "OP_NUM2BIN", 1, opcodeNum2bin},
+	bscript.OpBIN2NUM: {bscript.OpBIN2NUM, "OP_BIN2NUM", 1, opcodeBin2num},
+	bscript.OpSIZE:    {bscript.OpSIZE, "OP_SIZE", 1, opcodeSize},
+
+	// Bitwise logic opcodes.
+	bscript.OpINVERT:      {bscript.OpINVERT, "OP_INVERT", 1, opcodeInvert},
+	bscript.OpAND:         {bscript.OpAND, "OP_AND", 1, opcodeAnd},
+	bscript.OpOR:          {bscript.OpOR, "OP_OR", 1, opcodeOr},
+	bscript.OpXOR:         {bscript.OpXOR, "OP_XOR", 1, opcodeXor},
+	bscript.OpEQUAL:       {bscript.OpEQUAL, "OP_EQUAL", 1, opcodeEqual},
+	bscript.OpEQUALVERIFY: {bscript
