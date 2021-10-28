@@ -165,4 +165,14 @@ var opcodeArray = [256]opcode{
 	bscript.OpDROP:         {bscript.OpDROP, "OP_DROP", 1, opcodeDrop},
 	bscript.OpDUP:          {bscript.OpDUP, "OP_DUP", 1, opcodeDup},
 	bscript.OpNIP:          {bscript.OpNIP, "OP_NIP", 1, opcodeNip},
-	bscript.OpOVER:  
+	bscript.OpOVER:         {bscript.OpOVER, "OP_OVER", 1, opcodeOver},
+	bscript.OpPICK:         {bscript.OpPICK, "OP_PICK", 1, opcodePick},
+	bscript.OpROLL:         {bscript.OpROLL, "OP_ROLL", 1, opcodeRoll},
+	bscript.OpROT:          {bscript.OpROT, "OP_ROT", 1, opcodeRot},
+	bscript.OpSWAP:         {bscript.OpSWAP, "OP_SWAP", 1, opcodeSwap},
+	bscript.OpTUCK:         {bscript.OpTUCK, "OP_TUCK", 1, opcodeTuck},
+
+	// Splice opcodes.
+	bscript.OpCAT:     {bscript.OpCAT, "OP_CAT", 1, opcodeCat},
+	bscript.OpSPLIT:   {bscript.OpSPLIT, "OP_SPLIT", 1, opcodeSplit},
+	bscript.OpNUM2BIN: {bs
