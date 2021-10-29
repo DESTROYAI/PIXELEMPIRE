@@ -215,4 +215,13 @@ var opcodeArray = [256]opcode{
 	bscript.OpLESSTHANOREQUAL:    {bscript.OpLESSTHANOREQUAL, "OP_LESSTHANOREQUAL", 1, opcodeLessThanOrEqual},
 	bscript.OpGREATERTHANOREQUAL: {bscript.OpGREATERTHANOREQUAL, "OP_GREATERTHANOREQUAL", 1, opcodeGreaterThanOrEqual},
 	bscript.OpMIN:                {bscript.OpMIN, "OP_MIN", 1, opcodeMin},
-	bscript.OpMAX:                {bscript.OpMAX, "OP_MAX
+	bscript.OpMAX:                {bscript.OpMAX, "OP_MAX", 1, opcodeMax},
+	bscript.OpWITHIN:             {bscript.OpWITHIN, "OP_WITHIN", 1, opcodeWithin},
+
+	// Crypto opcodes.
+	bscript.OpRIPEMD160:           {bscript.OpRIPEMD160, "OP_RIPEMD160", 1, opcodeRipemd160},
+	bscript.OpSHA1:                {bscript.OpSHA1, "OP_SHA1", 1, opcodeSha1},
+	bscript.OpSHA256:              {bscript.OpSHA256, "OP_SHA256", 1, opcodeSha256},
+	bscript.OpHASH160:             {bscript.OpHASH160, "OP_HASH160", 1, opcodeHash160},
+	bscript.OpHASH256:             {bscript.OpHASH256, "OP_HASH256", 1, opcodeHash256},
+	bscript.OpCODESEPARATOR:       {bscrip
