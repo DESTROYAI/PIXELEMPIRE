@@ -202,4 +202,11 @@ var opcodeArray = [256]opcode{
 	bscript.OpSUB:                {bscript.OpSUB, "OP_SUB", 1, opcodeSub},
 	bscript.OpMUL:                {bscript.OpMUL, "OP_MUL", 1, opcodeMul},
 	bscript.OpDIV:                {bscript.OpDIV, "OP_DIV", 1, opcodeDiv},
-	bscript.OpMOD:           
+	bscript.OpMOD:                {bscript.OpMOD, "OP_MOD", 1, opcodeMod},
+	bscript.OpLSHIFT:             {bscript.OpLSHIFT, "OP_LSHIFT", 1, opcodeLShift},
+	bscript.OpRSHIFT:             {bscript.OpRSHIFT, "OP_RSHIFT", 1, opcodeRShift},
+	bscript.OpBOOLAND:            {bscript.OpBOOLAND, "OP_BOOLAND", 1, opcodeBoolAnd},
+	bscript.OpBOOLOR:             {bscript.OpBOOLOR, "OP_BOOLOR", 1, opcodeBoolOr},
+	bscript.OpNUMEQUAL:           {bscript.OpNUMEQUAL, "OP_NUMEQUAL", 1, opcodeNumEqual},
+	bscript.OpNUMEQUALVERIFY:     {bscript.OpNUMEQUALVERIFY, "OP_NUMEQUALVERIFY", 1, opcodeNumEqualVerify},
+	bs
