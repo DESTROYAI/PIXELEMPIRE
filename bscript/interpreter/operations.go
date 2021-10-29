@@ -209,4 +209,10 @@ var opcodeArray = [256]opcode{
 	bscript.OpBOOLOR:             {bscript.OpBOOLOR, "OP_BOOLOR", 1, opcodeBoolOr},
 	bscript.OpNUMEQUAL:           {bscript.OpNUMEQUAL, "OP_NUMEQUAL", 1, opcodeNumEqual},
 	bscript.OpNUMEQUALVERIFY:     {bscript.OpNUMEQUALVERIFY, "OP_NUMEQUALVERIFY", 1, opcodeNumEqualVerify},
-	bs
+	bscript.OpNUMNOTEQUAL:        {bscript.OpNUMNOTEQUAL, "OP_NUMNOTEQUAL", 1, opcodeNumNotEqual},
+	bscript.OpLESSTHAN:           {bscript.OpLESSTHAN, "OP_LESSTHAN", 1, opcodeLessThan},
+	bscript.OpGREATERTHAN:        {bscript.OpGREATERTHAN, "OP_GREATERTHAN", 1, opcodeGreaterThan},
+	bscript.OpLESSTHANOREQUAL:    {bscript.OpLESSTHANOREQUAL, "OP_LESSTHANOREQUAL", 1, opcodeLessThanOrEqual},
+	bscript.OpGREATERTHANOREQUAL: {bscript.OpGREATERTHANOREQUAL, "OP_GREATERTHANOREQUAL", 1, opcodeGreaterThanOrEqual},
+	bscript.OpMIN:                {bscript.OpMIN, "OP_MIN", 1, opcodeMin},
+	bscript.OpMAX:                {bscript.OpMAX, "OP_MAX
