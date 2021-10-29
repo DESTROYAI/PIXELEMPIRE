@@ -185,4 +185,13 @@ var opcodeArray = [256]opcode{
 	bscript.OpOR:          {bscript.OpOR, "OP_OR", 1, opcodeOr},
 	bscript.OpXOR:         {bscript.OpXOR, "OP_XOR", 1, opcodeXor},
 	bscript.OpEQUAL:       {bscript.OpEQUAL, "OP_EQUAL", 1, opcodeEqual},
-	bscript.OpEQUALVERIFY: {bscript
+	bscript.OpEQUALVERIFY: {bscript.OpEQUALVERIFY, "OP_EQUALVERIFY", 1, opcodeEqualVerify},
+	bscript.OpRESERVED1:   {bscript.OpRESERVED1, "OP_RESERVED1", 1, opcodeReserved},
+	bscript.OpRESERVED2:   {bscript.OpRESERVED2, "OP_RESERVED2", 1, opcodeReserved},
+
+	// Numeric related opcodes.
+	bscript.Op1ADD:               {bscript.Op1ADD, "OP_1ADD", 1, opcode1Add},
+	bscript.Op1SUB:               {bscript.Op1SUB, "OP_1SUB", 1, opcode1Sub},
+	bscript.Op2MUL:               {bscript.Op2MUL, "OP_2MUL", 1, opcodeDisabled},
+	bscript.Op2DIV:               {bscript.Op2DIV, "OP_2DIV", 1, opcodeDisabled},
+	bscript.OpNEGATE:        
