@@ -194,4 +194,12 @@ var opcodeArray = [256]opcode{
 	bscript.Op1SUB:               {bscript.Op1SUB, "OP_1SUB", 1, opcode1Sub},
 	bscript.Op2MUL:               {bscript.Op2MUL, "OP_2MUL", 1, opcodeDisabled},
 	bscript.Op2DIV:               {bscript.Op2DIV, "OP_2DIV", 1, opcodeDisabled},
-	bscript.OpNEGATE:        
+	bscript.OpNEGATE:             {bscript.OpNEGATE, "OP_NEGATE", 1, opcodeNegate},
+	bscript.OpABS:                {bscript.OpABS, "OP_ABS", 1, opcodeAbs},
+	bscript.OpNOT:                {bscript.OpNOT, "OP_NOT", 1, opcodeNot},
+	bscript.Op0NOTEQUAL:          {bscript.Op0NOTEQUAL, "OP_0NOTEQUAL", 1, opcode0NotEqual},
+	bscript.OpADD:                {bscript.OpADD, "OP_ADD", 1, opcodeAdd},
+	bscript.OpSUB:                {bscript.OpSUB, "OP_SUB", 1, opcodeSub},
+	bscript.OpMUL:                {bscript.OpMUL, "OP_MUL", 1, opcodeMul},
+	bscript.OpDIV:                {bscript.OpDIV, "OP_DIV", 1, opcodeDiv},
+	bscript.OpMOD:           
