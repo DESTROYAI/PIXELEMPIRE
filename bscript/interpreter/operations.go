@@ -224,4 +224,12 @@ var opcodeArray = [256]opcode{
 	bscript.OpSHA256:              {bscript.OpSHA256, "OP_SHA256", 1, opcodeSha256},
 	bscript.OpHASH160:             {bscript.OpHASH160, "OP_HASH160", 1, opcodeHash160},
 	bscript.OpHASH256:             {bscript.OpHASH256, "OP_HASH256", 1, opcodeHash256},
-	bscript.OpCODESEPARATOR:       {bscrip
+	bscript.OpCODESEPARATOR:       {bscript.OpCODESEPARATOR, "OP_CODESEPARATOR", 1, opcodeCodeSeparator},
+	bscript.OpCHECKSIG:            {bscript.OpCHECKSIG, "OP_CHECKSIG", 1, opcodeCheckSig},
+	bscript.OpCHECKSIGVERIFY:      {bscript.OpCHECKSIGVERIFY, "OP_CHECKSIGVERIFY", 1, opcodeCheckSigVerify},
+	bscript.OpCHECKMULTISIG:       {bscript.OpCHECKMULTISIG, "OP_CHECKMULTISIG", 1, opcodeCheckMultiSig},
+	bscript.OpCHECKMULTISIGVERIFY: {bscript.OpCHECKMULTISIGVERIFY, "OP_CHECKMULTISIGVERIFY", 1, opcodeCheckMultiSigVerify},
+
+	// Reserved opcodes.
+	bscript.OpNOP1:  {bscript.OpNOP1, "OP_NOP1", 1, opcodeNop},
+	bscript.OpNOP4:  {bscript.OpNO
