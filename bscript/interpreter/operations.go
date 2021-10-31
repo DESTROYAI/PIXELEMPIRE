@@ -243,4 +243,11 @@ var opcodeArray = [256]opcode{
 	// Undefined opcodes.
 	bscript.OpUNKNOWN186: {bscript.OpUNKNOWN186, "OP_UNKNOWN186", 1, opcodeInvalid},
 	bscript.OpUNKNOWN187: {bscript.OpUNKNOWN187, "OP_UNKNOWN187", 1, opcodeInvalid},
-	bscript.OpUNKNOWN188: {bscript.OpUNKNOWN18
+	bscript.OpUNKNOWN188: {bscript.OpUNKNOWN188, "OP_UNKNOWN188", 1, opcodeInvalid},
+	bscript.OpUNKNOWN189: {bscript.OpUNKNOWN189, "OP_UNKNOWN189", 1, opcodeInvalid},
+	bscript.OpUNKNOWN190: {bscript.OpUNKNOWN190, "OP_UNKNOWN190", 1, opcodeInvalid},
+	bscript.OpUNKNOWN191: {bscript.OpUNKNOWN191, "OP_UNKNOWN191", 1, opcodeInvalid},
+	bscript.OpUNKNOWN192: {bscript.OpUNKNOWN192, "OP_UNKNOWN192", 1, opcodeInvalid},
+	bscript.OpUNKNOWN193: {bscript.OpUNKNOWN193, "OP_UNKNOWN193", 1, opcodeInvalid},
+	bscript.OpUNKNOWN194: {bscript.OpUNKNOWN194, "OP_UNKNOWN194", 1, opcodeInvalid},
+	bscript.OpUNKNOWN195: {bs
