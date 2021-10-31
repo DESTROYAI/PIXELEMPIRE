@@ -232,4 +232,15 @@ var opcodeArray = [256]opcode{
 
 	// Reserved opcodes.
 	bscript.OpNOP1:  {bscript.OpNOP1, "OP_NOP1", 1, opcodeNop},
-	bscript.OpNOP4:  {bscript.OpNO
+	bscript.OpNOP4:  {bscript.OpNOP4, "OP_NOP4", 1, opcodeNop},
+	bscript.OpNOP5:  {bscript.OpNOP5, "OP_NOP5", 1, opcodeNop},
+	bscript.OpNOP6:  {bscript.OpNOP6, "OP_NOP6", 1, opcodeNop},
+	bscript.OpNOP7:  {bscript.OpNOP7, "OP_NOP7", 1, opcodeNop},
+	bscript.OpNOP8:  {bscript.OpNOP8, "OP_NOP8", 1, opcodeNop},
+	bscript.OpNOP9:  {bscript.OpNOP9, "OP_NOP9", 1, opcodeNop},
+	bscript.OpNOP10: {bscript.OpNOP10, "OP_NOP10", 1, opcodeNop},
+
+	// Undefined opcodes.
+	bscript.OpUNKNOWN186: {bscript.OpUNKNOWN186, "OP_UNKNOWN186", 1, opcodeInvalid},
+	bscript.OpUNKNOWN187: {bscript.OpUNKNOWN187, "OP_UNKNOWN187", 1, opcodeInvalid},
+	bscript.OpUNKNOWN188: {bscript.OpUNKNOWN18
