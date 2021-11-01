@@ -299,4 +299,12 @@ var opcodeArray = [256]opcode{
 	bscript.OpUNKNOWN241: {bscript.OpUNKNOWN241, "OP_UNKNOWN241", 1, opcodeInvalid},
 	bscript.OpUNKNOWN242: {bscript.OpUNKNOWN242, "OP_UNKNOWN242", 1, opcodeInvalid},
 	bscript.OpUNKNOWN243: {bscript.OpUNKNOWN243, "OP_UNKNOWN243", 1, opcodeInvalid},
-	bscript.OpU
+	bscript.OpUNKNOWN244: {bscript.OpUNKNOWN244, "OP_UNKNOWN244", 1, opcodeInvalid},
+	bscript.OpUNKNOWN245: {bscript.OpUNKNOWN245, "OP_UNKNOWN245", 1, opcodeInvalid},
+	bscript.OpUNKNOWN246: {bscript.OpUNKNOWN246, "OP_UNKNOWN246", 1, opcodeInvalid},
+	bscript.OpUNKNOWN247: {bscript.OpUNKNOWN247, "OP_UNKNOWN247", 1, opcodeInvalid},
+	bscript.OpUNKNOWN248: {bscript.OpUNKNOWN248, "OP_UNKNOWN248", 1, opcodeInvalid},
+	bscript.OpUNKNOWN249: {bscript.OpUNKNOWN249, "OP_UNKNOWN249", 1, opcodeInvalid},
+
+	// Bitcoin Core internal use opcode.  Defined here for completeness.
+	bscript.OpSMALLINTEGER: {bscript.OpSMALLINTEGER, "OP_
