@@ -320,4 +320,14 @@ var opcodeArray = [256]opcode{
 // Opcode implementation functions start here.
 // *******************************************
 
-//
+// opcodeDisabled is a common handler for disabled opcodes.  It returns an
+// appropriate error indicating the opcode is disabled.  While it would
+// ordinarily make more sense to detect if the script contains any disabled
+// opcodes before executing in an initial parse step, the consensus rules
+// dictate the script doesn't fail until the program counter passes over a
+// disabled opcode (even when they appear in a branch that is not executed).
+func opcodeDisabled(op *ParsedOpcode, t *thread) error {
+	return errs.NewError(errs.ErrDisabledOpcode, "attempt to execute disabled opcode %s", op.Name())
+}
+
+func
