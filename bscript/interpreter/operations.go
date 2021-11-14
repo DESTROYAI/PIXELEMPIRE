@@ -358,4 +358,22 @@ func opcodeFalse(op *ParsedOpcode, t *thread) error {
 }
 
 // opcodePushData is a common handler for the vast majority of opcodes that push
-// raw data (bytes) to th
+// raw data (bytes) to the data stack.
+func opcodePushData(op *ParsedOpcode, t *thread) error {
+	t.dstack.PushByteArray(op.Data)
+	return nil
+}
+
+// opcode1Negate pushes -1, encoded as a number, to the data stack.
+func opcode1Negate(op *ParsedOpcode, t *thread) error {
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.NewInt(-1),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// opcodeN is a common handler for the small integer data push opcodes.  It
+// pushes the numeric value the opcode represents (which will be from 1 to 16)
+// onto the data stack.
+func opcodeN(op *ParsedOpcode, t *threa
