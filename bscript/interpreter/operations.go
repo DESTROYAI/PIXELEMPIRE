@@ -451,4 +451,22 @@ func opcodeIf(op *ParsedOpcode, t *thread) error {
 				condVal = opCondTrue
 			}
 		} else {
-			condVal = op
+			condVal = opCondSkip
+		}
+	}
+
+	t.condStack = append(t.condStack, condVal)
+	t.elseStack.PushBool(false)
+	return nil
+}
+
+// opcodeNotIf treats the top item on the data stack as a boolean and removes
+// it.
+//
+// An appropriate entry is added to the conditional stack depending on whether
+// the boolean is true and whether this if is on an executing branch in order
+// to allow proper execution of further opcodes depending on the conditional
+// logic.  When the boolean is false, the first branch will be executed (unless
+// this opcode is nested in a non-executed branch).
+//
+// <expression> notif [statements] [else [stat
