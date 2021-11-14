@@ -330,4 +330,18 @@ func opcodeDisabled(op *ParsedOpcode, t *thread) error {
 	return errs.NewError(errs.ErrDisabledOpcode, "attempt to execute disabled opcode %s", op.Name())
 }
 
-func
+func opcodeVerConditional(op *ParsedOpcode, t *thread) error {
+	if t.afterGenesis && !t.shouldExec(*op) {
+		return nil
+	}
+	return opcodeReserved(op, t)
+}
+
+// opcodeReserved is a common handler for all reserved opcodes.  It returns an
+// appropriate error indicating the opcode is reserved.
+func opcodeReserved(op *ParsedOpcode, t *thread) error {
+	return errs.NewError(errs.ErrReservedOpcode, "attempt to execute reserved opcode %s", op.Name())
+}
+
+// opcodeInvalid is a common handler for all invalid opcodes.  It returns an
+// appropriate error indicating the opcode is invalid
