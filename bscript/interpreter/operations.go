@@ -376,4 +376,17 @@ func opcode1Negate(op *ParsedOpcode, t *thread) error {
 // opcodeN is a common handler for the small integer data push opcodes.  It
 // pushes the numeric value the opcode represents (which will be from 1 to 16)
 // onto the data stack.
-func opcodeN(op *ParsedOpcode, t *threa
+func opcodeN(op *ParsedOpcode, t *thread) error {
+	// The opcodes are all defined consecutively, so the numeric value is
+	// the difference.
+	t.dstack.PushByteArray([]byte{(op.op.val - (bscript.Op1 - 1))})
+	return nil
+}
+
+// opcodeNop is a common handler for the NOP family of opcodes.  As the name
+// implies it generally does nothing, however, it will return an error when
+// the flag to discourage use of NOPs is set for select opcodes.
+func opcodeNop(op *ParsedOpcode, t *thread) error {
+	switch op.op.val {
+	case bscript.OpNOP1, bscript.OpNOP4, bscript.OpNOP5,
+		bscript.OpNOP6, bscript.OpNOP7, bscript.OpNOP8, bscript.OpN
