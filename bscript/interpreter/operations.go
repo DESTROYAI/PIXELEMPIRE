@@ -413,4 +413,20 @@ func popIfBool(t *thread) (bool, error) {
 		if len(b) > 1 {
 			return false, errs.NewError(errs.ErrMinimalIf, "conditionl has data of length %d", len(b))
 		}
-		if
+		if len(b) == 1 && b[0] != 1 {
+			return false, errs.NewError(errs.ErrMinimalIf, "conditional failed")
+		}
+
+		return asBool(b), nil
+	}
+
+	return t.dstack.PopBool()
+}
+
+// opcodeIf treats the top item on the data stack as a boolean and removes it.
+//
+// An appropriate entry is added to the conditional stack depending on whether
+// the boolean is true and whether this if is on an executing branch in order
+// to allow proper execution of further opcodes depending on the conditional
+// logic.  When the boolean is true, the first branch will be executed (unless
+// this 
