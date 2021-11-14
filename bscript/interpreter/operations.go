@@ -469,4 +469,24 @@ func opcodeIf(op *ParsedOpcode, t *thread) error {
 // logic.  When the boolean is false, the first branch will be executed (unless
 // this opcode is nested in a non-executed branch).
 //
-// <expression> notif [statements] [else [stat
+// <expression> notif [statements] [else [statements]] endif
+//
+// Note that, unlike for all non-conditional opcodes, this is executed even when
+// it is on a non-executing branch so proper nesting is maintained.
+//
+// Data stack transformation: [... bool] -> [...]
+// Conditional stack transformation: [...] -> [... OpCondValue]
+func opcodeNotIf(op *ParsedOpcode, t *thread) error {
+	condVal := opCondFalse
+	if t.shouldExec(*op) {
+		if t.isBranchExecuting() {
+			ok, err := popIfBool(t)
+			if err != nil {
+				return err
+			}
+
+			if !ok {
+				condVal = opCondTrue
+			}
+		} else {
+			condVal = opCondS
