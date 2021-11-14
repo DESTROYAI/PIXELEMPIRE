@@ -389,4 +389,28 @@ func opcodeN(op *ParsedOpcode, t *thread) error {
 func opcodeNop(op *ParsedOpcode, t *thread) error {
 	switch op.op.val {
 	case bscript.OpNOP1, bscript.OpNOP4, bscript.OpNOP5,
-		bscript.OpNOP6, bscript.OpNOP7, bscript.OpNOP8, bscript.OpN
+		bscript.OpNOP6, bscript.OpNOP7, bscript.OpNOP8, bscript.OpNOP9, bscript.OpNOP10:
+		if t.hasFlag(scriptflag.DiscourageUpgradableNops) {
+			return errs.NewError(
+				errs.ErrDiscourageUpgradableNOPs,
+				"bscript.OpNOP%d reserved for soft-fork upgrades",
+				op.op.val-(bscript.OpNOP1-1),
+			)
+		}
+	}
+
+	return nil
+}
+
+// popIfBool pops the top item off the stack and returns a bool
+func popIfBool(t *thread) (bool, error) {
+	if t.hasFlag(scriptflag.VerifyMinimalIf) {
+		b, err := t.dstack.PopByteArray()
+		if err != nil {
+			return false, err
+		}
+
+		if len(b) > 1 {
+			return false, errs.NewError(errs.ErrMinimalIf, "conditionl has data of length %d", len(b))
+		}
+		if
