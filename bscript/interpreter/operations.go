@@ -344,4 +344,18 @@ func opcodeReserved(op *ParsedOpcode, t *thread) error {
 }
 
 // opcodeInvalid is a common handler for all invalid opcodes.  It returns an
-// appropriate error indicating the opcode is invalid
+// appropriate error indicating the opcode is invalid.
+func opcodeInvalid(op *ParsedOpcode, t *thread) error {
+	return errs.NewError(errs.ErrReservedOpcode, "attempt to execute invalid opcode %s", op.Name())
+}
+
+// opcodeFalse pushes an empty array to the data stack to represent false.  Note
+// that 0, when encoded as a number according to the numeric encoding consensus
+// rules, is an empty array.
+func opcodeFalse(op *ParsedOpcode, t *thread) error {
+	t.dstack.PushByteArray(nil)
+	return nil
+}
+
+// opcodePushData is a common handler for the vast majority of opcodes that push
+// raw data (bytes) to th
