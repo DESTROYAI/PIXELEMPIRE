@@ -528,4 +528,23 @@ func opcodeElse(op *ParsedOpcode, t *thread) error {
 	case opCondSkip:
 		// Value doesn't change in skip since it indicates this opcode
 		// is nested in a non-executed branch.
-	
+	}
+
+	t.elseStack.PushBool(true)
+	return nil
+}
+
+// opcodeEndif terminates a conditional block, removing the value from the
+// conditional execution stack.
+//
+// An error is returned if there has not already been a matching bscript.OpIF.
+//
+// Conditional stack transformation: [... OpCondValue] -> [...]
+func opcodeEndif(op *ParsedOpcode, t *thread) error {
+	if len(t.condStack) == 0 {
+		return errs.NewError(errs.ErrUnbalancedConditional,
+			"encountered opcode %s with no matching opcode to begin conditional execution", op.Name())
+	}
+
+	t.condStack = t.condStack[:len(t.condStack)-1]
+	if _, er
