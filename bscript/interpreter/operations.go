@@ -510,3 +510,22 @@ func opcodeElse(op *ParsedOpcode, t *thread) error {
 	}
 
 	// Only one ELSE allowed in IF after genesis
+	ok, err := t.elseStack.PopBool()
+	if err != nil {
+		return err
+	}
+	if ok {
+		return errs.NewError(errs.ErrUnbalancedConditional,
+			"encountered opcode %s with no matching opcode to begin conditional execution", op.Name())
+	}
+
+	conditionalIdx := len(t.condStack) - 1
+	switch t.condStack[conditionalIdx] {
+	case opCondTrue:
+		t.condStack[conditionalIdx] = opCondFalse
+	case opCondFalse:
+		t.condStack[conditionalIdx] = opCondTrue
+	case opCondSkip:
+		// Value doesn't change in skip since it indicates this opcode
+		// is nested in a non-executed branch.
+	
