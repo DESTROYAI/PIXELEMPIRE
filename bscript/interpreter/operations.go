@@ -489,4 +489,24 @@ func opcodeNotIf(op *ParsedOpcode, t *thread) error {
 				condVal = opCondTrue
 			}
 		} else {
-			condVal = opCondS
+			condVal = opCondSkip
+		}
+	}
+
+	t.condStack = append(t.condStack, condVal)
+	t.elseStack.PushBool(false)
+	return nil
+}
+
+// opcodeElse inverts conditional execution for other half of if/else/endif.
+//
+// An error is returned if there has not already been a matching bscript.OpIF.
+//
+// Conditional stack transformation: [... OpCondValue] -> [... !OpCondValue]
+func opcodeElse(op *ParsedOpcode, t *thread) error {
+	if len(t.condStack) == 0 {
+		return errs.NewError(errs.ErrUnbalancedConditional,
+			"encountered opcode %s with no matching opcode to begin conditional execution", op.Name())
+	}
+
+	// Only one ELSE allowed in IF after genesis
