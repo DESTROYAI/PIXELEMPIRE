@@ -547,4 +547,21 @@ func opcodeEndif(op *ParsedOpcode, t *thread) error {
 	}
 
 	t.condStack = t.condStack[:len(t.condStack)-1]
-	if _, er
+	if _, err := t.elseStack.PopBool(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// abstractVerify examines the top item on the data stack as a boolean value and
+// verifies it evaluates to true.  An error is returned either when there is no
+// item on the stack or when that item evaluates to false.  In the latter case
+// where the verification fails specifically due to the top item evaluating
+// to false, the returned error will use the passed error code.
+func abstractVerify(op *ParsedOpcode, t *thread, c errs.ErrorCode) error {
+	verified, err := t.dstack.PopBool()
+	if err != nil {
+		return err
+	}
+	i
