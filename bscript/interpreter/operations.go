@@ -564,4 +564,21 @@ func abstractVerify(op *ParsedOpcode, t *thread, c errs.ErrorCode) error {
 	if err != nil {
 		return err
 	}
-	i
+	if !verified {
+		return errs.NewError(c, "%s failed", op.Name())
+	}
+
+	return nil
+}
+
+// opcodeVerify examines the top item on the data stack as a boolean value and
+// verifies it evaluates to true.  An error is returned if it does not.
+func opcodeVerify(op *ParsedOpcode, t *thread) error {
+	return abstractVerify(op, t, errs.ErrVerify)
+}
+
+// opcodeReturn returns an appropriate error since it is always an error to
+// return early from a script.
+func opcodeReturn(op *ParsedOpcode, t *thread) error {
+	if !t.afterGenesis {
+		return errs.NewError(errs.ErrEarlyReturn, "script
