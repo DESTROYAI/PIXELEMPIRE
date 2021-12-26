@@ -581,4 +581,22 @@ func opcodeVerify(op *ParsedOpcode, t *thread) error {
 // return early from a script.
 func opcodeReturn(op *ParsedOpcode, t *thread) error {
 	if !t.afterGenesis {
-		return errs.NewError(errs.ErrEarlyReturn, "script
+		return errs.NewError(errs.ErrEarlyReturn, "script returned early")
+	}
+
+	t.earlyReturnAfterGenesis = true
+	if len(t.condStack) == 0 {
+		// Terminate the execution as successful. The remaining of the script does not affect the validity (even in
+		// presence of unbalanced IFs, invalid opcodes etc)
+		return success()
+	}
+
+	return nil
+}
+
+// verifyLockTime is a helper function used to validate locktimes.
+func verifyLockTime(txLockTime, threshold, lockTime int64) error {
+	// The lockTimes in both the script and transaction must be of the same
+	// type.
+	if !((txLockTime < threshold && lockTime < threshold) ||
+		(txLockTime >= thr
