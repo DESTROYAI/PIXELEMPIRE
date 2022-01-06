@@ -615,4 +615,16 @@ func verifyLockTime(txLockTime, threshold, lockTime int64) error {
 
 // opcodeCheckLockTimeVerify compares the top item on the data stack to the
 // LockTime field of the transaction containing the script signature
-// validating if the transaction outputs are spendable
+// validating if the transaction outputs are spendable yet.  If flag
+// ScriptVerifyCheckLockTimeVerify is not set, the code continues as if bscript.OpNOP2
+// were executed.
+func opcodeCheckLockTimeVerify(op *ParsedOpcode, t *thread) error {
+	// If the ScriptVerifyCheckLockTimeVerify script flag is not set, treat
+	// opcode as bscript.OpNOP2 instead.
+	if !t.hasFlag(scriptflag.VerifyCheckLockTimeVerify) || t.afterGenesis {
+		if t.hasFlag(scriptflag.DiscourageUpgradableNops) {
+			return errs.NewError(errs.ErrDiscourageUpgradableNOPs, "bscript.OpNOP2 reserved for soft-fork upgrades")
+		}
+
+		return nil
+	}
