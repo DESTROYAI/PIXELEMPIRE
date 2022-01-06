@@ -599,4 +599,20 @@ func verifyLockTime(txLockTime, threshold, lockTime int64) error {
 	// The lockTimes in both the script and transaction must be of the same
 	// type.
 	if !((txLockTime < threshold && lockTime < threshold) ||
-		(txLockTime >= thr
+		(txLockTime >= threshold && lockTime >= threshold)) {
+		return errs.NewError(errs.ErrUnsatisfiedLockTime,
+			"mismatched locktime types -- tx locktime %d, stack locktime %d", txLockTime, lockTime)
+	}
+
+	if lockTime > txLockTime {
+		return errs.NewError(errs.ErrUnsatisfiedLockTime,
+			"locktime requirement not satisfied -- locktime is greater than the transaction locktime: %d > %d",
+			lockTime, txLockTime)
+	}
+
+	return nil
+}
+
+// opcodeCheckLockTimeVerify compares the top item on the data stack to the
+// LockTime field of the transaction containing the script signature
+// validating if the transaction outputs are spendable
