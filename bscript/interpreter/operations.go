@@ -640,4 +640,19 @@ func opcodeCheckLockTimeVerify(op *ParsedOpcode, t *thread) error {
 	// to be limited to a 4-byte integer for reasons specified above.
 	so, err := t.dstack.PeekByteArray(0)
 	if err != nil {
-		ret
+		return err
+	}
+	lockTime, err := makeScriptNumber(so, 5, t.dstack.verifyMinimalData, t.afterGenesis)
+	if err != nil {
+		return err
+	}
+
+	// In the rare event that the argument needs to be < 0 due to some
+	// arithmetic being done first, you can always use
+	// 0 bscript.OpMAX bscript.OpCHECKLOCKTIMEVERIFY.
+	if lockTime.LessThanInt(0) {
+		return errs.NewError(errs.ErrNegativeLockTime, "negative lock time: %d", lockTime.Int64())
+	}
+
+	// The lock time field of a transaction is either a block height at
+	// which the transaction is finalised or a timest
