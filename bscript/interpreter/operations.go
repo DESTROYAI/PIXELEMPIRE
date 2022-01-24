@@ -668,4 +668,13 @@ func opcodeCheckLockTimeVerify(op *ParsedOpcode, t *thread) error {
 	// condition would result in the transaction being allowed into the blockchain
 	// making the opcode ineffective.
 	//
-	// This
+	// This condition is prevented by enforcing that the input being used by
+	// the opcode is unlocked (its sequence number is less than the max
+	// value).  This is sufficient to prove correctness without having to
+	// check every input.
+	//
+	// NOTE: This implies that even if the transaction is not finalised due to
+	// another input being unlocked, the opcode execution will still fail when the
+	// input being used by the opcode is locked.
+	if t.tx.Inputs[t.inputIdx].SequenceNumber == bt.MaxTxInSequenceNum {
+		return errs.NewError(errs.ErrUnsatisfiedL
