@@ -677,4 +677,18 @@ func opcodeCheckLockTimeVerify(op *ParsedOpcode, t *thread) error {
 	// another input being unlocked, the opcode execution will still fail when the
 	// input being used by the opcode is locked.
 	if t.tx.Inputs[t.inputIdx].SequenceNumber == bt.MaxTxInSequenceNum {
-		return errs.NewError(errs.ErrUnsatisfiedL
+		return errs.NewError(errs.ErrUnsatisfiedLockTime, "transaction input is finalised")
+	}
+
+	return nil
+}
+
+// opcodeCheckSequenceVerify compares the top item on the data stack to the
+// LockTime field of the transaction containing the script signature
+// validating if the transaction outputs are spendable yet.  If flag
+// ScriptVerifyCheckSequenceVerify is not set, the code continues as if bscript.OpNOP3
+// were executed.
+func opcodeCheckSequenceVerify(op *ParsedOpcode, t *thread) error {
+	// If the ScriptVerifyCheckSequenceVerify script flag is not set, treat
+	// opcode as bscript.OpNOP3 instead.
+	if !t.hasFlag(script
