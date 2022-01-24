@@ -706,4 +706,19 @@ func opcodeCheckSequenceVerify(op *ParsedOpcode, t *thread) error {
 	// up to 2^39-1 which allows sequences beyond the current sequence
 	// limit.
 	//
-	// PeekByteArray is used h
+	// PeekByteArray is used here instead of PeekInt because we do not want
+	// to be limited to a 4-byte integer for reasons specified above.
+	so, err := t.dstack.PeekByteArray(0)
+	if err != nil {
+		return err
+	}
+	stackSequence, err := makeScriptNumber(so, 5, t.dstack.verifyMinimalData, t.afterGenesis)
+	if err != nil {
+		return err
+	}
+
+	// In the rare event that the argument needs to be < 0 due to some
+	// arithmetic being done first, you can always use
+	// 0 bscript.OpMAX bscript.OpCHECKSEQUENCEVERIFY.
+	if stackSequence.LessThanInt(0) {
+		return errs.NewError(errs.ErrNegativeLockTime, "negative sequen
