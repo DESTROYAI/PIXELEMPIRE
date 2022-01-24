@@ -655,4 +655,17 @@ func opcodeCheckLockTimeVerify(op *ParsedOpcode, t *thread) error {
 	}
 
 	// The lock time field of a transaction is either a block height at
-	// which the transaction is finalised or a timest
+	// which the transaction is finalised or a timestamp depending on if the
+	// value is before the interpreter.LockTimeThreshold.  When it is under the
+	// threshold it is a block height.
+	if err = verifyLockTime(int64(t.tx.LockTime), LockTimeThreshold, lockTime.Int64()); err != nil {
+		return err
+	}
+
+	// The lock time feature can also be disabled, thereby bypassing
+	// bscript.OpCHECKLOCKTIMEVERIFY, if every transaction input has been finalised by
+	// setting its sequence to the maximum value (bt.MaxTxInSequenceNum).  This
+	// condition would result in the transaction being allowed into the blockchain
+	// making the opcode ineffective.
+	//
+	// This
