@@ -691,4 +691,19 @@ func opcodeCheckLockTimeVerify(op *ParsedOpcode, t *thread) error {
 func opcodeCheckSequenceVerify(op *ParsedOpcode, t *thread) error {
 	// If the ScriptVerifyCheckSequenceVerify script flag is not set, treat
 	// opcode as bscript.OpNOP3 instead.
-	if !t.hasFlag(script
+	if !t.hasFlag(scriptflag.VerifyCheckSequenceVerify) || t.afterGenesis {
+		if t.hasFlag(scriptflag.DiscourageUpgradableNops) {
+			return errs.NewError(errs.ErrDiscourageUpgradableNOPs, "bscript.OpNOP3 reserved for soft-fork upgrades")
+		}
+
+		return nil
+	}
+
+	// The current transaction sequence is a uint32 resulting in a maximum
+	// sequence of 2^32-1.  However, scriptNums are signed and therefore a
+	// standard 4-byte scriptNum would only support up to a maximum of
+	// 2^31-1.  Thus, a 5-byte scriptNum is used here since it will support
+	// up to 2^39-1 which allows sequences beyond the current sequence
+	// limit.
+	//
+	// PeekByteArray is used h
