@@ -721,4 +721,23 @@ func opcodeCheckSequenceVerify(op *ParsedOpcode, t *thread) error {
 	// arithmetic being done first, you can always use
 	// 0 bscript.OpMAX bscript.OpCHECKSEQUENCEVERIFY.
 	if stackSequence.LessThanInt(0) {
-		return errs.NewError(errs.ErrNegativeLockTime, "negative sequen
+		return errs.NewError(errs.ErrNegativeLockTime, "negative sequence: %d", stackSequence.Int64())
+	}
+
+	sequence := stackSequence.Int64()
+
+	// To provide for future soft-fork extensibility, if the
+	// operand has the disabled lock-time flag set,
+	// CHECKSEQUENCEVERIFY behaves as a NOP.
+	if sequence&int64(bt.SequenceLockTimeDisabled) != 0 {
+		return nil
+	}
+
+	// Transaction version numbers not high enough to trigger CSV rules must
+	// fail.
+	if t.tx.Version < 2 {
+		return errs.NewError(errs.ErrUnsatisfiedLockTime, "invalid transaction version: %d", t.tx.Version)
+	}
+
+	// Sequence numbers with their most significant bit set are not
+	// consensus co
