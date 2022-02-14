@@ -890,4 +890,19 @@ func opcodeOver(op *ParsedOpcode, t *thread) error {
 	return t.dstack.OverN(1)
 }
 
-// opcodePick t
+// opcodePick treats the top item on the data stack as an integer and duplicates
+// the item on the stack that number of items back to the top.
+//
+// Stack transformation: [xn ... x2 x1 x0 n] -> [xn ... x2 x1 x0 xn]
+// Example with n=1: [x2 x1 x0 1] -> [x2 x1 x0 x1]
+// Example with n=2: [x2 x1 x0 2] -> [x2 x1 x0 x2]
+func opcodePick(op *ParsedOpcode, t *thread) error {
+	val, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	return t.dstack.PickN(val.Int32())
+}
+
+// opcodeRoll treats the top item on the data stack as an integer a
