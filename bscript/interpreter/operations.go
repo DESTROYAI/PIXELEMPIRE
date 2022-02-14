@@ -752,4 +752,23 @@ func opcodeCheckSequenceVerify(op *ParsedOpcode, t *thread) error {
 	// Mask off non-consensus bits before doing comparisons.
 	lockTimeMask := int64(bt.SequenceLockTimeIsSeconds | bt.SequenceLockTimeMask)
 
-	return verifyLockTime(txSequence&loc
+	return verifyLockTime(txSequence&lockTimeMask, bt.SequenceLockTimeIsSeconds, sequence&lockTimeMask)
+}
+
+// opcodeToAltStack removes the top item from the main data stack and pushes it
+// onto the alternate data stack.
+//
+// Main data stack transformation: [... x1 x2 x3] -> [... x1 x2]
+// Alt data stack transformation:  [... y1 y2 y3] -> [... y1 y2 y3 x3]
+func opcodeToAltStack(op *ParsedOpcode, t *thread) error {
+	so, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	t.astack.PushByteArray(so)
+
+	return nil
+}
+
+// opcodeFromAltStack removes the top item from the alterna
