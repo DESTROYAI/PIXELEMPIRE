@@ -791,4 +791,23 @@ func opcodeFromAltStack(op *ParsedOpcode, t *thread) error {
 //
 // Stack transformation: [... x1 x2 x3] -> [... x1]
 func opcode2Drop(op *ParsedOpcode, t *thread) error {
-	return t.dsta
+	return t.dstack.DropN(2)
+}
+
+// opcode2Dup duplicates the top 2 items on the data stack.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1 x2 x3 x2 x3]
+func opcode2Dup(op *ParsedOpcode, t *thread) error {
+	return t.dstack.DupN(2)
+}
+
+// opcode3Dup duplicates the top 3 items on the data stack.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1 x2 x3 x1 x2 x3]
+func opcode3Dup(op *ParsedOpcode, t *thread) error {
+	return t.dstack.DupN(3)
+}
+
+// opcode2Over duplicates the 2 items before the top 2 items on the data stack.
+//
+// Stack transformation: [... x1 x2 x3 x4] -> [... x1 x2 
