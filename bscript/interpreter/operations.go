@@ -871,4 +871,23 @@ func opcodeDrop(op *ParsedOpcode, t *thread) error {
 
 // opcodeDup duplicates the top item on the data stack.
 //
-// St
+// Stack transformation: [... x1 x2 x3] -> [... x1 x2 x3 x3]
+func opcodeDup(op *ParsedOpcode, t *thread) error {
+	return t.dstack.DupN(1)
+}
+
+// opcodeNip removes the item before the top item on the data stack.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1 x3]
+func opcodeNip(op *ParsedOpcode, t *thread) error {
+	return t.dstack.NipN(1)
+}
+
+// opcodeOver duplicates the item before the top item on the data stack.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1 x2 x3 x2]
+func opcodeOver(op *ParsedOpcode, t *thread) error {
+	return t.dstack.OverN(1)
+}
+
+// opcodePick t
