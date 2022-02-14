@@ -810,4 +810,22 @@ func opcode3Dup(op *ParsedOpcode, t *thread) error {
 
 // opcode2Over duplicates the 2 items before the top 2 items on the data stack.
 //
-// Stack transformation: [... x1 x2 x3 x4] -> [... x1 x2 
+// Stack transformation: [... x1 x2 x3 x4] -> [... x1 x2 x3 x4 x1 x2]
+func opcode2Over(op *ParsedOpcode, t *thread) error {
+	return t.dstack.OverN(2)
+}
+
+// opcode2Rot rotates the top 6 items on the data stack to the left twice.
+//
+// Stack transformation: [... x1 x2 x3 x4 x5 x6] -> [... x3 x4 x5 x6 x1 x2]
+func opcode2Rot(op *ParsedOpcode, t *thread) error {
+	return t.dstack.RotN(2)
+}
+
+// opcode2Swap swaps the top 2 items on the data stack with the 2 that come
+// before them.
+//
+// Stack transformation: [... x1 x2 x3 x4] -> [... x3 x4 x1 x2]
+func opcode2Swap(op *ParsedOpcode, t *thread) error {
+	return t.dstack.SwapN(2)
+}
