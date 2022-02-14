@@ -829,3 +829,26 @@ func opcode2Rot(op *ParsedOpcode, t *thread) error {
 func opcode2Swap(op *ParsedOpcode, t *thread) error {
 	return t.dstack.SwapN(2)
 }
+
+// opcodeIfDup duplicates the top item of the stack if it is not zero.
+//
+// Stack transformation (x1==0): [... x1] -> [... x1]
+// Stack transformation (x1!=0): [... x1] -> [... x1 x1]
+func opcodeIfDup(op *ParsedOpcode, t *thread) error {
+	so, err := t.dstack.PeekByteArray(0)
+	if err != nil {
+		return err
+	}
+
+	// Push copy of data iff it isn't zero
+	if asBool(so) {
+		t.dstack.PushByteArray(so)
+	}
+
+	return nil
+}
+
+// opcodeDepth pushes the depth of the data stack prior to executing this
+// opcode, encoded as a number, onto the data stack.
+//
+// Stack transformati
