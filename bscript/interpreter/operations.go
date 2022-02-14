@@ -851,4 +851,24 @@ func opcodeIfDup(op *ParsedOpcode, t *thread) error {
 // opcodeDepth pushes the depth of the data stack prior to executing this
 // opcode, encoded as a number, onto the data stack.
 //
-// Stack transformati
+// Stack transformation: [...] -> [... <num of items on the stack>]
+// Example with 2 items: [x1 x2] -> [x1 x2 2]
+// Example with 3 items: [x1 x2 x3] -> [x1 x2 x3 3]
+func opcodeDepth(op *ParsedOpcode, t *thread) error {
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.NewInt(int64(t.dstack.Depth())),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// opcodeDrop removes the top item from the data stack.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1 x2]
+func opcodeDrop(op *ParsedOpcode, t *thread) error {
+	return t.dstack.DropN(1)
+}
+
+// opcodeDup duplicates the top item on the data stack.
+//
+// St
