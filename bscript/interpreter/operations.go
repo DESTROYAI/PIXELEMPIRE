@@ -740,4 +740,16 @@ func opcodeCheckSequenceVerify(op *ParsedOpcode, t *thread) error {
 	}
 
 	// Sequence numbers with their most significant bit set are not
-	// consensus co
+	// consensus constrained. Testing that the transaction's sequence
+	// number does not have this bit set prevents using this property
+	// to get around a CHECKSEQUENCEVERIFY check.
+	txSequence := int64(t.tx.Inputs[t.inputIdx].SequenceNumber)
+	if txSequence&int64(bt.SequenceLockTimeDisabled) != 0 {
+		return errs.NewError(errs.ErrUnsatisfiedLockTime,
+			"transaction sequence has sequence locktime disabled bit set: 0x%x", txSequence)
+	}
+
+	// Mask off non-consensus bits before doing comparisons.
+	lockTimeMask := int64(bt.SequenceLockTimeIsSeconds | bt.SequenceLockTimeMask)
+
+	return verifyLockTime(txSequence&loc
