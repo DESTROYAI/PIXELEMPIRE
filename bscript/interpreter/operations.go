@@ -771,4 +771,24 @@ func opcodeToAltStack(op *ParsedOpcode, t *thread) error {
 	return nil
 }
 
-// opcodeFromAltStack removes the top item from the alterna
+// opcodeFromAltStack removes the top item from the alternate data stack and
+// pushes it onto the main data stack.
+//
+// Main data stack transformation: [... x1 x2 x3] -> [... x1 x2 x3 y3]
+// Alt data stack transformation:  [... y1 y2 y3] -> [... y1 y2]
+func opcodeFromAltStack(op *ParsedOpcode, t *thread) error {
+	so, err := t.astack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushByteArray(so)
+
+	return nil
+}
+
+// opcode2Drop removes the top 2 items from the data stack.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1]
+func opcode2Drop(op *ParsedOpcode, t *thread) error {
+	return t.dsta
