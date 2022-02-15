@@ -927,4 +927,22 @@ func opcodeRot(op *ParsedOpcode, t *thread) error {
 	return t.dstack.RotN(1)
 }
 
-// opcodeS
+// opcodeSwap swaps the top two items on the stack.
+//
+// Stack transformation: [... x1 x2] -> [... x2 x1]
+func opcodeSwap(op *ParsedOpcode, t *thread) error {
+	return t.dstack.SwapN(1)
+}
+
+// opcodeTuck inserts a duplicate of the top item of the data stack before the
+// second-to-top item.
+//
+// Stack transformation: [... x1 x2] -> [... x2 x1 x2]
+func opcodeTuck(op *ParsedOpcode, t *thread) error {
+	return t.dstack.Tuck()
+}
+
+// opcodeCat concatenates two byte sequences. The result must
+// not be larger than MaxScriptElementSize.
+//
+// Stack transformation: {Ox11} {0x22, 0x33} bscript.OpCAT 
