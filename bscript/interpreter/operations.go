@@ -970,4 +970,31 @@ func opcodeCat(op *ParsedOpcode, t *thread) error {
 // opcodeSplit splits the operand at the given position.
 // This operation is the exact inverse of bscript.OpCAT
 //
-// Stack transformation: x n 
+// Stack transformation: x n bscript.OpSPLIT -> x1 x2
+func opcodeSplit(op *ParsedOpcode, t *thread) error {
+	n, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	c, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	if n.Int32() > int32(len(c)) {
+		return errs.NewError(errs.ErrNumberTooBig, "n is larger than length of array")
+	}
+	if n.LessThanInt(0) {
+		return errs.NewError(errs.ErrNumberTooSmall, "n is negative")
+	}
+
+	a := c[:n.Int()]
+	b := c[n.Int():]
+	t.dstack.PushByteArray(a)
+	t.dstack.PushByteArray(b)
+
+	return nil
+}
+
+// opcodeNum2Bin converts the numeric 
