@@ -997,4 +997,24 @@ func opcodeSplit(op *ParsedOpcode, t *thread) error {
 	return nil
 }
 
-// opcodeNum2Bin converts the numeric 
+// opcodeNum2Bin converts the numeric value into a byte sequence of a
+// certain size, taking account of the sign bit. The byte sequence
+// produced uses the little-endian encoding.
+//
+// Stack transformation: a b bscript.OpNUM2BIN -> x
+func opcodeNum2bin(op *ParsedOpcode, t *thread) error {
+	n, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	a, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	if n.GreaterThanInt(int64(t.cfg.MaxScriptElementSize())) {
+		return errs.NewError(errs.ErrNumberTooBig, "n is larger than the max of %d", t.cfg.MaxScriptElementSize())
+	}
+
+	// 
