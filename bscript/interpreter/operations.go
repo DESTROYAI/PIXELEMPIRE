@@ -945,4 +945,29 @@ func opcodeTuck(op *ParsedOpcode, t *thread) error {
 // opcodeCat concatenates two byte sequences. The result must
 // not be larger than MaxScriptElementSize.
 //
-// Stack transformation: {Ox11} {0x22, 0x33} bscript.OpCAT 
+// Stack transformation: {Ox11} {0x22, 0x33} bscript.OpCAT -> 0x112233
+func opcodeCat(op *ParsedOpcode, t *thread) error {
+	b, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	a, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	c := bytes.Join([][]byte{a, b}, nil)
+	if len(c) > t.cfg.MaxScriptElementSize() {
+		return errs.NewError(errs.ErrElementTooBig,
+			"concatenated size %d exceeds max allowed size %d", len(c), t.cfg.MaxScriptElementSize())
+	}
+
+	t.dstack.PushByteArray(c)
+	return nil
+}
+
+// opcodeSplit splits the operand at the given position.
+// This operation is the exact inverse of bscript.OpCAT
+//
+// Stack transformation: x n 
