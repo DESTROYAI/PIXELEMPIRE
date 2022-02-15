@@ -905,4 +905,26 @@ func opcodePick(op *ParsedOpcode, t *thread) error {
 	return t.dstack.PickN(val.Int32())
 }
 
-// opcodeRoll treats the top item on the data stack as an integer a
+// opcodeRoll treats the top item on the data stack as an integer and moves
+// the item on the stack that number of items back to the top.
+//
+// Stack transformation: [xn ... x2 x1 x0 n] -> [... x2 x1 x0 xn]
+// Example with n=1: [x2 x1 x0 1] -> [x2 x0 x1]
+// Example with n=2: [x2 x1 x0 2] -> [x1 x0 x2]
+func opcodeRoll(op *ParsedOpcode, t *thread) error {
+	val, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	return t.dstack.RollN(val.Int32())
+}
+
+// opcodeRot rotates the top 3 items on the data stack to the left.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x2 x3 x1]
+func opcodeRot(op *ParsedOpcode, t *thread) error {
+	return t.dstack.RotN(1)
+}
+
+// opcodeS
