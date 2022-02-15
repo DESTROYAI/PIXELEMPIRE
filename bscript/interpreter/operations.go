@@ -1045,4 +1045,25 @@ func opcodeNum2bin(op *ParsedOpcode, t *thread) error {
 
 	b = append(b, signbit)
 
-	t.dstac
+	t.dstack.PushByteArray(b)
+	return nil
+}
+
+// opcodeBin2num converts the byte sequence into a numeric value,
+// including minimal encoding. The byte sequence must encode the
+// value in little-endian encoding.
+//
+// Stack transformation: a bscript.OpBIN2NUM -> x
+func opcodeBin2num(op *ParsedOpcode, t *thread) error {
+	a, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	b := minimallyEncode(a)
+	if len(b) > t.cfg.MaxScriptNumberLength() {
+		return errs.NewError(errs.ErrNumberTooBig, "script numbers are limited to %d bytes", t.cfg.MaxScriptNumberLength())
+	}
+
+	t.dstack.PushByteArray(b)
+	retur
