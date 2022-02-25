@@ -1089,4 +1089,32 @@ func opcodeSize(op *ParsedOpcode, t *thread) error {
 // opcodeInvert flips all of the top stack item's bits
 //
 // Stack transformation: a -> ~a
-func opcodeInvert(op *ParsedOpcode, t *thread) error
+func opcodeInvert(op *ParsedOpcode, t *thread) error {
+	ba, err := t.dstack.PeekByteArray(0)
+	if err != nil {
+		return err
+	}
+
+	for i := range ba {
+		ba[i] = ba[i] ^ 0xFF
+	}
+
+	return nil
+}
+
+// opcodeAnd executes a boolean and between each bit in the operands
+//
+// Stack transformation: x1 x2 bscript.OpAND -> out
+func opcodeAnd(op *ParsedOpcode, t *thread) error { //nolint:dupl // to keep functionality with function signature
+	a, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	b, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	if len(a) != len(b) {
+		return errs.NewErr
