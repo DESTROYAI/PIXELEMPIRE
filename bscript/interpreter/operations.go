@@ -1066,4 +1066,27 @@ func opcodeBin2num(op *ParsedOpcode, t *thread) error {
 	}
 
 	t.dstack.PushByteArray(b)
-	retur
+	return nil
+}
+
+// opcodeSize pushes the size of the top item of the data stack onto the data
+// stack.
+//
+// Stack transformation: [... x1] -> [... x1 len(x1)]
+func opcodeSize(op *ParsedOpcode, t *thread) error {
+	so, err := t.dstack.PeekByteArray(0)
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.NewInt(int64(len(so))),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// opcodeInvert flips all of the top stack item's bits
+//
+// Stack transformation: a -> ~a
+func opcodeInvert(op *ParsedOpcode, t *thread) error
