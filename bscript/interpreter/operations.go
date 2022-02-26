@@ -1139,4 +1139,25 @@ func opcodeOr(op *ParsedOpcode, t *thread) error { //nolint:dupl // to keep func
 	}
 
 	b, err := t.dstack.PopByteArray()
-	if err != n
+	if err != nil {
+		return err
+	}
+
+	if len(a) != len(b) {
+		return errs.NewError(errs.ErrInvalidInputLength, "byte arrays are not the same length")
+	}
+
+	c := make([]byte, len(a))
+	for i := range a {
+		c[i] = a[i] | b[i]
+	}
+
+	t.dstack.PushByteArray(c)
+	return nil
+}
+
+// opcodeXor executes a boolean xor between each bit in the operands
+//
+// Stack transformation: x1 x2 bscript.OpXOR -> out
+func opcodeXor(op *ParsedOpcode, t *thread) error { //nolint:dupl // to keep functionality with function signature
+	a, err := t.dstack.PopByteArray()
