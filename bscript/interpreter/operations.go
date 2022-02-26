@@ -1161,3 +1161,33 @@ func opcodeOr(op *ParsedOpcode, t *thread) error { //nolint:dupl // to keep func
 // Stack transformation: x1 x2 bscript.OpXOR -> out
 func opcodeXor(op *ParsedOpcode, t *thread) error { //nolint:dupl // to keep functionality with function signature
 	a, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	b, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	if len(a) != len(b) {
+		return errs.NewError(errs.ErrInvalidInputLength, "byte arrays are not the same length")
+	}
+
+	c := make([]byte, len(a))
+	for i := range a {
+		c[i] = a[i] ^ b[i]
+	}
+
+	t.dstack.PushByteArray(c)
+	return nil
+}
+
+// opcodeEqual removes the top 2 items of the data stack, compares them as raw
+// bytes, and pushes the result, encoded as a boolean, back to the stack.
+//
+// Stack transformation: [... x1 x2] -> [... bool]
+func opcodeEqual(op *ParsedOpcode, t *thread) error {
+	a, err := t.dstack.PopByteArray()
+	if err != nil {
+	
