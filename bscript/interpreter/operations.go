@@ -1190,4 +1190,23 @@ func opcodeXor(op *ParsedOpcode, t *thread) error { //nolint:dupl // to keep fun
 func opcodeEqual(op *ParsedOpcode, t *thread) error {
 	a, err := t.dstack.PopByteArray()
 	if err != nil {
-	
+		return err
+	}
+
+	b, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushBool(bytes.Equal(a, b))
+	return nil
+}
+
+// opcodeEqualVerify is a combination of opcodeEqual and opcodeVerify.
+// Specifically, it removes the top 2 items of the data stack, compares them,
+// and pushes the result, encoded as a boolean, back to the stack.  Then, it
+// examines the top item on the data stack as a boolean value and verifies it
+// evaluates to true.  An error is returned if it does not.
+//
+// Stack transformation: [... x1 x2] -> [... bool] -> [...]
+func opcodeE
