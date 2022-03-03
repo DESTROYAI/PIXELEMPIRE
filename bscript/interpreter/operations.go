@@ -1209,4 +1209,27 @@ func opcodeEqual(op *ParsedOpcode, t *thread) error {
 // evaluates to true.  An error is returned if it does not.
 //
 // Stack transformation: [... x1 x2] -> [... bool] -> [...]
-func opcodeE
+func opcodeEqualVerify(op *ParsedOpcode, t *thread) error {
+	if err := opcodeEqual(op, t); err != nil {
+		return err
+	}
+
+	return abstractVerify(op, t, errs.ErrEqualVerify)
+}
+
+// opcode1Add treats the top item on the data stack as an integer and replaces
+// it with its incremented value (plus 1).
+//
+// Stack transformation: [... x1 x2] -> [... x1 x2+1]
+func opcode1Add(op *ParsedOpcode, t *thread) error {
+	m, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushInt(m.Incr())
+	return nil
+}
+
+// opcode1Sub treats the top item on the data stack as an integer and replaces
+// it with its d
