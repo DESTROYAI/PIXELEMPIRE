@@ -1232,4 +1232,31 @@ func opcode1Add(op *ParsedOpcode, t *thread) error {
 }
 
 // opcode1Sub treats the top item on the data stack as an integer and replaces
-// it with its d
+// it with its decremented value (minus 1).
+//
+// Stack transformation: [... x1 x2] -> [... x1 x2-1]
+func opcode1Sub(op *ParsedOpcode, t *thread) error {
+	m, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushInt(m.Decr())
+	return nil
+}
+
+// opcodeNegate treats the top item on the data stack as an integer and replaces
+// it with its negation.
+//
+// Stack transformation: [... x1 x2] -> [... x1 -x2]
+func opcodeNegate(op *ParsedOpcode, t *thread) error {
+	m, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushInt(m.Neg())
+	return nil
+}
+
+// opcodeAbs treats the top item on 
