@@ -1278,4 +1278,23 @@ func opcodeAbs(op *ParsedOpcode, t *thread) error {
 //
 // NOTE: While it would probably make more sense to treat the top item as a
 // boolean, and push the opposite, which is really what the intention of this
-// opc
+// opcode is, it is extremely important that is not done because integers are
+// interpreted differently than booleans and the consensus rules for this opcode
+// dictate the item is interpreted as an integer.
+//
+// Stack transformation (x2==0): [... x1 0] -> [... x1 1]
+// Stack transformation (x2!=0): [... x1 1] -> [... x1 0]
+// Stack transformation (x2!=0): [... x1 17] -> [... x1 0]
+func opcodeNot(op *ParsedOpcode, t *thread) error {
+	m, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	var n int64
+	if m.IsZero() {
+		n = 1
+	}
+
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.
