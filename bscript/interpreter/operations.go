@@ -1259,4 +1259,23 @@ func opcodeNegate(op *ParsedOpcode, t *thread) error {
 	return nil
 }
 
-// opcodeAbs treats the top item on 
+// opcodeAbs treats the top item on the data stack as an integer and replaces it
+// it with its absolute value.
+//
+// Stack transformation: [... x1 x2] -> [... x1 abs(x2)]
+func opcodeAbs(op *ParsedOpcode, t *thread) error {
+	m, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushInt(m.Abs())
+	return nil
+}
+
+// opcodeNot treats the top item on the data stack as an integer and replaces
+// it with its "inverted" value (0 becomes 1, non-zero becomes 0).
+//
+// NOTE: While it would probably make more sense to treat the top item as a
+// boolean, and push the opposite, which is really what the intention of this
+// opc
