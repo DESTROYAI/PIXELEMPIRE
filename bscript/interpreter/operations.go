@@ -1297,4 +1297,30 @@ func opcodeNot(op *ParsedOpcode, t *thread) error {
 	}
 
 	t.dstack.PushInt(&scriptNumber{
-		val:          big.
+		val:          big.NewInt(n),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// opcode0NotEqual treats the top item on the data stack as an integer and
+// replaces it with either a 0 if it is zero, or a 1 if it is not zero.
+//
+// Stack transformation (x2==0): [... x1 0] -> [... x1 0]
+// Stack transformation (x2!=0): [... x1 1] -> [... x1 1]
+// Stack transformation (x2!=0): [... x1 17] -> [... x1 1]
+func opcode0NotEqual(op *ParsedOpcode, t *thread) error {
+	m, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	if !m.IsZero() {
+		m.Set(1)
+	}
+
+	t.dstack.PushInt(m)
+	return nil
+}
+
+// o
