@@ -1323,4 +1323,25 @@ func opcode0NotEqual(op *ParsedOpcode, t *thread) error {
 	return nil
 }
 
-// o
+// opcodeAdd treats the top two items on the data stack as integers and replaces
+// them with their sum.
+//
+// Stack transformation: [... x1 x2] -> [... x1+x2]
+func opcodeAdd(op *ParsedOpcode, t *thread) error {
+	v0, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	v1, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushInt(v0.Add(v1))
+	return nil
+}
+
+// opcodeSub treats the top two items on the data stack as integers and replaces
+// them with the result of subtracting the top entry from the second-to-top
+//
