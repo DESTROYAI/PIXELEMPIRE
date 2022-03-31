@@ -1368,4 +1368,35 @@ func opcodeSub(op *ParsedOpcode, t *thread) error {
 func opcodeMul(op *ParsedOpcode, t *thread) error {
 	n1, err := t.dstack.PopInt()
 	if err != nil {
-		
+		return err
+	}
+
+	n2, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushInt(n1.Mul(n2))
+	return nil
+}
+
+// opcodeDiv return the integer quotient of a and b. If the result
+// would be a non-integer it is rounded towards zero.
+//
+// Stack transformation: a b bscript.OpDIV -> out
+func opcodeDiv(op *ParsedOpcode, t *thread) error {
+	b, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	a, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	if b.IsZero() {
+		return errs.NewError(errs.ErrDivideByZero, "divide by zero")
+	}
+
+	t.dstack.PushInt(a.Div(b)
