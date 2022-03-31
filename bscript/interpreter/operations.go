@@ -1344,4 +1344,28 @@ func opcodeAdd(op *ParsedOpcode, t *thread) error {
 
 // opcodeSub treats the top two items on the data stack as integers and replaces
 // them with the result of subtracting the top entry from the second-to-top
+// entry.
 //
+// Stack transformation: [... x1 x2] -> [... x1-x2]
+func opcodeSub(op *ParsedOpcode, t *thread) error {
+	v0, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	v1, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushInt(v1.Sub(v0))
+	return nil
+}
+
+// opcodeMul treats the top two items on the data stack as integers and replaces
+// them with the result of subtracting the top entry from the second-to-top
+// entry.
+func opcodeMul(op *ParsedOpcode, t *thread) error {
+	n1, err := t.dstack.PopInt()
+	if err != nil {
+		
