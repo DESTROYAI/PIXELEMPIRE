@@ -1604,4 +1604,32 @@ func opcodeNumNotEqual(op *ParsedOpcode, t *thread) error {
 	}
 
 	t.dstack.PushInt(&scriptNumber{
+		val:          big.NewInt(n),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// opcodeLessThan treats the top two items on the data stack as integers.  When
+// the second-to-top item is less than the top item, they are replaced with a 1,
+// otherwise a 0.
+//
+// Stack transformation: [... x1 x2] -> [... bool]
+func opcodeLessThan(op *ParsedOpcode, t *thread) error {
+	v0, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	v1, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	var n int64
+	if v1.LessThan(v0) {
+		n = 1
+	}
+
+	t.dstack.PushInt(&scriptNumber{
 		val:          big.N
