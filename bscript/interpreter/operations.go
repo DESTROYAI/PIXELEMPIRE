@@ -1579,4 +1579,29 @@ func opcodeNumEqualVerify(op *ParsedOpcode, t *thread) error {
 		return err
 	}
 
-	return abstractVerify(op, t, errs.ErrNumEqualV
+	return abstractVerify(op, t, errs.ErrNumEqualVerify)
+}
+
+// opcodeNumNotEqual treats the top two items on the data stack as integers.
+// When they are NOT equal, they are replaced with a 1, otherwise a 0.
+//
+// Stack transformation (x1==x2): [... 5 5] -> [... 0]
+// Stack transformation (x1!=x2): [... 5 7] -> [... 1]
+func opcodeNumNotEqual(op *ParsedOpcode, t *thread) error {
+	v0, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	v1, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	var n int64
+	if !v0.Equal(v1) {
+		n = 1
+	}
+
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.N
