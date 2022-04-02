@@ -1428,4 +1428,40 @@ func opcodeMod(op *ParsedOpcode, t *thread) error {
 
 func opcodeLShift(op *ParsedOpcode, t *thread) error {
 	num, err := t.dstack.PopInt()
-	if err != 
+	if err != nil {
+		return err
+	}
+	n := num.Int()
+
+	if n < 0 {
+		return errs.NewError(errs.ErrNumberTooSmall, "n less than 0")
+	}
+
+	x, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	l := len(x)
+	for i := 0; i < l-1; i++ {
+		x[i] = x[i]<<n | x[i+1]>>(8-n)
+	}
+	x[l-1] <<= n
+
+	t.dstack.PushByteArray(x)
+	return nil
+}
+
+func opcodeRShift(op *ParsedOpcode, t *thread) error {
+	num, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+	n := num.Int()
+
+	if n < 0 {
+		return errs.NewError(errs.ErrNumberTooSmall, "n less than 0")
+	}
+
+	x, err := t.dstack.PopByteArray()
+	if e
