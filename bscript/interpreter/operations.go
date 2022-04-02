@@ -1464,4 +1464,24 @@ func opcodeRShift(op *ParsedOpcode, t *thread) error {
 	}
 
 	x, err := t.dstack.PopByteArray()
-	if e
+	if err != nil {
+		return err
+	}
+
+	l := len(x)
+	for i := l - 1; i > 0; i-- {
+		x[i] = x[i]>>n | x[i-1]<<(8-n)
+	}
+	x[0] >>= n
+
+	t.dstack.PushByteArray(x)
+	return nil
+}
+
+// opcodeBoolAnd treats the top two items on the data stack as integers.  When
+// both of them are not zero, they are replaced with a 1, otherwise a 0.
+//
+// Stack transformation (x1==0, x2==0): [... 0 0] -> [... 0]
+// Stack transformation (x1!=0, x2==0): [... 5 0] -> [... 0]
+// Stack transformation (x1==0, x2!=0): [... 0 7] -> [... 0]
+// Stack transformation (x1!=0, x2!=
