@@ -1511,4 +1511,31 @@ func opcodeBoolAnd(op *ParsedOpcode, t *thread) error {
 // opcodeBoolOr treats the top two items on the data stack as integers.  When
 // either of them are not zero, they are replaced with a 1, otherwise a 0.
 //
-// Stack transformation (x1==0, x2==0): [... 0 
+// Stack transformation (x1==0, x2==0): [... 0 0] -> [... 0]
+// Stack transformation (x1!=0, x2==0): [... 5 0] -> [... 1]
+// Stack transformation (x1==0, x2!=0): [... 0 7] -> [... 1]
+// Stack transformation (x1!=0, x2!=0): [... 4 8] -> [... 1]
+func opcodeBoolOr(op *ParsedOpcode, t *thread) error {
+	v0, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	v1, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	var n int64
+	if !v0.IsZero() || !v1.IsZero() {
+		n = 1
+	}
+
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.NewInt(n),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// opcodeNumEqual treats the top two items o
