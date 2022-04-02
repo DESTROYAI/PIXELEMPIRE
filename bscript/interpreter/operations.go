@@ -1538,4 +1538,32 @@ func opcodeBoolOr(op *ParsedOpcode, t *thread) error {
 	return nil
 }
 
-// opcodeNumEqual treats the top two items o
+// opcodeNumEqual treats the top two items on the data stack as integers.  When
+// they are equal, they are replaced with a 1, otherwise a 0.
+//
+// Stack transformation (x1==x2): [... 5 5] -> [... 1]
+// Stack transformation (x1!=x2): [... 5 7] -> [... 0]
+func opcodeNumEqual(op *ParsedOpcode, t *thread) error {
+	v0, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	v1, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	var n int64
+	if v0.Equal(v1) {
+		n = 1
+	}
+
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.NewInt(n),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// opcodeNumEqualVerify is 
