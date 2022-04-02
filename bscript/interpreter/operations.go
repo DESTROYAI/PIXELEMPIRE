@@ -1399,4 +1399,33 @@ func opcodeDiv(op *ParsedOpcode, t *thread) error {
 		return errs.NewError(errs.ErrDivideByZero, "divide by zero")
 	}
 
-	t.dstack.PushInt(a.Div(b)
+	t.dstack.PushInt(a.Div(b))
+	return nil
+}
+
+// opcodeMod returns the remainder after dividing a by b. The output will
+// be represented using the least number of bytes required.
+//
+// Stack transformation: a b bscript.OpMOD -> out
+func opcodeMod(op *ParsedOpcode, t *thread) error {
+	b, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	a, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	if b.IsZero() {
+		return errs.NewError(errs.ErrDivideByZero, "mod by zero")
+	}
+
+	t.dstack.PushInt(a.Mod(b))
+	return nil
+}
+
+func opcodeLShift(op *ParsedOpcode, t *thread) error {
+	num, err := t.dstack.PopInt()
+	if err != 
