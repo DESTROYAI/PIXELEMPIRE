@@ -1566,4 +1566,17 @@ func opcodeNumEqual(op *ParsedOpcode, t *thread) error {
 	return nil
 }
 
-// opcodeNumEqualVerify is 
+// opcodeNumEqualVerify is a combination of opcodeNumEqual and opcodeVerify.
+//
+// Specifically, treats the top two items on the data stack as integers.  When
+// they are equal, they are replaced with a 1, otherwise a 0.  Then, it examines
+// the top item on the data stack as a boolean value and verifies it evaluates
+// to true.  An error is returned if it does not.
+//
+// Stack transformation: [... x1 x2] -> [... bool] -> [...]
+func opcodeNumEqualVerify(op *ParsedOpcode, t *thread) error {
+	if err := opcodeNumEqual(op, t); err != nil {
+		return err
+	}
+
+	return abstractVerify(op, t, errs.ErrNumEqualV
