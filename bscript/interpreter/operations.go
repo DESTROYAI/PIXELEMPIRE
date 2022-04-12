@@ -1740,3 +1740,35 @@ func opcodeMin(op *ParsedOpcode, t *thread) error {
 	n := v0
 	if v1.LessThan(v0) {
 		n = v1
+	}
+
+	t.dstack.PushInt(n)
+	return nil
+}
+
+// opcodeMax treats the top two items on the data stack as integers and replaces
+// them with the maximum of the two.
+//
+// Stack transformation: [... x1 x2] -> [... max(x1, x2)]
+func opcodeMax(op *ParsedOpcode, t *thread) error {
+	v0, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	v1, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	n := v0
+	if v1.GreaterThan(v0) {
+		n = v1
+	}
+
+	t.dstack.PushInt(n)
+	return nil
+}
+
+// opcodeWithin treats the top 3 items on the data stack as integers.  When the
+// value to test is within the specif
