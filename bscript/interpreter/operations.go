@@ -1706,4 +1706,37 @@ func opcodeGreaterThanOrEqual(op *ParsedOpcode, t *thread) error {
 	}
 
 	v1, err := t.dstack.PopInt()
-	if er
+	if err != nil {
+		return err
+	}
+
+	var n int64
+	if v1.GreaterThanOrEqual(v0) {
+		n = 1
+	}
+
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.NewInt(n),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// opcodeMin treats the top two items on the data stack as integers and replaces
+// them with the minimum of the two.
+//
+// Stack transformation: [... x1 x2] -> [... min(x1, x2)]
+func opcodeMin(op *ParsedOpcode, t *thread) error {
+	v0, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	v1, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	n := v0
+	if v1.LessThan(v0) {
+		n = v1
