@@ -1795,4 +1795,26 @@ func opcodeWithin(op *ParsedOpcode, t *thread) error {
 	}
 
 	var n int64
-	if minVal.LessThanOrEqual(x) && x.LessThan(maxVal) 
+	if minVal.LessThanOrEqual(x) && x.LessThan(maxVal) {
+		n = 1
+	}
+
+	t.dstack.PushInt(&scriptNumber{
+		val:          big.NewInt(n),
+		afterGenesis: t.afterGenesis,
+	})
+	return nil
+}
+
+// calcHash calculates the hash of hasher over buf.
+func calcHash(buf []byte, hasher hash.Hash) []byte {
+	hasher.Write(buf)
+	return hasher.Sum(nil)
+}
+
+// opcodeRipemd160 treats the top item of the data stack as raw bytes and
+// replaces it with ripemd160(data).
+//
+// Stack transformation: [... x1] -> [... ripemd160(x1)]
+func opcodeRipemd160(op *ParsedOpcode, t *thread) error {
+	buf, err := t.dstack.PopByteArra
