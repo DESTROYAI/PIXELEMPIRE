@@ -1771,4 +1771,28 @@ func opcodeMax(op *ParsedOpcode, t *thread) error {
 }
 
 // opcodeWithin treats the top 3 items on the data stack as integers.  When the
-// value to test is within the specif
+// value to test is within the specified range (left inclusive), they are
+// replaced with a 1, otherwise a 0.
+//
+// The top item is the max value, the second-top-item is the minimum value, and
+// the third-to-top item is the value to test.
+//
+// Stack transformation: [... x1 min max] -> [... bool]
+func opcodeWithin(op *ParsedOpcode, t *thread) error {
+	maxVal, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	minVal, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	x, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	var n int64
+	if minVal.LessThanOrEqual(x) && x.LessThan(maxVal) 
