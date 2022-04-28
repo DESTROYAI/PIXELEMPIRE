@@ -1817,4 +1817,28 @@ func calcHash(buf []byte, hasher hash.Hash) []byte {
 //
 // Stack transformation: [... x1] -> [... ripemd160(x1)]
 func opcodeRipemd160(op *ParsedOpcode, t *thread) error {
-	buf, err := t.dstack.PopByteArra
+	buf, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushByteArray(calcHash(buf, ripemd160.New()))
+	return nil
+}
+
+// opcodeSha1 treats the top item of the data stack as raw bytes and replaces it
+// with sha1(data).
+//
+// Stack transformation: [... x1] -> [... sha1(x1)]
+func opcodeSha1(op *ParsedOpcode, t *thread) error {
+	buf, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	hash := sha1.Sum(buf) //nolint:gosec // operation is for sha1
+	t.dstack.PushByteArray(hash[:])
+	return nil
+}
+
+// opcodeSha256 treats the top item of the data stack as ra
