@@ -1862,4 +1862,28 @@ func opcodeSha256(op *ParsedOpcode, t *thread) error {
 // Stack transformation: [... x1] -> [... ripemd160(sha256(x1))]
 func opcodeHash160(op *ParsedOpcode, t *thread) error {
 	buf, err := t.dstack.PopByteArray()
-	if err != n
+	if err != nil {
+		return err
+	}
+
+	hash := sha256.Sum256(buf)
+	t.dstack.PushByteArray(calcHash(hash[:], ripemd160.New()))
+	return nil
+}
+
+// opcodeHash256 treats the top item of the data stack as raw bytes and replaces
+// it with sha256(sha256(data)).
+//
+// Stack transformation: [... x1] -> [... sha256(sha256(x1))]
+func opcodeHash256(op *ParsedOpcode, t *thread) error {
+	buf, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	t.dstack.PushByteArray(crypto.Sha256d(buf))
+	return nil
+}
+
+// opcodeCodeSeparator stores the current script offset as the most recently
+// 
