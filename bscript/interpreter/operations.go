@@ -1841,4 +1841,25 @@ func opcodeSha1(op *ParsedOpcode, t *thread) error {
 	return nil
 }
 
-// opcodeSha256 treats the top item of the data stack as ra
+// opcodeSha256 treats the top item of the data stack as raw bytes and replaces
+// it with sha256(data).
+//
+// Stack transformation: [... x1] -> [... sha256(x1)]
+func opcodeSha256(op *ParsedOpcode, t *thread) error {
+	buf, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	hash := sha256.Sum256(buf)
+	t.dstack.PushByteArray(hash[:])
+	return nil
+}
+
+// opcodeHash160 treats the top item of the data stack as raw bytes and replaces
+// it with ripemd160(sha256(data)).
+//
+// Stack transformation: [... x1] -> [... ripemd160(sha256(x1))]
+func opcodeHash160(op *ParsedOpcode, t *thread) error {
+	buf, err := t.dstack.PopByteArray()
+	if err != n
