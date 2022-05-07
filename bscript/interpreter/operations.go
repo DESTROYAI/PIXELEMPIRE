@@ -1996,4 +1996,22 @@ func opcodeCheckSig(op *ParsedOpcode, t *thread) error {
 	}
 
 	ok := signature.Verify(hash, pubKey)
-	if !ok && t.hasFlag(scriptflag.VerifyNullFail) && len(s
+	if !ok && t.hasFlag(scriptflag.VerifyNullFail) && len(sigBytes) > 0 {
+		return errs.NewError(errs.ErrNullFail, "signature not empty on failed checksig")
+	}
+
+	t.dstack.PushBool(ok)
+	return nil
+}
+
+// opcodeCheckSigVerify is a combination of opcodeCheckSig and opcodeVerify.
+// The opcodeCheckSig function is invoked followed by opcodeVerify.  See the
+// documentation for each of those opcodes for more details.
+//
+// Stack transformation: signature pubkey] -> [... bool] -> [...]
+func opcodeCheckSigVerify(op *ParsedOpcode, t *thread) error {
+	if err := opcodeCheckSig(op, t); err != nil {
+		return err
+	}
+
+	return abstractVerify(op, t, errs.ErrChe
