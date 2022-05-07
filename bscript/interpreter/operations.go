@@ -2014,4 +2014,18 @@ func opcodeCheckSigVerify(op *ParsedOpcode, t *thread) error {
 		return err
 	}
 
-	return abstractVerify(op, t, errs.ErrChe
+	return abstractVerify(op, t, errs.ErrCheckSigVerify)
+}
+
+// parsedSigInfo houses a raw signature along with its parsed form and a flag
+// for whether or not it has already been parsed.  It is used to prevent parsing
+// the same signature multiple times when verifying a multisig.
+type parsedSigInfo struct {
+	signature       []byte
+	parsedSignature *bec.Signature
+	parsed          bool
+}
+
+// opcodeCheckMultiSig treats the top item on the stack as an integer number of
+// public keys, followed by that many entries as raw data representing the public
+// keys, followed by the integer number of signatures, followed
