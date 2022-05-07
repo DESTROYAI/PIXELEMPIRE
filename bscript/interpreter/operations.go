@@ -1980,4 +1980,20 @@ func opcodeCheckSig(op *ParsedOpcode, t *thread) error {
 
 	pubKey, err := bec.ParsePubKey(pkBytes, bec.S256())
 	if err != nil {
-		t.dstack.PushBo
+		t.dstack.PushBool(false)
+		return nil //nolint:nilerr // only need a false push in this case
+	}
+
+	var signature *bec.Signature
+	if t.hasAny(scriptflag.VerifyStrictEncoding, scriptflag.VerifyDERSignatures) {
+		signature, err = bec.ParseDERSignature(sigBytes, bec.S256())
+	} else {
+		signature, err = bec.ParseSignature(sigBytes, bec.S256())
+	}
+	if err != nil {
+		t.dstack.PushBool(false)
+		return nil //nolint:nilerr // only need a false push in this case
+	}
+
+	ok := signature.Verify(hash, pubKey)
+	if !ok && t.hasFlag(scriptflag.VerifyNullFail) && len(s
