@@ -1909,4 +1909,24 @@ func opcodeCodeSeparator(op *ParsedOpcode, t *thread) error {
 //
 // Stack transformation: [... signature pubkey] -> [... bool]
 func opcodeCheckSig(op *ParsedOpcode, t *thread) error {
-	pkBytes, err := t.dstack.
+	pkBytes, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	fullSigBytes, err := t.dstack.PopByteArray()
+	if err != nil {
+		return err
+	}
+
+	// The signature actually needs needs to be longer than this, but at
+	// least 1 byte is needed for the hash type below.  The full length is
+	// checked depending on the script flags and upon parsing the signature.
+	if len(fullSigBytes) < 1 {
+		t.dstack.PushBool(false)
+		return nil
+	}
+
+	// Trim off hashtype from the signature string and check if the
+	// signature and pubkey conform to the strict encoding requirements
+	// dependi
