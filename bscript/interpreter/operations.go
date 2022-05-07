@@ -1900,4 +1900,13 @@ func opcodeCodeSeparator(op *ParsedOpcode, t *thread) error {
 //
 // The process of verifying a signature requires calculating a signature hash in
 // the same way the transaction signer did.  It involves hashing portions of the
-// transaction based on the has
+// transaction based on the hash type byte (which is the final byte of the
+// signature) and the portion of the script starting from the most recent
+// bscript.OpCODESEPARATOR (or the beginning of the script if there are none) to the
+// end of the script (with any other bscript.OpCODESEPARATORs removed).  Once this
+// "script hash" is calculated, the signature is checked using standard
+// cryptographic methods against the provided public key.
+//
+// Stack transformation: [... signature pubkey] -> [... bool]
+func opcodeCheckSig(op *ParsedOpcode, t *thread) error {
+	pkBytes, err := t.dstack.
