@@ -1929,4 +1929,13 @@ func opcodeCheckSig(op *ParsedOpcode, t *thread) error {
 
 	// Trim off hashtype from the signature string and check if the
 	// signature and pubkey conform to the strict encoding requirements
-	// dependi
+	// depending on the flags.
+	//
+	// NOTE: When the strict encoding flags are set, any errors in the
+	// signature or public encoding here result in an immediate script error
+	// (and thus no result bool is pushed to the data stack).  This differs
+	// from the logic below where any errors in parsing the signature is
+	// treated as the signature failure resulting in false being pushed to
+	// the data stack.  This is required because the more general script
+	// validation consensus rules do not have the new strict encoding
+	// requirements enabled by the flags
