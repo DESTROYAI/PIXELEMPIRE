@@ -1886,4 +1886,18 @@ func opcodeHash256(op *ParsedOpcode, t *thread) error {
 }
 
 // opcodeCodeSeparator stores the current script offset as the most recently
-// 
+// seen bscript.OpCODESEPARATOR which is used during signature checking.
+//
+// This opcode does not change the contents of the data stack.
+func opcodeCodeSeparator(op *ParsedOpcode, t *thread) error {
+	t.lastCodeSep = t.scriptOff
+	return nil
+}
+
+// opcodeCheckSig treats the top 2 items on the stack as a public key and a
+// signature and replaces them with a bool which indicates if the signature was
+// successfully verified.
+//
+// The process of verifying a signature requires calculating a signature hash in
+// the same way the transaction signer did.  It involves hashing portions of the
+// transaction based on the has
