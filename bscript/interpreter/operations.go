@@ -1938,4 +1938,25 @@ func opcodeCheckSig(op *ParsedOpcode, t *thread) error {
 	// treated as the signature failure resulting in false being pushed to
 	// the data stack.  This is required because the more general script
 	// validation consensus rules do not have the new strict encoding
-	// requirements enabled by the flags
+	// requirements enabled by the flags.
+	shf := sighash.Flag(fullSigBytes[len(fullSigBytes)-1])
+	sigBytes := fullSigBytes[:len(fullSigBytes)-1]
+	if err = t.checkHashTypeEncoding(shf); err != nil {
+		return err
+	}
+	if err = t.checkSignatureEncoding(sigBytes); err != nil {
+		return err
+	}
+	if err = t.checkPubKeyEncoding(pkBytes); err != nil {
+		return err
+	}
+
+	// Get script starting from the most recent bscript.OpCODESEPARATOR.
+	subScript := t.subScript()
+
+	// Generate the signature hash based on the signature hash type.
+	var hash []byte
+
+	// Remove the signature since there is no way for a signature
+	// to sign itself.
+	if !t.hasF
