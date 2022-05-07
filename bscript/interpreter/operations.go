@@ -1959,4 +1959,25 @@ func opcodeCheckSig(op *ParsedOpcode, t *thread) error {
 
 	// Remove the signature since there is no way for a signature
 	// to sign itself.
-	if !t.hasF
+	if !t.hasFlag(scriptflag.EnableSighashForkID) || !shf.Has(sighash.ForkID) {
+		subScript = subScript.removeOpcodeByData(fullSigBytes)
+		subScript = subScript.removeOpcode(bscript.OpCODESEPARATOR)
+	}
+
+	up, err := t.scriptParser.Unparse(subScript)
+	if err != nil {
+		return err
+	}
+
+	txCopy := t.tx.Clone()
+	txCopy.Inputs[t.inputIdx].PreviousTxScript = up
+
+	hash, err = txCopy.CalcInputSignatureHash(uint32(t.inputIdx), shf)
+	if err != nil {
+		t.dstack.PushBool(false)
+		return err
+	}
+
+	pubKey, err := bec.ParsePubKey(pkBytes, bec.S256())
+	if err != nil {
+		t.dstack.PushBo
