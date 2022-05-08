@@ -2028,4 +2028,14 @@ type parsedSigInfo struct {
 
 // opcodeCheckMultiSig treats the top item on the stack as an integer number of
 // public keys, followed by that many entries as raw data representing the public
-// keys, followed by the integer number of signatures, followed
+// keys, followed by the integer number of signatures, followed by that many
+// entries as raw data representing the signatures.
+//
+// Due to a bug in the original Satoshi client implementation, an additional
+// dummy argument is also required by the consensus rules, although it is not
+// used.  The dummy value SHOULD be an bscript.Op0, although that is not required by
+// the consensus rules.  When the ScriptStrictMultiSig flag is set, it must be
+// bscript.Op0.
+//
+// All of the aforementioned stack items are replaced with a bool which
+// indicates if the requisite number of signatures were 
