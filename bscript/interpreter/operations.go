@@ -2038,4 +2038,22 @@ type parsedSigInfo struct {
 // bscript.Op0.
 //
 // All of the aforementioned stack items are replaced with a bool which
-// indicates if the requisite number of signatures were 
+// indicates if the requisite number of signatures were successfully verified.
+//
+// See the opcodeCheckSigVerify documentation for more details about the process
+// for verifying each signature.
+//
+// Stack transformation:
+// [... dummy [sig ...] numsigs [pubkey ...] numpubkeys] -> [... bool]
+func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
+	numKeys, err := t.dstack.PopInt()
+	if err != nil {
+		return err
+	}
+
+	numPubKeys := numKeys.Int()
+	if numPubKeys < 0 {
+		return errs.NewError(errs.ErrInvalidPubKeyCount, "number of pubkeys %d is negative", numPubKeys)
+	}
+	if numPubKeys > t.cfg.MaxPubKeysPerMultiSig() {
+		return errs.New
