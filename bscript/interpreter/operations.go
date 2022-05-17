@@ -2056,4 +2056,25 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 		return errs.NewError(errs.ErrInvalidPubKeyCount, "number of pubkeys %d is negative", numPubKeys)
 	}
 	if numPubKeys > t.cfg.MaxPubKeysPerMultiSig() {
-		return errs.New
+		return errs.NewError(
+			errs.ErrInvalidPubKeyCount,
+			"too many pubkeys: %d > %d",
+			numPubKeys, t.cfg.MaxPubKeysPerMultiSig(),
+		)
+	}
+	t.numOps += numPubKeys
+	if t.numOps > t.cfg.MaxOps() {
+		return errs.NewError(errs.ErrTooManyOperations, "exceeded max operation limit of %d", t.cfg.MaxOps())
+	}
+
+	pubKeys := make([][]byte, 0, numPubKeys)
+	for i := 0; i < numPubKeys; i++ {
+		pubKey, err := t.dstack.PopByteArray() //nolint:govet // ignore shadowed error
+		if err != nil {
+			return err
+		}
+		pubKeys = append(pubKeys, pubKey)
+	}
+
+	numSigs, err := t.dstack.PopInt()
+	if err
