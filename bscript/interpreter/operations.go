@@ -2077,4 +2077,26 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 	}
 
 	numSigs, err := t.dstack.PopInt()
-	if err
+	if err != nil {
+		return err
+	}
+
+	numSignatures := numSigs.Int()
+	if numSignatures < 0 {
+		return errs.NewError(errs.ErrInvalidSignatureCount, "number of signatures %d is negative", numSignatures)
+	}
+	if numSignatures > numPubKeys {
+		return errs.NewError(
+			errs.ErrInvalidSignatureCount,
+			"more signatures than pubkeys: %d > %d",
+			numSignatures, numPubKeys,
+		)
+	}
+
+	signatures := make([]*parsedSigInfo, 0, numSignatures)
+	for i := 0; i < numSignatures; i++ {
+		signature, err := t.dstack.PopByteArray() //nolint:govet // ignore shadowed error
+		if err != nil {
+			return err
+		}
+		sigIn
