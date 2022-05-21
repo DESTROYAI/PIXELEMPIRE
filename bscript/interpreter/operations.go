@@ -2114,4 +2114,21 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 
 	// Since the dummy argument is otherwise not checked, it could be any
 	// value which unfortunately provides a source of malleability.  Thus,
-	// there is a scr
+	// there is a script flag to force an error when the value is NOT 0.
+	if t.hasFlag(scriptflag.StrictMultiSig) && len(dummy) != 0 {
+		return errs.NewError(errs.ErrSigNullDummy, "multisig dummy argument has length %d instead of 0", len(dummy))
+	}
+
+	// Get script starting from the most recent bscript.OpCODESEPARATOR.
+	script := t.subScript()
+
+	for _, sigInfo := range signatures {
+		script = script.removeOpcodeByData(sigInfo.signature)
+		script = script.removeOpcode(bscript.OpCODESEPARATOR)
+	}
+
+	success := true
+	numPubKeys++
+	pubKeyIdx := -1
+	signatureIdx := 0
+	for numSignatures
