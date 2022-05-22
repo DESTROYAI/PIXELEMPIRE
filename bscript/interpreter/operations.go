@@ -2151,4 +2151,24 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 
 		rawSig := sigInfo.signature
 		if len(rawSig) == 0 {
-			// Skip to the next pubkey if sign
+			// Skip to the next pubkey if signature is empty.
+			continue
+		}
+
+		// Split the signature into hash type and signature components.
+		shf := sighash.Flag(rawSig[len(rawSig)-1])
+		signature := rawSig[:len(rawSig)-1]
+
+		// Only parse and check the signature encoding once.
+		var parsedSig *bec.Signature
+		if !sigInfo.parsed {
+			if err := t.checkHashTypeEncoding(shf); err != nil {
+				return err
+			}
+			if err := t.checkSignatureEncoding(signature); err != nil {
+				return err
+			}
+
+			// Parse the signature.
+			var err error
+			if t.hasAny(scriptflag.VerifyStrictEncoding, scriptf
