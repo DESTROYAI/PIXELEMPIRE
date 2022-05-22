@@ -2131,4 +2131,24 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 	numPubKeys++
 	pubKeyIdx := -1
 	signatureIdx := 0
-	for numSignatures
+	for numSignatures > 0 {
+		// When there are more signatures than public keys remaining,
+		// there is no way to succeed since too many signatures are
+		// invalid, so exit early.
+		pubKeyIdx++
+		numPubKeys--
+		if numSignatures > numPubKeys {
+			success = false
+			break
+		}
+
+		sigInfo := signatures[signatureIdx]
+		pubKey := pubKeys[pubKeyIdx]
+
+		// The order of the signature and public key evaluation is
+		// important here since it can be distinguished by an
+		// bscript.OpCHECKMULTISIG NOT when the strict encoding flag is set.
+
+		rawSig := sigInfo.signature
+		if len(rawSig) == 0 {
+			// Skip to the next pubkey if sign
