@@ -2239,4 +2239,19 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 }
 
 // opcodeCheckMultiSigVerify is a combination of opcodeCheckMultiSig and
-// opcodeVerify.  The opcodeCheckMultiSig is
+// opcodeVerify.  The opcodeCheckMultiSig is invoked followed by opcodeVerify.
+// See the documentation for each of those opcodes for more details.
+//
+// Stack transformation:
+// [... dummy [sig ...] numsigs [pubkey ...] numpubkeys] -> [... bool] -> [...]
+func opcodeCheckMultiSigVerify(op *ParsedOpcode, t *thread) error {
+	if err := opcodeCheckMultiSig(op, t); err != nil {
+		return err
+	}
+
+	return abstractVerify(op, t, errs.ErrCheckMultiSigVerify)
+}
+
+func success() errs.Error {
+	return errs.NewError(errs.ErrOK, "success")
+}
