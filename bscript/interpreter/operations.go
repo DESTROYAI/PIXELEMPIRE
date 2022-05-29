@@ -2171,4 +2171,29 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 
 			// Parse the signature.
 			var err error
-			if t.hasAny(scriptflag.VerifyStrictEncoding, scriptf
+			if t.hasAny(scriptflag.VerifyStrictEncoding, scriptflag.VerifyDERSignatures) {
+				parsedSig, err = bec.ParseDERSignature(signature,
+					bec.S256())
+			} else {
+				parsedSig, err = bec.ParseSignature(signature,
+					bec.S256())
+			}
+			sigInfo.parsed = true
+			if err != nil {
+				continue
+			}
+			sigInfo.parsedSignature = parsedSig
+		} else {
+			// Skip to the next pubkey if the signature is invalid.
+			if sigInfo.parsedSignature == nil {
+				continue
+			}
+
+			// Use the already parsed signature.
+			parsedSig = sigInfo.parsedSignature
+		}
+
+		if err := t.checkPubKeyEncoding(pubKey); err != nil {
+			return err
+		}
+
