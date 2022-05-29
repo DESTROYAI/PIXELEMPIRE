@@ -2197,3 +2197,23 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 			return err
 		}
 
+		// Parse the pubkey.
+		parsedPubKey, err := bec.ParsePubKey(pubKey, bec.S256())
+		if err != nil {
+			continue
+		}
+
+		up, err := t.scriptParser.Unparse(script)
+		if err != nil {
+			t.dstack.PushBool(false)
+			return nil //nolint:nilerr // only need a false push in this case
+		}
+
+		// Generate the signature hash based on the signature hash type.
+		txCopy := t.tx.Clone()
+		txCopy.Inputs[t.inputIdx].PreviousTxScript = up
+
+		signatureHash, err := txCopy.CalcInputSignatureHash(uint32(t.inputIdx), shf)
+		if err != nil {
+			t.dstack.PushBool(false)
+			return nil //noli
