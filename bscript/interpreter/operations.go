@@ -2216,4 +2216,27 @@ func opcodeCheckMultiSig(op *ParsedOpcode, t *thread) error {
 		signatureHash, err := txCopy.CalcInputSignatureHash(uint32(t.inputIdx), shf)
 		if err != nil {
 			t.dstack.PushBool(false)
-			return nil //noli
+			return nil //nolint:nilerr // only need a false push in this case
+		}
+
+		if ok := parsedSig.Verify(signatureHash, parsedPubKey); ok {
+			// PubKey verified, move on to the next signature.
+			signatureIdx++
+			numSignatures--
+		}
+	}
+
+	if !success && t.hasFlag(scriptflag.VerifyNullFail) {
+		for _, sig := range signatures {
+			if len(sig.signature) > 0 {
+				return errs.NewError(errs.ErrNullFail, "not all signatures empty on failed checkmultisig")
+			}
+		}
+	}
+
+	t.dstack.PushBool(success)
+	return nil
+}
+
+// opcodeCheckMultiSigVerify is a combination of opcodeCheckMultiSig and
+// opcodeVerify.  The opcodeCheckMultiSig is
