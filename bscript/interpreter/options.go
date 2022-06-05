@@ -57,4 +57,18 @@ func WithFlags(flags scriptflag.Flag) ExecutionOptionFunc {
 // WithDebugger enable execution debugging with the provided configured debugger.
 // It is important to note that when this setting is applied, it enables thread
 // state cloning, at every configured debug step.
-func WithDebugger(debugger Debugge
+func WithDebugger(debugger Debugger) ExecutionOptionFunc {
+	return func(p *execOpts) {
+		p.debugger = debugger
+	}
+}
+
+// WithState inject the provided state into the execution thread. This assumes
+// that the state is correct for the scripts provided.
+//
+// NOTE: This is highly experimental and is unstable when used with unintended states,
+// and likely still when used in a happy path scenario. Therefore, it is recommended
+// to only be used for debugging purposes.
+//
+// The safest recommended *interpreter.State records for a given script can be
+// are those which can be captured during `debugg
