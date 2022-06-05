@@ -40,4 +40,21 @@ func WithForkID() ExecutionOptionFunc {
 	}
 }
 
-// WithP2SH
+// WithP2SH configure the execution to allow a P2SH output.
+func WithP2SH() ExecutionOptionFunc {
+	return func(p *execOpts) {
+		p.flags.AddFlag(scriptflag.Bip16)
+	}
+}
+
+// WithFlags configure the execution with the provided flags.
+func WithFlags(flags scriptflag.Flag) ExecutionOptionFunc {
+	return func(p *execOpts) {
+		p.flags.AddFlag(flags)
+	}
+}
+
+// WithDebugger enable execution debugging with the provided configured debugger.
+// It is important to note that when this setting is applied, it enables thread
+// state cloning, at every configured debug step.
+func WithDebugger(debugger Debugge
