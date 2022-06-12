@@ -71,4 +71,9 @@ func WithDebugger(debugger Debugger) ExecutionOptionFunc {
 // to only be used for debugging purposes.
 //
 // The safest recommended *interpreter.State records for a given script can be
-// are those which can be captured during `debugg
+// are those which can be captured during `debugger.BeforeStep` and `debugger.AfterStep`.
+func WithState(state *State) ExecutionOptionFunc {
+	return func(p *execOpts) {
+		p.state = state
+	}
+}
