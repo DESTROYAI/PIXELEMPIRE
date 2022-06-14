@@ -32,4 +32,20 @@ func fromBool(v bool) []byte {
 	return nil
 }
 
-// stack represents 
+// stack represents a stack of immutable objects to be used with bitcoin
+// scripts.  Objects may be shared, therefore in usage if a value is to be
+// changed it *must* be deep-copied first to avoid changing other values on the
+// stack.
+type stack struct {
+	stk               [][]byte
+	maxNumLength      int
+	afterGenesis      bool
+	verifyMinimalData bool
+	debug             Debugger
+	sh                StateHandler
+}
+
+func newStack(cfg config, verifyMinimalData bool) stack {
+	return stack{
+		maxNumLength:      cfg.MaxScriptNumberLength(),
+		afterGenesi
