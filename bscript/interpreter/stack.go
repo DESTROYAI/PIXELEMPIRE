@@ -48,4 +48,25 @@ type stack struct {
 func newStack(cfg config, verifyMinimalData bool) stack {
 	return stack{
 		maxNumLength:      cfg.MaxScriptNumberLength(),
-		afterGenesi
+		afterGenesis:      cfg.AfterGenesis(),
+		verifyMinimalData: verifyMinimalData,
+		debug:             &nopDebugger{},
+		sh:                &nopStateHandler{},
+	}
+}
+
+// Depth returns the number of items on the stack.
+func (s *stack) Depth() int32 {
+	return int32(len(s.stk))
+}
+
+// PushByteArray adds the given back array to the top of the stack.
+//
+// Stack transformation: [... x1 x2] -> [... x1 x2 data]
+func (s *stack) PushByteArray(so []byte) {
+	defer s.afterStackPush(so)
+	s.beforeStackPush(so)
+	s.stk = append(s.stk, so)
+}
+
+// PushInt converts the provided scriptNumber
