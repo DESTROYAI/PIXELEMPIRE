@@ -69,4 +69,23 @@ func (s *stack) PushByteArray(so []byte) {
 	s.stk = append(s.stk, so)
 }
 
-// PushInt converts the provided scriptNumber
+// PushInt converts the provided scriptNumber to a suitable byte array then pushes
+// it onto the top of the stack.
+//
+// Stack transformation: [... x1 x2] -> [... x1 x2 int]
+func (s *stack) PushInt(n *scriptNumber) {
+	s.PushByteArray(n.Bytes())
+}
+
+// PushBool converts the provided boolean to a suitable byte array then pushes
+// it onto the top of the stack.
+//
+// Stack transformation: [... x1 x2] -> [... x1 x2 bool]
+func (s *stack) PushBool(val bool) {
+	s.PushByteArray(fromBool(val))
+}
+
+// PopByteArray pops the value off the top of the stack and returns it.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1 x2]
+func (s *stack) Pop
