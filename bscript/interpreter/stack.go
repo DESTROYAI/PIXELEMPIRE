@@ -88,4 +88,25 @@ func (s *stack) PushBool(val bool) {
 // PopByteArray pops the value off the top of the stack and returns it.
 //
 // Stack transformation: [... x1 x2 x3] -> [... x1 x2]
-func (s *stack) Pop
+func (s *stack) PopByteArray() ([]byte, error) {
+	s.beforeStackPop()
+	data, err := s.nipN(0)
+	if err != nil {
+		return nil, err
+	}
+	s.afterStackPop(data)
+	return data, nil
+}
+
+// PopInt pops the value off the top of the stack, converts it into a scriptNumber,
+// and returns it.  The act of converting to a script num enforces the
+// consensus rules imposed on data interpreted as numbers.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1 x2]
+func (s *stack) PopInt() (*scriptNumber, error) {
+	so, err := s.PopByteArray()
+	if err != nil {
+		return nil, err
+	}
+
+	return makeScriptNu
