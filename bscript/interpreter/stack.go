@@ -129,4 +129,23 @@ func (s *stack) PopBool() (bool, error) {
 func (s *stack) PeekByteArray(idx int32) ([]byte, error) {
 	sz := int32(len(s.stk))
 	if idx < 0 || idx >= sz {
-		return nil, errs.NewError(errs.ErrInvalidStackOperati
+		return nil, errs.NewError(errs.ErrInvalidStackOperation, "index %d is invalid for stack size %d", idx, sz)
+	}
+
+	return s.stk[sz-idx-1], nil
+}
+
+// PeekInt returns the Nth item on the stack as a script num without removing
+// it.  The act of converting to a script num enforces the consensus rules
+// imposed on data interpreted as numbers.
+func (s *stack) PeekInt(idx int32) (*scriptNumber, error) {
+	so, err := s.PeekByteArray(idx)
+	if err != nil {
+		return nil, err
+	}
+
+	return makeScriptNumber(so, s.maxNumLength, s.verifyMinimalData, s.afterGenesis)
+}
+
+// PeekBool returns the Nth item on the stack as a bool without removing it.
+func (s *stac
