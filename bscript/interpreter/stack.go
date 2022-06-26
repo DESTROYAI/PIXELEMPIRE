@@ -109,4 +109,24 @@ func (s *stack) PopInt() (*scriptNumber, error) {
 		return nil, err
 	}
 
-	return makeScriptNu
+	return makeScriptNumber(so, s.maxNumLength, s.verifyMinimalData, s.afterGenesis)
+}
+
+// PopBool pops the value off the top of the stack, converts it into a bool, and
+// returns it.
+//
+// Stack transformation: [... x1 x2 x3] -> [... x1 x2]
+func (s *stack) PopBool() (bool, error) {
+	so, err := s.PopByteArray()
+	if err != nil {
+		return false, err
+	}
+
+	return asBool(so), nil
+}
+
+// PeekByteArray returns the Nth item on the stack without removing it.
+func (s *stack) PeekByteArray(idx int32) ([]byte, error) {
+	sz := int32(len(s.stk))
+	if idx < 0 || idx >= sz {
+		return nil, errs.NewError(errs.ErrInvalidStackOperati
