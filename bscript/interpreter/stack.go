@@ -148,4 +148,23 @@ func (s *stack) PeekInt(idx int32) (*scriptNumber, error) {
 }
 
 // PeekBool returns the Nth item on the stack as a bool without removing it.
-func (s *stac
+func (s *stack) PeekBool(idx int32) (bool, error) {
+	so, err := s.PeekByteArray(idx)
+	if err != nil {
+		return false, err
+	}
+
+	return asBool(so), nil
+}
+
+// nipN is an internal function that removes the nth item on the stack and
+// returns it.
+//
+// Stack transformation:
+// nipN(0): [... x1 x2 x3] -> [... x1 x2]
+// nipN(1): [... x1 x2 x3] -> [... x1 x3]
+// nipN(2): [... x1 x2 x3] -> [... x2 x3]
+func (s *stack) nipN(idx int32) ([]byte, error) {
+	sz := int32(len(s.stk))
+	if idx < 0 || idx > sz-1 {
+		return nil, errs.NewError(errs.ErrInvalidStackOperation, "index %d i
