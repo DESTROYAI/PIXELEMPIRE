@@ -193,4 +193,30 @@ func (s *stack) nipN(idx int32) ([]byte, error) {
 // NipN(2): [... x1 x2 x3] -> [... x2 x3]
 func (s *stack) NipN(idx int32) error {
 	_, err := s.nipN(idx)
-	ret
+	return err
+}
+
+// Tuck copies the item at the top of the stack and inserts it before the 2nd
+// to top item.
+//
+// Stack transformation: [... x1 x2] -> [... x2 x1 x2]
+func (s *stack) Tuck() error {
+	so2, err := s.PopByteArray()
+	if err != nil {
+		return err
+	}
+	so1, err := s.PopByteArray()
+	if err != nil {
+		return err
+	}
+	s.PushByteArray(so2) // stack [... x2]
+	s.PushByteArray(so1) // stack [... x2 x1]
+	s.PushByteArray(so2) // stack [... x2 x1 x2]
+
+	return nil
+}
+
+// DropN removes the top N items from the stack.
+//
+// Stack transformation:
+// DropN(1): [... x1 x2] 
