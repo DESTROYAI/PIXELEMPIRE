@@ -219,4 +219,27 @@ func (s *stack) Tuck() error {
 // DropN removes the top N items from the stack.
 //
 // Stack transformation:
-// DropN(1): [... x1 x2] 
+// DropN(1): [... x1 x2] -> [... x1]
+// DropN(2): [... x1 x2] -> [...]
+func (s *stack) DropN(n int32) error {
+	if n < 1 {
+		return errs.NewError(errs.ErrInvalidStackOperation, "attempt to drop %d items from stack", n)
+	}
+
+	for ; n > 0; n-- {
+		_, err := s.PopByteArray()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// DupN duplicates the top N items on the stack.
+//
+// Stack transformation:
+// DupN(1): [... x1 x2] -> [... x1 x2 x2]
+// DupN(2): [... x1 x2] -> [... x1 x2 x1 x2]
+func (s *stack) DupN(n int32) error {
+	if n < 1 {
+		return errs.NewError(errs.ErrInvalidStackOperation, "attempt to d
