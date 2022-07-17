@@ -242,4 +242,26 @@ func (s *stack) DropN(n int32) error {
 // DupN(2): [... x1 x2] -> [... x1 x2 x1 x2]
 func (s *stack) DupN(n int32) error {
 	if n < 1 {
-		return errs.NewError(errs.ErrInvalidStackOperation, "attempt to d
+		return errs.NewError(errs.ErrInvalidStackOperation, "attempt to dup %d stack items", n)
+	}
+
+	// Iteratively duplicate the value n-1 down the stack n times.
+	// This leaves an in-order duplicate of the top n items on the stack.
+	for i := n; i > 0; i-- {
+		so, err := s.PeekByteArray(n - 1)
+		if err != nil {
+			return err
+		}
+		s.PushByteArray(so)
+	}
+	return nil
+}
+
+// RotN rotates the top 3N items on the stack to the left N times.
+//
+// Stack transformation:
+// RotN(1): [... x1 x2 x3] -> [... x2 x3 x1]
+// RotN(2): [... x1 x2 x3 x4 x5 x6] -> [... x3 x4 x5 x6 x1 x2]
+func (s *stack) RotN(n int32) error {
+	if n < 1 {
+		return errs.NewError(errs.ErrIn
