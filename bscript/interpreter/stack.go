@@ -264,4 +264,28 @@ func (s *stack) DupN(n int32) error {
 // RotN(2): [... x1 x2 x3 x4 x5 x6] -> [... x3 x4 x5 x6 x1 x2]
 func (s *stack) RotN(n int32) error {
 	if n < 1 {
-		return errs.NewError(errs.ErrIn
+		return errs.NewError(errs.ErrInvalidStackOperation, "attempt to rotate %d stack items", n)
+	}
+
+	// Nip the 3n-1th item from the stack to the top n times to rotate
+	// them up to the head of the stack.
+	entry := 3*n - 1
+	for i := n; i > 0; i-- {
+		so, err := s.nipN(entry)
+		if err != nil {
+			return err
+		}
+
+		s.PushByteArray(so)
+	}
+	return nil
+}
+
+// SwapN swaps the top N items on the stack with those below them.
+//
+// Stack transformation:
+// SwapN(1): [... x1 x2] -> [... x2 x1]
+// SwapN(2): [... x1 x2 x3 x4] -> [... x3 x4 x1 x2]
+func (s *stack) SwapN(n int32) error {
+	if n < 1 {
+		return errs.NewError(errs.ErrInvalidStackOperation, "attempt 
