@@ -314,4 +314,33 @@ func (s *stack) OverN(n int32) error {
 		return errs.NewError(errs.ErrInvalidStackOperation, "attempt to perform over on %d stack items", n)
 	}
 
-	// Co
+	// Copy 2n-1th entry to top of the stack.
+	entry := 2*n - 1
+	for ; n > 0; n-- {
+		so, err := s.PeekByteArray(entry)
+		if err != nil {
+			return err
+		}
+		s.PushByteArray(so)
+	}
+
+	return nil
+}
+
+// PickN copies the item N items back in the stack to the top.
+//
+// Stack transformation:
+// PickN(0): [x1 x2 x3] -> [x1 x2 x3 x3]
+// PickN(1): [x1 x2 x3] -> [x1 x2 x3 x2]
+// PickN(2): [x1 x2 x3] -> [x1 x2 x3 x1]
+func (s *stack) PickN(n int32) error {
+	so, err := s.PeekByteArray(n)
+	if err != nil {
+		return err
+	}
+	s.PushByteArray(so)
+
+	return nil
+}
+
+// RollN moves the item N items back in the stack t
