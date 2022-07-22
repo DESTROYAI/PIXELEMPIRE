@@ -373,4 +373,32 @@ func (s *stack) String() string {
 	return result
 }
 
-func (s *stack) beforeStackPush(bb []byte) 
+func (s *stack) beforeStackPush(bb []byte) {
+	s.debug.BeforeStackPush(s.sh.State(), bb)
+}
+
+func (s *stack) afterStackPush(bb []byte) {
+	s.debug.AfterStackPush(s.sh.State(), bb)
+}
+
+func (s *stack) beforeStackPop() {
+	s.debug.BeforeStackPop(s.sh.State())
+}
+
+func (s *stack) afterStackPop(bb []byte) {
+	s.debug.AfterStackPop(s.sh.State(), bb)
+}
+
+type boolStack interface {
+	PushBool(b bool)
+	PopBool() (bool, error)
+	PeekBool(int32) (bool, error)
+	Depth() int32
+}
+
+type nopBoolStack struct{}
+
+func (n *nopBoolStack) PushBool(bool) {}
+
+func (n *nopBoolStack) PopBool() (bool, error) {
+	return
