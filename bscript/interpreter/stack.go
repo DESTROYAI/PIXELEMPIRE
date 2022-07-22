@@ -343,4 +343,34 @@ func (s *stack) PickN(n int32) error {
 	return nil
 }
 
-// RollN moves the item N items back in the stack t
+// RollN moves the item N items back in the stack to the top.
+//
+// Stack transformation:
+// RollN(0): [x1 x2 x3] -> [x1 x2 x3]
+// RollN(1): [x1 x2 x3] -> [x1 x3 x2]
+// RollN(2): [x1 x2 x3] -> [x2 x3 x1]
+func (s *stack) RollN(n int32) error {
+	so, err := s.nipN(n)
+	if err != nil {
+		return err
+	}
+
+	s.PushByteArray(so)
+
+	return nil
+}
+
+// String returns the stack in a readable format.
+func (s *stack) String() string {
+	var result string
+	for _, stack := range s.stk {
+		if len(stack) == 0 {
+			result += "00000000  <empty>\n"
+		}
+		result += hex.Dump(stack)
+	}
+
+	return result
+}
+
+func (s *stack) beforeStackPush(bb []byte) 
