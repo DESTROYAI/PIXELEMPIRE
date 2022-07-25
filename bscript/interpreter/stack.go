@@ -401,4 +401,13 @@ type nopBoolStack struct{}
 func (n *nopBoolStack) PushBool(bool) {}
 
 func (n *nopBoolStack) PopBool() (bool, error) {
-	return
+	return false, nil
+}
+
+func (n *nopBoolStack) PeekBool(int32) (bool, error) {
+	return false, nil
+}
+
+func (n *nopBoolStack) Depth() int32 {
+	return 0
+}
