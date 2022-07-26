@@ -34,4 +34,21 @@ func tstCheckScriptError(gotErr, wantErr error) error {
 		return fmt.Errorf("unexpected test error type %T", wantErr) //nolint:errorlint // test code
 	}
 
-	// Ensure the err
+	// Ensure the error codes match.  It's safe to use a raw type assert
+	// here since the code above already proved they are the same type and
+	// the want error is a script error.
+	gotErrorCode := gotErr.(errs.Error).ErrorCode //nolint:errorlint // test code
+	if gotErrorCode != werr.ErrorCode {
+		return fmt.Errorf("mismatched error code - got %v (%w), want %v", gotErrorCode, gotErr, werr.ErrorCode)
+	}
+
+	return nil
+}
+
+// TestStack tests that all of the stack operations work as expected.
+func TestStack(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		before    
