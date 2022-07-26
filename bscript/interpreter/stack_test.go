@@ -51,4 +51,34 @@ func TestStack(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		before    
+		before    [][]byte
+		operation func(*stack) error
+		err       error
+		after     [][]byte
+	}{
+		{
+			"noop",
+			[][]byte{{1}, {2}, {3}, {4}, {5}},
+			func(s *stack) error {
+				return nil
+			},
+			nil,
+			[][]byte{{1}, {2}, {3}, {4}, {5}},
+		},
+		{
+			"peek underflow (byte)",
+			[][]byte{{1}, {2}, {3}, {4}, {5}},
+			func(s *stack) error {
+				_, err := s.PeekByteArray(5)
+				return err
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"peek underflow (int)",
+			[][]byte{{1}, {2}, {3}, {4}, {5}},
+			func(s *stack) error {
+				_, err := s.PeekInt(5)
+				return err
+	
