@@ -81,4 +81,34 @@ func TestStack(t *testing.T) {
 			func(s *stack) error {
 				_, err := s.PeekInt(5)
 				return err
-	
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"peek underflow (bool)",
+			[][]byte{{1}, {2}, {3}, {4}, {5}},
+			func(s *stack) error {
+				_, err := s.PeekBool(5)
+				return err
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"pop",
+			[][]byte{{1}, {2}, {3}, {4}, {5}},
+			func(s *stack) error {
+				val, err := s.PopByteArray()
+				if err != nil {
+					return err
+				}
+				if !bytes.Equal(val, []byte{5}) {
+					return errors.New("not equal")
+				}
+				return err
+			},
+			nil,
+			[][]byte{{1}, {2}, {3}, {4}},
+		},
+		
