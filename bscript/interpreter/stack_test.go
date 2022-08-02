@@ -145,4 +145,46 @@ func TestStack(t *testing.T) {
 			"pop bool",
 			[][]byte{nil},
 			func(s *stack) error {
-		
+				val, err := s.PopBool()
+				if err != nil {
+					return err
+				}
+
+				if val {
+					return errors.New("unexpected value")
+				}
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"pop bool",
+			[][]byte{{1}},
+			func(s *stack) error {
+				val, err := s.PopBool()
+				if err != nil {
+					return err
+				}
+
+				if !val {
+					return errors.New("unexpected value")
+				}
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"pop bool",
+			nil,
+			func(s *stack) error {
+				_, err := s.PopBool()
+				return err
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"popInt 0",
+	
