@@ -111,4 +111,38 @@ func TestStack(t *testing.T) {
 			nil,
 			[][]byte{{1}, {2}, {3}, {4}},
 		},
+		{
+			"pop everything",
+			[][]byte{{1}, {2}, {3}, {4}, {5}},
+			func(s *stack) error {
+				for i := 0; i < 5; i++ {
+					_, err := s.PopByteArray()
+					if err != nil {
+						return err
+					}
+				}
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"pop underflow",
+			[][]byte{{1}, {2}, {3}, {4}, {5}},
+			func(s *stack) error {
+				for i := 0; i < 6; i++ {
+					_, err := s.PopByteArray()
+					if err != nil {
+						return err
+					}
+				}
+				return nil
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"pop bool",
+			[][]byte{nil},
+			func(s *stack) error {
 		
