@@ -291,4 +291,36 @@ func TestStack(t *testing.T) {
 					return err
 				}
 				if v.Int() != -513 {
-					return errors
+					return errors.New("-513 != -513 on popInt")
+				}
+				return nil
+			},
+			nil,
+			nil,
+		},
+		// Confirm that the asInt code doesn't modify the base data.
+		{
+			"peekint nomodify -1",
+			[][]byte{{0x01, 0x00, 0x00, 0x80}},
+			func(s *stack) error {
+				v, err := s.PeekInt(0)
+				if err != nil {
+					return err
+				}
+				if v.Int() != -1 {
+					return errors.New("-1 != -1 on popInt")
+				}
+				return nil
+			},
+			nil,
+			[][]byte{{0x01, 0x00, 0x00, 0x80}},
+		},
+		{
+			"PushInt 0",
+			nil,
+			func(s *stack) error {
+				s.PushInt(&scriptNumber{val: big.NewInt(0)})
+				return nil
+			},
+			nil,
+			[][]byte{
