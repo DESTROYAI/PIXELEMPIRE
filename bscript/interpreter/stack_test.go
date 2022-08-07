@@ -223,4 +223,38 @@ func TestStack(t *testing.T) {
 			func(s *stack) error {
 				v, err := s.PopInt()
 				if err != nil {
-	
+					return err
+				}
+				if v.Int() != 1 {
+					return errors.New("1 != 1 on popInt")
+				}
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"popInt 1 leading 0",
+			[][]byte{{0x01, 0x00, 0x00, 0x00}},
+			func(s *stack) error {
+				v, err := s.PopInt()
+				if err != nil {
+					return err
+				}
+				if v.Int() != 1 {
+					return errors.New("1 != 1 on popInt")
+				}
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"popInt -1",
+			[][]byte{{0x81}},
+			func(s *stack) error {
+				v, err := s.PopInt()
+				if err != nil {
+					return err
+				}
+				if v.Int() !=
