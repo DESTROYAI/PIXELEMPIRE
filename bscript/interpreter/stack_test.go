@@ -323,4 +323,38 @@ func TestStack(t *testing.T) {
 				return nil
 			},
 			nil,
-			[][]byte{
+			[][]byte{{}},
+		},
+		{
+			"PushInt 1",
+			nil,
+			func(s *stack) error {
+				s.PushInt(&scriptNumber{val: big.NewInt(1)})
+				return nil
+			},
+			nil,
+			[][]byte{{0x1}},
+		},
+		{
+			"PushInt -1",
+			nil,
+			func(s *stack) error {
+				s.PushInt(&scriptNumber{val: big.NewInt(-1)})
+				return nil
+			},
+			nil,
+			[][]byte{{0x81}},
+		},
+		{
+			"PushInt two bytes",
+			nil,
+			func(s *stack) error {
+				s.PushInt(&scriptNumber{val: big.NewInt(256)})
+				return nil
+			},
+			nil,
+			// little endian.. *sigh*
+			[][]byte{{0x00, 0x01}},
+		},
+		{
+			"PushInt leading z
