@@ -357,4 +357,36 @@ func TestStack(t *testing.T) {
 			[][]byte{{0x00, 0x01}},
 		},
 		{
-			"PushInt leading z
+			"PushInt leading zeros",
+			nil,
+			func(s *stack) error {
+				// this will have the highbit set
+				s.PushInt(&scriptNumber{val: big.NewInt(128)})
+				return nil
+			},
+			nil,
+			[][]byte{{0x80, 0x00}},
+		},
+		{
+			"dup",
+			[][]byte{{1}},
+			func(s *stack) error {
+				return s.DupN(1)
+			},
+			nil,
+			[][]byte{{1}, {1}},
+		},
+		{
+			"dup2",
+			[][]byte{{1}, {2}},
+			func(s *stack) error {
+				return s.DupN(2)
+			},
+			nil,
+			[][]byte{{1}, {2}, {1}, {2}},
+		},
+		{
+			"dup3",
+			[][]byte{{1}, {2}, {3}},
+			func(s *stack) error {
+		
