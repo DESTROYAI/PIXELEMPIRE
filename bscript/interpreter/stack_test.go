@@ -389,4 +389,39 @@ func TestStack(t *testing.T) {
 			"dup3",
 			[][]byte{{1}, {2}, {3}},
 			func(s *stack) error {
-		
+				return s.DupN(3)
+			},
+			nil,
+			[][]byte{{1}, {2}, {3}, {1}, {2}, {3}},
+		},
+		{
+			"dup0",
+			[][]byte{{1}},
+			func(s *stack) error {
+				return s.DupN(0)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"dup-1",
+			[][]byte{{1}},
+			func(s *stack) error {
+				return s.DupN(-1)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"dup too much",
+			[][]byte{{1}},
+			func(s *stack) error {
+				return s.DupN(2)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"PushBool true",
+			nil,
+			func(s 
