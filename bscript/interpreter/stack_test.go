@@ -424,4 +424,45 @@ func TestStack(t *testing.T) {
 		{
 			"PushBool true",
 			nil,
-			func(s 
+			func(s *stack) error {
+				s.PushBool(true)
+
+				return nil
+			},
+			nil,
+			[][]byte{{1}},
+		},
+		{
+			"PushBool false",
+			nil,
+			func(s *stack) error {
+				s.PushBool(false)
+
+				return nil
+			},
+			nil,
+			[][]byte{nil},
+		},
+		{
+			"PushBool PopBool",
+			nil,
+			func(s *stack) error {
+				s.PushBool(true)
+				val, err := s.PopBool()
+				if err != nil {
+					return err
+				}
+				if !val {
+					return errors.New("unexpected value")
+				}
+
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"PushBool PopBool 2",
+			nil,
+			func(s *stack) error {
+				s.PushBool(fals
