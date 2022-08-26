@@ -465,4 +465,43 @@ func TestStack(t *testing.T) {
 			"PushBool PopBool 2",
 			nil,
 			func(s *stack) error {
-				s.PushBool(fals
+				s.PushBool(false)
+				val, err := s.PopBool()
+				if err != nil {
+					return err
+				}
+				if val {
+					return errors.New("unexpected value")
+				}
+
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"PushInt PopBool",
+			nil,
+			func(s *stack) error {
+				s.PushInt(&scriptNumber{val: big.NewInt(1)})
+				val, err := s.PopBool()
+				if err != nil {
+					return err
+				}
+				if !val {
+					return errors.New("unexpected value")
+				}
+
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"PushInt PopBool 2",
+			nil,
+			func(s *stack) error {
+				s.PushInt(&scriptNumber{val: big.NewInt(0)})
+				val, err := s.PopBool()
+				if err != nil {
+					retur
