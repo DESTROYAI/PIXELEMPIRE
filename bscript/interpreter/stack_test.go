@@ -504,4 +504,46 @@ func TestStack(t *testing.T) {
 				s.PushInt(&scriptNumber{val: big.NewInt(0)})
 				val, err := s.PopBool()
 				if err != nil {
-					retur
+					return err
+				}
+				if val {
+					return errors.New("unexpected value")
+				}
+
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"Nip top",
+			[][]byte{{1}, {2}, {3}},
+			func(s *stack) error {
+				return s.NipN(0)
+			},
+			nil,
+			[][]byte{{1}, {2}},
+		},
+		{
+			"Nip middle",
+			[][]byte{{1}, {2}, {3}},
+			func(s *stack) error {
+				return s.NipN(1)
+			},
+			nil,
+			[][]byte{{1}, {3}},
+		},
+		{
+			"Nip low",
+			[][]byte{{1}, {2}, {3}},
+			func(s *stack) error {
+				return s.NipN(2)
+			},
+			nil,
+			[][]byte{{2}, {3}},
+		},
+		{
+			"Nip too much",
+			[][]byte{{1}, {2}, {3}},
+			func(s *stack) error {
+				// bit
