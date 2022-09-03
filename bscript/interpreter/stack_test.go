@@ -546,4 +546,31 @@ func TestStack(t *testing.T) {
 			"Nip too much",
 			[][]byte{{1}, {2}, {3}},
 			func(s *stack) error {
-				// bit
+				// bite off more than we can chew
+				return s.NipN(3)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			[][]byte{{2}, {3}},
+		},
+		{
+			"keep on tucking",
+			[][]byte{{1}, {2}, {3}},
+			func(s *stack) error {
+				return s.Tuck()
+			},
+			nil,
+			[][]byte{{1}, {3}, {2}, {3}},
+		},
+		{
+			"a little tucked up",
+			[][]byte{{1}}, // too few arguments for tuck
+			func(s *stack) error {
+				return s.Tuck()
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"all tucked up",
+			nil, // too few arguments  for tuck
+			f
