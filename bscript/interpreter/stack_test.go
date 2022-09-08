@@ -573,4 +573,39 @@ func TestStack(t *testing.T) {
 		{
 			"all tucked up",
 			nil, // too few arguments  for tuck
-			f
+			func(s *stack) error {
+				return s.Tuck()
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"drop 1",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) error {
+				return s.DropN(1)
+			},
+			nil,
+			[][]byte{{1}, {2}, {3}},
+		},
+		{
+			"drop 2",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) error {
+				return s.DropN(2)
+			},
+			nil,
+			[][]byte{{1}, {2}},
+		},
+		{
+			"drop 3",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) error {
+				return s.DropN(3)
+			},
+			nil,
+			[][]byte{{1}},
+		},
+		{
+			"drop 4",
+			
