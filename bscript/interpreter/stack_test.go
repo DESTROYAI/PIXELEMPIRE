@@ -643,3 +643,33 @@ func TestStack(t *testing.T) {
 			[][]byte{{1}, {3}, {4}, {2}},
 		},
 		{
+			"Rot2",
+			[][]byte{{1}, {2}, {3}, {4}, {5}, {6}},
+			func(s *stack) error {
+				return s.RotN(2)
+			},
+			nil,
+			[][]byte{{3}, {4}, {5}, {6}, {1}, {2}},
+		},
+		{
+			"Rot too little",
+			[][]byte{{1}, {2}},
+			func(s *stack) error {
+				return s.RotN(1)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"Rot0",
+			[][]byte{{1}, {2}, {3}},
+			func(s *stack) error {
+				return s.RotN(0)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"Swap1",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) erro
