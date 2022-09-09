@@ -672,4 +672,39 @@ func TestStack(t *testing.T) {
 		{
 			"Swap1",
 			[][]byte{{1}, {2}, {3}, {4}},
-			func(s *stack) erro
+			func(s *stack) error {
+				return s.SwapN(1)
+			},
+			nil,
+			[][]byte{{1}, {2}, {4}, {3}},
+		},
+		{
+			"Swap2",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) error {
+				return s.SwapN(2)
+			},
+			nil,
+			[][]byte{{3}, {4}, {1}, {2}},
+		},
+		{
+			"Swap too little",
+			[][]byte{{1}},
+			func(s *stack) error {
+				return s.SwapN(1)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"Swap0",
+			[][]byte{{1}, {2}, {3}},
+			func(s *stack) error {
+				return s.SwapN(0)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"Over1",
+			[][]byte{{1}, {2
