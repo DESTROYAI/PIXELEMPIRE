@@ -803,4 +803,36 @@ func TestStack(t *testing.T) {
 				// just check it works.
 				val, err := s.PeekBool(0)
 				if err != nil {
-					retu
+					return err
+				}
+				if !val {
+					return errors.New("invalid result")
+				}
+				return nil
+			},
+			nil,
+			[][]byte{{1}},
+		},
+		{
+			"Peek bool 2",
+			[][]byte{nil},
+			func(s *stack) error {
+				// Peek bool is otherwise pretty well tested,
+				// just check it works.
+				val, err := s.PeekBool(0)
+				if err != nil {
+					return err
+				}
+				if val {
+					return errors.New("invalid result")
+				}
+				return nil
+			},
+			nil,
+			[][]byte{nil},
+		},
+		{
+			"Peek int",
+			[][]byte{{1}},
+			func(s *stack) error {
+				// Peek int is otherwise pretty well
