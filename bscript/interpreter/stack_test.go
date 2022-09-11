@@ -742,4 +742,33 @@ func TestStack(t *testing.T) {
 			nil,
 		},
 		{
-			"
+			"Pick1",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) error {
+				return s.PickN(1)
+			},
+			nil,
+			[][]byte{{1}, {2}, {3}, {4}, {3}},
+		},
+		{
+			"Pick2",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) error {
+				return s.PickN(2)
+			},
+			nil,
+			[][]byte{{1}, {2}, {3}, {4}, {2}},
+		},
+		{
+			"Pick too little",
+			[][]byte{{1}},
+			func(s *stack) error {
+				return s.PickN(1)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"Roll1",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) error {
