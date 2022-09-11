@@ -772,3 +772,35 @@ func TestStack(t *testing.T) {
 			"Roll1",
 			[][]byte{{1}, {2}, {3}, {4}},
 			func(s *stack) error {
+				return s.RollN(1)
+			},
+			nil,
+			[][]byte{{1}, {2}, {4}, {3}},
+		},
+		{
+			"Roll2",
+			[][]byte{{1}, {2}, {3}, {4}},
+			func(s *stack) error {
+				return s.RollN(2)
+			},
+			nil,
+			[][]byte{{1}, {3}, {4}, {2}},
+		},
+		{
+			"Roll too little",
+			[][]byte{{1}},
+			func(s *stack) error {
+				return s.RollN(1)
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+		{
+			"Peek bool",
+			[][]byte{{1}},
+			func(s *stack) error {
+				// Peek bool is otherwise pretty well tested,
+				// just check it works.
+				val, err := s.PeekBool(0)
+				if err != nil {
+					retu
