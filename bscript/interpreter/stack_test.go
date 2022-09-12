@@ -835,4 +835,37 @@ func TestStack(t *testing.T) {
 			"Peek int",
 			[][]byte{{1}},
 			func(s *stack) error {
-				// Peek int is otherwise pretty well
+				// Peek int is otherwise pretty well tested,
+				// just check it works.
+				val, err := s.PeekInt(0)
+				if err != nil {
+					return err
+				}
+				if val.Int() != 1 {
+					return errors.New("invalid result")
+				}
+				return nil
+			},
+			nil,
+			[][]byte{{1}},
+		},
+		{
+			"Peek int 2",
+			[][]byte{{0}},
+			func(s *stack) error {
+				// Peek int is otherwise pretty well tested,
+				// just check it works.
+				val, err := s.PeekInt(0)
+				if err != nil {
+					return err
+				}
+				if val.Int() != 0 {
+					return errors.New("invalid result")
+				}
+				return nil
+			},
+			nil,
+			[][]byte{{0}},
+		},
+		{
+		
