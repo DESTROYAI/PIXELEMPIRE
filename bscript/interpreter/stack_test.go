@@ -868,4 +868,36 @@ func TestStack(t *testing.T) {
 			[][]byte{{0}},
 		},
 		{
-		
+			"pop int",
+			nil,
+			func(s *stack) error {
+				s.PushInt(&scriptNumber{val: big.NewInt(1)})
+				// Peek int is otherwise pretty well tested,
+				// just check it works.
+				val, err := s.PopInt()
+				if err != nil {
+					return err
+				}
+				if val.Int() != 1 {
+					return errors.New("invalid result")
+				}
+				return nil
+			},
+			nil,
+			nil,
+		},
+		{
+			"pop empty",
+			nil,
+			func(s *stack) error {
+				// Peek int is otherwise pretty well tested,
+				// just check it works.
+				_, err := s.PopInt()
+				return err
+			},
+			errs.NewError(errs.ErrInvalidStackOperation, ""),
+			nil,
+		},
+	}
+
+	for 
