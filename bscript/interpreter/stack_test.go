@@ -900,4 +900,23 @@ func TestStack(t *testing.T) {
 		},
 	}
 
-	for 
+	for _, test := range tests {
+		// Setup the initial stack state and perform the test operation.
+		s := newStack(&beforeGenesisConfig{}, false)
+		for i := range test.before {
+			s.PushByteArray(test.before[i])
+		}
+		err := test.operation(&s)
+
+		// Ensure the error code is of the expected type and the error
+		// code matches the value specified in the test instance.
+		if e := tstCheckScriptError(err, test.err); e != nil {
+			t.Errorf("%s: %v", test.name, e)
+			continue
+		}
+		if err != nil {
+			continue
+		}
+
+		// Ensure the resulting stack is the expected length.
+		if int32(len(test.after)) != s.Depth() {
