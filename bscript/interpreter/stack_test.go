@@ -920,3 +920,23 @@ func TestStack(t *testing.T) {
 
 		// Ensure the resulting stack is the expected length.
 		if int32(len(test.after)) != s.Depth() {
+			t.Errorf("%s: stack depth doesn't match expected: %v "+
+				"vs %v", test.name, len(test.after),
+				s.Depth())
+			continue
+		}
+
+		// Ensure all items of the resulting stack are the expected
+		// values.
+		for i := range test.after {
+			val, err := s.PeekByteArray(s.Depth() - int32(i) - 1)
+			if err != nil {
+				t.Errorf("%s: can't peek %dth stack entry: %v",
+					test.name, i, err)
+				break
+			}
+
+			if !bytes.Equal(val, test.after[i]) {
+				t.Errorf("%s: %dth stack entry doesn't match "+
+					"expected: %v vs %v", test.name, i, val,
+					test.afte
