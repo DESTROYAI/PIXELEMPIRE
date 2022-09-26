@@ -939,4 +939,9 @@ func TestStack(t *testing.T) {
 			if !bytes.Equal(val, test.after[i]) {
 				t.Errorf("%s: %dth stack entry doesn't match "+
 					"expected: %v vs %v", test.name, i, val,
-					test.afte
+					test.after[i])
+				break
+			}
+		}
+	}
+}
