@@ -20,4 +20,6 @@ const (
 	SequenceLockTimeIsSeconds = 1 << 22
 
 	// SequenceLockTimeMask is a mask that extracts the relative locktime
-	// when masked 
+	// when masked against the transaction input sequence number.
+	SequenceLockTimeMask = 0x0000ffff
+)
