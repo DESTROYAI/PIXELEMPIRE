@@ -22,4 +22,22 @@ var (
 
 // Sentinal errors reported by outputs.
 var (
-	ErrOutputNoExist  = errors.New("specified output do
+	ErrOutputNoExist  = errors.New("specified output does not exist")
+	ErrOutputTooShort = errors.New("output length too short")
+)
+
+// Sentinal errors reported by change.
+var (
+	ErrInsufficientInputs = errors.New("satoshis inputted to the tx are less than the outputted satoshis")
+)
+
+// Sentinal errors reported by signature hash.
+var (
+	ErrEmptyPreviousTxID     = errors.New("'PreviousTxID' not supplied")
+	ErrEmptyPreviousTxScript = errors.New("'PreviousTxScript' not supplied")
+)
+
+// Sentinel errors reported by the fees.
+var (
+	ErrFeeQuotesNotInit = errors.New("feeQuotes have not been setup, call NewFeeQuotes")
+	ErrMinerNoQuotes    = errors.New("miner has no qu
