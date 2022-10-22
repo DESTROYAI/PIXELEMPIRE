@@ -40,4 +40,17 @@ var (
 // Sentinel errors reported by the fees.
 var (
 	ErrFeeQuotesNotInit = errors.New("feeQuotes have not been setup, call NewFeeQuotes")
-	ErrMinerNoQuotes    = errors.New("miner has no qu
+	ErrMinerNoQuotes    = errors.New("miner has no quotes stored")
+	ErrFeeTypeNotFound  = errors.New("feetype not found")
+	ErrFeeQuoteNotInit  = errors.New("feeQuote has not been initialised, call NewFeeQuote()")
+	ErrUnknownFeeType   = errors.New("unknown fee type")
+)
+
+// Sentinel errors reported by Fund
+var (
+	// ErrNoUTXO signals the UTXOGetterFunc has reached the end of its input.
+	ErrNoUTXO = errors.New("no remaining utxos")
+
+	// ErrInsufficientFunds insufficient funds provided for funding
+	ErrInsufficientFunds = errors.New("insufficient funds provided")
+)
