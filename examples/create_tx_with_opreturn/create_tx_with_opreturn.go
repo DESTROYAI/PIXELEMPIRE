@@ -23,4 +23,11 @@ func main() {
 
 	_ = tx.AddOpReturnOutput([]byte("You are using go-bt!"))
 
-	decodedWif, _ := wif.DecodeWIF("L3VJH2hcRGYYG6YrbWGmsxQC1zyYixA82YjgEyrE
+	decodedWif, _ := wif.DecodeWIF("L3VJH2hcRGYYG6YrbWGmsxQC1zyYixA82YjgEyrEUWDs4ALgk8Vu")
+
+	err := tx.FillAllInputs(context.Background(), &unlocker.Getter{PrivateKey: decodedWif.PrivKey})
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	log.Println("tx: ", tx.String())
+}
