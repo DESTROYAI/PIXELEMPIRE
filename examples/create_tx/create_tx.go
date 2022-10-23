@@ -26,4 +26,5 @@ func main() {
 	if err := tx.FillAllInputs(context.Background(), &unlocker.Getter{PrivateKey: decodedWif.PrivKey}); err != nil {
 		log.Fatal(err.Error())
 	}
-	log.Printf("tx: %s\n"
+	log.Printf("tx: %s\n", tx)
+}
