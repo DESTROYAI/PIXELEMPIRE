@@ -35,4 +35,9 @@ func main() {
 
 	txs := bt.Txs{}
 	if _, err = txs.ReadFrom(r); err != nil {
-		panic(er
+		panic(err)
+	}
+	for _, tx := range txs {
+		fmt.Println(tx.TxID())
+	}
+}
