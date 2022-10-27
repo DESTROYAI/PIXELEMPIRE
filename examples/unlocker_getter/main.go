@@ -21,4 +21,10 @@ import (
 // key, creating a P2PKH script from that this pair, and storing the value used to derive this private/public
 // key pair against the P2PKH script that it produced.
 //
-// When an account wishes 
+// When an account wishes to spend a fund it received in this manner, after adding the funds to the tx it is
+// currently building, it calls `tx.FillAllInputs`. This function iterates all inputs on the tx, passing
+// their `PreviousTxScript` to the `bt.UnlockerGetter` provided to the `bt.FillAllInputs` call.
+// This allows an account when receiving a locking script to refer to its own script=>derivation mapping,
+// and ultimately derive the private key used to create the public key that used to create the locking script.
+// Finally allowing for an `unlocker.Simple` to be returned, with this derived private key.
+func main() {
