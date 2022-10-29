@@ -28,3 +28,22 @@ import (
 // and ultimately derive the private key used to create the public key that used to create the locking script.
 // Finally allowing for an `unlocker.Simple` to be returned, with this derived private key.
 func main() {
+	// Create two accounts. The first is our account, which we will pretend to fund to begin with.
+	// The second is the merchant, which we will pretend to send money to.
+	myAccount := newAccount()
+	merchantAccount := newAccount()
+
+	// Base Tx to "fund" our account.
+	baseTx := bt.NewTx()
+	if err := baseTx.From(
+		"11b476ad8e0a48fcd40807a111a050af51114877e09283bfa7f3505081a1819d",
+		0,
+		"76a914b48b288c48e6cd7246876e19f848a60f46ab4a6188ac",
+		1500,
+	); err != nil {
+		panic(err)
+	}
+
+	// decocdedWif just for signing the base tx. It isn't relevant to myAccount or merchantAccount,
+	// and can be ignored.
+	deco
