@@ -61,4 +61,25 @@ func main() {
 		}
 	}
 
-	changeScript, err := bscript.NewP2PKHFromPubKeyEC(decodedWif
+	changeScript, err := bscript.NewP2PKHFromPubKeyEC(decodedWif.PrivKey.PubKey())
+	if err != nil {
+		panic(err)
+	}
+
+	if err = baseTx.Change(changeScript, bt.NewFeeQuote()); err != nil {
+		panic(err)
+	}
+
+	if err = baseTx.FillInput(
+		context.Background(),
+		&unlocker.Simple{PrivateKey: decodedWif.PrivKey},
+		bt.UnlockerParams{},
+	); err != nil {
+		panic(err)
+	}
+
+	// Here we would broadcast the transaction, to the account. Assume this has been done
+	// and that we are starting anew, only this time it's the account who is building and
+	// broadcasting a transaction to elsewhere.
+
+	// Create the tx whic
