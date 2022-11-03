@@ -46,4 +46,19 @@ func main() {
 
 	// decocdedWif just for signing the base tx. It isn't relevant to myAccount or merchantAccount,
 	// and can be ignored.
-	deco
+	decodedWif, err := wif.DecodeWIF("KznvCNc6Yf4iztSThoMH6oHWzH9EgjfodKxmeuUGPq5DEX5maspS")
+	if err != nil {
+		panic(err)
+	}
+
+	// Get three destinations (p2pkh scripts) from our account and add them to the baseTx.
+	// We must get these from the account we're sending to, to allow the account to build its
+	// own internal mapping for later spending.
+	for i := 0; i < 3; i++ {
+		destination := myAccount.createDestination()
+		if err := baseTx.AddP2PKHOutputFromScript(destination, 400); err != nil {
+			panic(err)
+		}
+	}
+
+	changeScript, err := bscript.NewP2PKHFromPubKeyEC(decodedWif
