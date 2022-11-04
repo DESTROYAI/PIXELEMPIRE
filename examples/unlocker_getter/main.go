@@ -101,4 +101,7 @@ func main() {
 
 	// Call fill all inputs and pass in the signing account as the UnlockerGetter. The account
 	// struct implements `bt.UnlockerGetter`.
-	if err := 
+	if err := tx.FillAllInputs(context.Background(), myAccount); err != nil {
+		panic(err)
+	}
+}
