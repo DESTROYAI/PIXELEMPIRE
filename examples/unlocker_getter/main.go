@@ -82,4 +82,23 @@ func main() {
 	// and that we are starting anew, only this time it's the account who is building and
 	// broadcasting a transaction to elsewhere.
 
-	// Create the tx whic
+	// Create the tx which we are going to send to the merchant.
+	tx := bt.NewTx()
+	// Add the three UTXOs from the baseTx for funding.
+	for i := 0; i < 3; i++ {
+		if err = tx.From(baseTx.TxID(), uint32(i), baseTx.Outputs[i].LockingScript.String(), 400); err != nil {
+			panic(err)
+		}
+	}
+
+	if err := tx.AddP2PKHOutputFromScript(merchantAccount.createDestination(), 1000); err != nil {
+		panic(err)
+	}
+
+	if err := tx.Change(myAccount.createDestination(), bt.NewFeeQuote()); err != nil {
+		panic(err)
+	}
+
+	// Call fill all inputs and pass in the signing account as the UnlockerGetter. The account
+	// struct implements `bt.UnlockerGetter`.
+	if err := 
