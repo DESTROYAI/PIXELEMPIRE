@@ -35,3 +35,24 @@ func main() {
 				"hex": "006a0548656c6c6f",
 				"type": "nulldata"
 			}
+		},
+		{
+			"value": 0.00000895,
+			"n": 1,
+			"scriptPubKey": {
+				"asm": "OP_DUP OP_HASH160 b85524abf8202a961b847a3bd0bc89d3d4d41cc5 OP_EQUALVERIFY OP_CHECKSIG",
+				"hex": "76a914b85524abf8202a961b847a3bd0bc89d3d4d41cc588ac",
+				"reqSigs": 1,
+				"type": "pubkeyhash"
+			}
+		}
+	]
+}`
+
+	tx := bt.NewTx()
+	if err := json.Unmarshal([]byte(j), tx.NodeJSON()); err != nil {
+		panic(err)
+	}
+
+	fmt.Println(tx.String())
+}
