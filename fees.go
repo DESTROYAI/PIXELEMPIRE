@@ -31,4 +31,20 @@ type FeeQuotes struct {
 	quotes map[string]*FeeQuote
 }
 
-// NewFeeQuotes will set u
+// NewFeeQuotes will set up default feeQuotes for the minerName supplied, ie TAAL etc.
+func NewFeeQuotes(minerName string) *FeeQuotes {
+	return &FeeQuotes{
+		mu:     sync.RWMutex{},
+		quotes: map[string]*FeeQuote{minerName: NewFeeQuote()},
+	}
+}
+
+// AddMinerWithDefault will add a new miner to the quotes map with default fees & immediate expiry.
+func (f *FeeQuotes) AddMinerWithDefault(minerName string) *FeeQuotes {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.quotes[minerName] = NewFeeQuote()
+	return f
+}
+
+// AddMiner will add a new miner to the quotes map with the provided feeQu
