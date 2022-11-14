@@ -47,4 +47,25 @@ func (f *FeeQuotes) AddMinerWithDefault(minerName string) *FeeQuotes {
 	return f
 }
 
-// AddMiner will add a new miner to the quotes map with the provided feeQu
+// AddMiner will add a new miner to the quotes map with the provided feeQuote.
+// If you just want to add default fees use the AddMinerWithDefault method.
+func (f *FeeQuotes) AddMiner(minerName string, quote *FeeQuote) *FeeQuotes {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.quotes[minerName] = quote
+	return f
+}
+
+// Quote will return all fees for a miner.
+// If no fees are found an ErrMinerNoQuotes error is returned.
+func (f *FeeQuotes) Quote(minerName string) (*FeeQuote, error) {
+	if f == nil {
+		return nil, ErrFeeQuotesNotInit
+	}
+	f.mu.RLock()
+	defer f.mu.RUnlock()
+	q, ok := f.quotes[minerName]
+	if !ok {
+		return nil, ErrMinerNoQuotes
+	}
+	return q, n
