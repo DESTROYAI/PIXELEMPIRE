@@ -68,4 +68,24 @@ func (f *FeeQuotes) Quote(minerName string) (*FeeQuote, error) {
 	if !ok {
 		return nil, ErrMinerNoQuotes
 	}
-	return q, n
+	return q, nil
+}
+
+// Fee is a convenience method for quickly getting a fee by type and miner name.
+// If the miner has no fees an ErrMinerNoQuotes error will be returned.
+// If the feeType cannot be found an ErrFeeTypeNotFound error will be returned.
+func (f *FeeQuotes) Fee(minerName string, feeType FeeType) (*Fee, error) {
+	if f == nil {
+		return nil, ErrFeeQuotesNotInit
+	}
+	f.mu.RLock()
+	defer f.mu.RUnlock()
+	m := f.quotes[minerName]
+	if m == nil {
+		return nil, ErrMinerNoQuotes
+	}
+	return m.Fee(feeType)
+}
+
+// UpdateMinerFees a convenience method to update a fee quote from a FeeQuotes struct directly.
+// This will
