@@ -88,4 +88,20 @@ func (f *FeeQuotes) Fee(minerName string, feeType FeeType) (*Fee, error) {
 }
 
 // UpdateMinerFees a convenience method to update a fee quote from a FeeQuotes struct directly.
-// This will
+// This will update the miner feeType with the provided fee. Useful after receiving new quotes from mapi.
+func (f *FeeQuotes) UpdateMinerFees(minerName string, feeType FeeType, fee *Fee) (*FeeQuote, error) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	if minerName == "" || feeType == "" || fee == nil {
+		return nil, ErrEmptyValues
+	}
+	m := f.quotes[minerName]
+	if m == nil {
+		return nil, ErrMinerNoQuotes
+	}
+	return m.AddQuote(feeType, fee), nil
+}
+
+// FeeQuote contains a thread safe map of fees for standard and data
+// fees as well as an expiry time for a specific miner.
+//
