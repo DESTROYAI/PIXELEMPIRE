@@ -105,3 +105,16 @@ func (f *FeeQuotes) UpdateMinerFees(minerName string, feeType FeeType, fee *Fee)
 // FeeQuote contains a thread safe map of fees for standard and data
 // fees as well as an expiry time for a specific miner.
 //
+// This can be used if you are only dealing with a single miner and know you
+// will always be using a single miner.
+// FeeQuote will store the fees for a single miner and can be passed to transactions
+// to calculate fees when creating change outputs.
+//
+// If you are dealing with quotes from multiple miners, use the FeeQuotes structure above.
+//
+// NewFeeQuote() should be called to get a new instance of a FeeQuote.
+//
+// When expiry expires ie Expired() == true then you should fetch
+// new quotes from a MAPI server and call AddQuote with the fee information.
+type FeeQuote struct {
+	mu         sy
