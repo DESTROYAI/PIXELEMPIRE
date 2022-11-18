@@ -117,4 +117,18 @@ func (f *FeeQuotes) UpdateMinerFees(minerName string, feeType FeeType, fee *Fee)
 // When expiry expires ie Expired() == true then you should fetch
 // new quotes from a MAPI server and call AddQuote with the fee information.
 type FeeQuote struct {
-	mu         sy
+	mu         sync.RWMutex
+	fees       map[FeeType]*Fee
+	expiryTime time.Time
+}
+
+// NewFeeQuote will set up and return a new FeeQuotes struct which
+// contains default fees when initially setup. You would then pass this
+// data structure to a singleton struct via injection for reading.
+// If you are only getting quotes from one miner you can use this directly
+// instead of using the NewFeeQuotes() method which is for storing multiple miner quotes.
+//
+//  fq := NewFeeQuote()
+//
+// The fees have an expiry time which, when initially setup, has an
+// expiry of now.UTC. This allows you to check
