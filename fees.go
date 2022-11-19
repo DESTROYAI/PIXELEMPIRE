@@ -142,4 +142,24 @@ type FeeQuote struct {
 //  func Fee(ft bt.FeeType) *bt.Fee{
 //     // you would not call this every time - this is just an example
 //     // you'd call this at app startup and store it / pass to a struct
-//     
+//     fq := NewFeeQuote()
+//
+//     // fq setup with defaultFees
+//     if !fq.Expired() {
+//        // not expired, just return fee we have cached
+//        return fe.Fee(ft)
+//     }
+//
+//     // cache expired, fetch new quotes
+//     var stdFee *bt.Fee
+//     var dataFee *bt.Fee
+//
+//     // fetch quotes from MAPI server
+//
+//     fq.AddQuote(bt.FeeTypeStandard, stdFee)
+//     fq.AddQuote(bt.FeeTypeData, dataFee)
+//
+//     // MAPI returns a quote expiry
+//     exp, _ := time.Parse(time.RFC3339, resp.Quote.ExpirationTime)
+//     fq.UpdateExpiry(exp)
+//
