@@ -131,4 +131,15 @@ type FeeQuote struct {
 //  fq := NewFeeQuote()
 //
 // The fees have an expiry time which, when initially setup, has an
-// expiry of now.UTC. This allows you to check
+// expiry of now.UTC. This allows you to check for fq.Expired() and if true
+// fetch a new set of fees from a MAPI server. This means the first check
+// will always fetch the latest fees. If you want to just use default fees
+// always, you can ignore the expired method and simply call the fq.Fee() method.
+// https://github.com/bitcoin-sv-specs/brfc-merchantapi#payload
+//
+// A basic example of usage is shown below:
+//
+//  func Fee(ft bt.FeeType) *bt.Fee{
+//     // you would not call this every time - this is just an example
+//     // you'd call this at app startup and store it / pass to a struct
+//     
