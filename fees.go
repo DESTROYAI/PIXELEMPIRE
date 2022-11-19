@@ -180,4 +180,31 @@ func NewFeeQuote() *FeeQuote {
 // Fee will return a fee by type if found, nil and an error if not.
 func (f *FeeQuote) Fee(t FeeType) (*Fee, error) {
 	if f == nil {
-		return nil, Er
+		return nil, ErrFeeQuoteNotInit
+	}
+	f.mu.RLock()
+	defer f.mu.RUnlock()
+	fee, ok := f.fees[t]
+	if fee == nil || !ok {
+		return nil, ErrFeeTypeNotFound
+	}
+	return fee, nil
+}
+
+// AddQuote will add new set of quotes for a feetype or update an existing
+// quote if it already exists.
+func (f *FeeQuote) AddQuote(ft FeeType, fee *Fee) *FeeQuote {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.fees[ft] = fee
+	return f
+}
+
+// Expiry will return the expiry timestamp for the `bt.FeeQuote` in a threadsafe manner.
+func (f *FeeQuote) Expiry() time.Time {
+	f.mu.RLock()
+	defer f.mu.RUnlock()
+	return f.expiryTime
+}
+
+/
