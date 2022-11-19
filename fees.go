@@ -162,4 +162,22 @@ type FeeQuote struct {
 //     // MAPI returns a quote expiry
 //     exp, _ := time.Parse(time.RFC3339, resp.Quote.ExpirationTime)
 //     fq.UpdateExpiry(exp)
-//
+//     return fe.Fee(ft)
+//  }
+// It will set the expiry time to now.UTC which when expires
+// will indicate that new quotes should be fetched from a MAPI server.
+func NewFeeQuote() *FeeQuote {
+	fq := &FeeQuote{
+		fees:       map[FeeType]*Fee{},
+		expiryTime: time.Now().UTC(),
+		mu:         sync.RWMutex{},
+	}
+	fq.AddQuote(FeeTypeStandard, defaultStandardFee()).
+		AddQuote(FeeTypeData, defaultDataFee())
+	return fq
+}
+
+// Fee will return a fee by type if found, nil and an error if not.
+func (f *FeeQuote) Fee(t FeeType) (*Fee, error) {
+	if f == nil {
+		return nil, Er
