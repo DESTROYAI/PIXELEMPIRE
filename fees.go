@@ -252,4 +252,23 @@ func (f *FeeQuote) MarshalJSON() ([]byte, error) {
 	return json.Marshal(f.fees)
 }
 
-// UnmarshalJSON will convert a json encoded FeeQuote back into a fee qu
+// UnmarshalJSON will convert a json encoded FeeQuote back into a fee quote type, the expected
+// JSON format is shown above in the MarshalJSON function.
+// If the fee type supplied is unknown an ErrUnknownFeeType will be returned.
+func (f *FeeQuote) UnmarshalJSON(body []byte) error {
+	fees := map[FeeType]*Fee{}
+	if err := json.Unmarshal(body, &fees); err != nil {
+		return err
+	}
+	for k, v := range fees {
+		if k != FeeTypeData && k != FeeTypeStandard {
+			return fmt.Errorf("%w '%s'", ErrUnknownFeeType, k)
+		}
+		v.FeeType = k
+	}
+	f.fees = fees
+	return nil
+}
+
+// FeeUnit displays the amount of Satoshis needed
+// for a s
