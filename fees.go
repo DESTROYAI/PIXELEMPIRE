@@ -224,4 +224,32 @@ func (f *FeeQuote) Expired() bool {
 	return f.expiryTime.Before(time.Now().UTC())
 }
 
-// MarshalJSON will
+// MarshalJSON will convert the FeeQuote to a json object
+// with the format as shown:
+//  {
+//	 "data": {
+//		 "miningFee": {
+//			 "satoshis": 5,
+//			 "bytes": 2
+//		 },
+//		 "relayFee": {
+//			 "satoshis": 8,
+//			 "bytes": 4
+//		 }
+//	 },
+//	 "standard": {
+//		 "miningFee": {
+//			 "satoshis": 100,
+//			 "bytes": 10
+//		 },
+//		 "relayFee": {
+//			 "satoshis": 10,
+//			 "bytes": 5
+//		 }
+//	 }
+//  }
+func (f *FeeQuote) MarshalJSON() ([]byte, error) {
+	return json.Marshal(f.fees)
+}
+
+// UnmarshalJSON will convert a json encoded FeeQuote back into a fee qu
