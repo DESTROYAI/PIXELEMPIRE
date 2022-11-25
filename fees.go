@@ -207,4 +207,21 @@ func (f *FeeQuote) Expiry() time.Time {
 	return f.expiryTime
 }
 
-/
+// UpdateExpiry will update the expiry time of the quotes, this will be
+// used when you fetch a fresh set of quotes from a MAPI server which
+// should return an expiration time.
+func (f *FeeQuote) UpdateExpiry(exp time.Time) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.expiryTime = exp
+}
+
+// Expired will return true if the expiry time is before UTC now, this
+// means we need to fetch fresh quotes from a MAPI server.
+func (f *FeeQuote) Expired() bool {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.expiryTime.Before(time.Now().UTC())
+}
+
+// MarshalJSON will
