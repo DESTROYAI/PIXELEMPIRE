@@ -284,4 +284,34 @@ type FeeUnit struct {
 type Fee struct {
 	FeeType   FeeType `json:"-"` // standard || data
 	MiningFee FeeUnit `json:"miningFee"`
-	RelayFee  FeeUnit `json
+	RelayFee  FeeUnit `json:"relayFee"` // Fee for retaining Tx in secondary mempool
+}
+
+// defaultStandardFee returns the default
+// standard fees offered by most miners.
+func defaultStandardFee() *Fee {
+	return &Fee{
+		FeeType: FeeTypeStandard,
+		MiningFee: FeeUnit{
+			Satoshis: 5,
+			Bytes:    10,
+		},
+		RelayFee: FeeUnit{
+			Satoshis: 5,
+			Bytes:    10,
+		},
+	}
+}
+
+// defaultDataFee returns the default
+// data fees offered by most miners.
+func defaultDataFee() *Fee {
+	return &Fee{
+		FeeType: FeeTypeData,
+		MiningFee: FeeUnit{
+			Satoshis: 5,
+			Bytes:    10,
+		},
+		RelayFee: FeeUnit{
+			Satoshis: 5,
+			Bytes:    10,
