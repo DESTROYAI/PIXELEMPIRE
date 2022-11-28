@@ -271,4 +271,17 @@ func (f *FeeQuote) UnmarshalJSON(body []byte) error {
 }
 
 // FeeUnit displays the amount of Satoshis needed
-// for a s
+// for a specific amount of Bytes in a transaction
+// see https://github.com/bitcoin-sv-specs/brfc-misc/tree/master/feespec
+type FeeUnit struct {
+	Satoshis int `json:"satoshis"` // Fee in satoshis of the amount of Bytes
+	Bytes    int `json:"bytes"`    // Number of bytes that the Fee covers
+}
+
+// Fee displays the MiningFee as well as the RelayFee for a specific
+// FeeType, for example 'standard' or 'data'
+// see https://github.com/bitcoin-sv-specs/brfc-misc/tree/master/feespec
+type Fee struct {
+	FeeType   FeeType `json:"-"` // standard || data
+	MiningFee FeeUnit `json:"miningFee"`
+	RelayFee  FeeUnit `json
