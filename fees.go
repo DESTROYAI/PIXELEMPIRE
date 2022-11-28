@@ -315,3 +315,6 @@ func defaultDataFee() *Fee {
 		RelayFee: FeeUnit{
 			Satoshis: 5,
 			Bytes:    10,
+		},
+	}
+}
