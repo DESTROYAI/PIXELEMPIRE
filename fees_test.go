@@ -549,3 +549,90 @@ func TestFeeQuotes_Fee(t *testing.T) {
 		})
 	}
 }
+
+func TestFeeQuote_MarshalUnmarshalJSON(t *testing.T) {
+	t.Parallel()
+	tests := map[string]struct {
+		quote *FeeQuote
+		err   error
+	}{
+		"successful run should return no errors": {
+			quote: &FeeQuote{
+				fees: map[FeeType]*Fee{
+					FeeTypeStandard: {
+						FeeType: FeeTypeStandard,
+						MiningFee: FeeUnit{
+							Satoshis: 100,
+							Bytes:    10,
+						},
+						RelayFee: FeeUnit{
+							Satoshis: 10,
+							Bytes:    5},
+					}, FeeTypeData: {
+						FeeType: FeeTypeData,
+						MiningFee: FeeUnit{
+							Satoshis: 5,
+							Bytes:    2,
+						},
+						RelayFee: FeeUnit{
+							Satoshis: 8,
+							Bytes:    4},
+					},
+				},
+			},
+			err: nil,
+		},
+		"empty key should error": {
+			quote: &FeeQuote{
+				fees: map[FeeType]*Fee{
+					"": {
+						FeeType: FeeTypeStandard,
+						MiningFee: FeeUnit{
+							Satoshis: 100,
+							Bytes:    10,
+						},
+						RelayFee: FeeUnit{
+							Satoshis: 10,
+							Bytes:    5},
+					},
+				},
+			},
+			err: errors.New("unknown fee type ''"),
+		}, "random key should error": {
+			quote: &FeeQuote{
+				fees: map[FeeType]*Fee{
+					"randomKey": {
+						FeeType: FeeTypeStandard,
+						MiningFee: FeeUnit{
+							Satoshis: 100,
+							Bytes:    10,
+						},
+						RelayFee: FeeUnit{
+							Satoshis: 10,
+							Bytes:    5},
+					},
+				},
+			},
+			err: errors.New("unknown fee type 'randomKey'"),
+		},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			bb, err := json.Marshal(test.quote)
+			if err != nil {
+				assert.Error(t, err)
+				assert.EqualError(t, err, test.err.Error())
+				return
+			}
+
+			var quote *FeeQuote
+			err = json.Unmarshal(bb, &quote)
+			if test.err != nil {
+				assert.Error(t, err)
+				assert.EqualError(t, err, test.err.Error())
+				return
+			}
+			assert.Equal(t, test.quote, quote)
+		})
+	}
+}
