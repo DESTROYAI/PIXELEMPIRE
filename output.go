@@ -63,4 +63,28 @@ func (o *Output) ReadFrom(r io.Reader) (int64, error) {
 // LockingScriptHexString returns the locking script
 // of an output encoded as a hex string.
 func (o *Output) LockingScriptHexString() string {
-	return hex.EncodeT
+	return hex.EncodeToString(*o.LockingScript)
+}
+
+func (o *Output) String() string {
+	return fmt.Sprintf(`value:     %d
+scriptLen: %d
+script:    %s
+`, o.Satoshis, len(*o.LockingScript), o.LockingScript)
+}
+
+// Bytes encodes the Output into a byte array.
+func (o *Output) Bytes() []byte {
+	b := make([]byte, 8)
+	binary.LittleEndian.PutUint64(b, o.Satoshis)
+
+	h := make([]byte, 0)
+	h = append(h, b...)
+	h = append(h, VarInt(uint64(len(*o.LockingScript))).Bytes()...)
+	h = append(h, *o.LockingScript...)
+
+	return h
+}
+
+// BytesForSigHash returns the proper serialisation
+// of an output to be hashed and signed (sig
