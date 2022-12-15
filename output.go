@@ -40,4 +40,27 @@ func (o *Output) ReadFrom(r io.Reader) (int64, error) {
 		return bytesRead, errors.Wrapf(err, "satoshis(8): got %d bytes", n)
 	}
 
-	var l VarIn
+	var l VarInt
+	n64, err := l.ReadFrom(r)
+	bytesRead += n64
+	if err != nil {
+		return bytesRead, err
+	}
+
+	script := make([]byte, l)
+	n, err = io.ReadFull(r, script)
+	bytesRead += int64(n)
+	if err != nil {
+		return bytesRead, errors.Wrapf(err, "lockingScript(%d): got %d bytes", l, n)
+	}
+
+	o.Satoshis = binary.LittleEndian.Uint64(satoshis)
+	o.LockingScript = bscript.NewFromBytes(script)
+
+	return bytesRead, nil
+}
+
+// LockingScriptHexString returns the locking script
+// of an output encoded as a hex string.
+func (o *Output) LockingScriptHexString() string {
+	return hex.EncodeT
