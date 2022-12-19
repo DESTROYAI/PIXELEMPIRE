@@ -87,4 +87,25 @@ func (o *Output) Bytes() []byte {
 }
 
 // BytesForSigHash returns the proper serialisation
-// of an output to be hashed and signed (sig
+// of an output to be hashed and signed (sighash).
+func (o *Output) BytesForSigHash() []byte {
+	buf := make([]byte, 0)
+
+	satoshis := make([]byte, 8)
+	binary.LittleEndian.PutUint64(satoshis, o.Satoshis)
+	buf = append(buf, satoshis...)
+
+	buf = append(buf, VarInt(uint64(len(*o.LockingScript))).Bytes()...)
+	buf = append(buf, *o.LockingScript...)
+
+	return buf
+}
+
+// NodeJSON returns a wrapped *bt.Output for marshalling/unmarshalling into a node output format.
+//
+// Marshalling usage example:
+//  bb, err := json.Marshal(output.NodeJSON())
+//
+// Unmarshalling usage example:
+//  output := &bt.Output{}
+//  if err := json.Unmarshal
