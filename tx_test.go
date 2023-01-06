@@ -1007,3 +1007,218 @@ func Test_EstimateFeesPaid(t *testing.T) {
 			},
 		}, "556B unsigned transaction (3 inputs + 2 outputs + 1 change) no data should return 278 sats fee": {
 			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				err := tx.From("a4c76f8a7c05a91dcf5699b95b54e856298e50c1ceca9a8a5569c8532c500c11",
+					0, "76a91455b61be43392125d127f1780fb038437cd67ef9c88ac", 1000)
+				assert.NoError(t, err)
+				err = tx.From("a4c76f8a7c05a91dcf5699b95b54e856298e50c1ceca9a8a5569c8532c500c11",
+					0, "76a91455b61be43392125d127f1780fb038437cd67ef9c88ac", 1000)
+				assert.NoError(t, err)
+				assert.NoError(t, tx.From("a4c76f8a7c05a91dcf5699b95b54e856298e50c1ceca9a8a5569c8532c500c11",
+					0, "76a91455b61be43392125d127f1780fb038437cd67ef9c88ac", 1000))
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 100))
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 100))
+				tx.ChangeToAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", bt.NewFeeQuote())
+				return tx
+			}(),
+			expFees: &bt.TxFees{
+				TotalFeePaid: 278,
+				StdFeePaid:   278,
+				DataFeePaid:  0,
+			},
+			expSize: &bt.TxSize{
+				TotalBytes:     556,
+				TotalStdBytes:  556,
+				TotalDataBytes: 0,
+			},
+		}, "565B unsigned transaction 100B data should return 63 sats std fee, 50 data fee": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.From("a4c76f8a7c05a91dcf5699b95b54e856298e50c1ceca9a8a5569c8532c500c11",
+					0, "76a91455b61be43392125d127f1780fb038437cd67ef9c88ac", 100))
+				assert.NoError(t, tx.From("a4c76f8a7c05a91dcf5699b95b54e856298e50c1ceca9a8a5569c8532c500c11",
+					0, "76a91455b61be43392125d127f1780fb038437cd67ef9c88ac", 100))
+				assert.NoError(t, tx.From("a4c76f8a7c05a91dcf5699b95b54e856298e50c1ceca9a8a5569c8532c500c11",
+					0, "76a91455b61be43392125d127f1780fb038437cd67ef9c88ac", 1000))
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 100))
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 100))
+				assert.NoError(t, tx.AddOpReturnOutput(make([]byte, 0x64)))
+				tx.ChangeToAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", bt.NewFeeQuote())
+				return tx
+			}(),
+			expFees: &bt.TxFees{
+				TotalFeePaid: 334,
+				StdFeePaid:   282,
+				DataFeePaid:  52,
+			},
+			expSize: &bt.TxSize{
+				TotalBytes:     669,
+				TotalStdBytes:  565,
+				TotalDataBytes: 104,
+			},
+		},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			fee := bt.NewFeeQuote()
+			resp, err := test.tx.EstimateFeesPaid(fee)
+			assert.NoError(t, err)
+			assert.Equal(t, test.expFees, resp)
+
+			swt, err := test.tx.EstimateSizeWithTypes()
+			assert.NoError(t, err)
+			assert.Equal(t, test.expSize, swt)
+		})
+	}
+}
+
+func TestTx_EstimateFeesPaidTotal(t *testing.T) {
+	tests := map[string]struct {
+		tx      *bt.Tx
+		fees    *bt.FeeQuote
+		expFees uint64
+		err     error
+	}{
+		"Transaction with one input one output should return 96": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.From(
+					"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+					0,
+					"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+					1000))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				return tx
+			}(),
+			fees:    bt.NewFeeQuote(),
+			expFees: 96,
+		}, "Transaction with one input 4 Outputs should return 147": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.From(
+					"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+					0,
+					"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+					2500,
+				))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				return tx
+			}(),
+			fees:    bt.NewFeeQuote(),
+			expFees: 147,
+		},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			fee, err := test.tx.EstimateFeesPaid(test.fees)
+			assert.Equal(t, test.err, err)
+			assert.Equal(t, test.expFees, fee.TotalFeePaid)
+		})
+	}
+}
+
+// This test reads a sample block from a file, but normally
+// we would get the block directly from the node via a REST GET...
+/*
+	resp, err := http.Get(fmt.Sprintf("%s/rest/block/%s.bin", b.client.serverAddr, blockHash))
+	if err != nil {
+		return nil, fmt.Errorf("Could not GET block: %v", err)
+	}
+	if resp.StatusCode != 200 {
+		defer resp.Body.Close()
+		data, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read response body: %w", err)
+		}
+		return nil, fmt.Errorf("ERROR: code %d: %s", resp.StatusCode, data)
+	}
+	Then use resp.Body as in the test below
+*/
+func TestTx_ReadFrom(t *testing.T) {
+	f, err := data.TxBinData.Open("block.bin")
+	defer func() {
+		if f != nil {
+			f.Close()
+		}
+	}()
+	assert.NoError(t, err)
+
+	r := bufio.NewReader(f)
+
+	header := make([]byte, 80)
+	_, err = io.ReadFull(f, header)
+	assert.NoError(t, err)
+
+	var txCount bt.VarInt
+	_, err = txCount.ReadFrom(r)
+	assert.NoError(t, err)
+	assert.Equal(t, uint64(648), uint64(txCount))
+
+	tx := new(bt.Tx)
+	var bytesRead int64
+	for i := uint64(0); i < uint64(txCount); i++ {
+		n, err := tx.ReadFrom(r)
+		bytesRead += n
+		assert.NoError(t, err)
+	}
+
+	assert.Equal(t, "b7c59d7fa17a74bbe0a05e5381f42b9ac7fe23b8a1ca40005a74802fe5b8bb5a", tx.TxID())
+	assert.Equal(t, int64(340216), bytesRead)
+}
+
+func TestTxs_ReadFrom(t *testing.T) {
+	f, err := data.TxBinData.Open("block.bin")
+	defer func() {
+		if f != nil {
+			f.Close()
+		}
+	}()
+	assert.NoError(t, err)
+
+	r := bufio.NewReader(f)
+
+	header := make([]byte, 80)
+	_, err = io.ReadFull(f, header)
+	assert.NoError(t, err)
+
+	txs := bt.Txs{}
+	bytesRead, err := txs.ReadFrom(r)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "b7c59d7fa17a74bbe0a05e5381f42b9ac7fe23b8a1ca40005a74802fe5b8bb5a", txs[len(txs)-1].TxID())
+	assert.Equal(t, int64(340219), bytesRead)
+}
+
+func TestExtendedFormat(t *testing.T) {
+	tx, err := bt.NewTxFromString("0100000001478a4ac0c8e4dae42db983bc720d95ed2099dec4c8c3f2d9eedfbeb74e18cdbb1b0100006b483045022100b05368f9855a28f21d3cb6f3e278752d3c5202f1de927862bbaaf5ef7d67adc50220728d4671cd4c34b1fa28d15d5cd2712b68166ea885522baa35c0b9e399fe9ed74121030d4ad284751daf629af387b1af30e02cf5794139c4e05836b43b1ca376624f7fffffffff01000000000000000070006a0963657274696861736822314c6d763150594d70387339594a556e374d3948565473446b64626155386b514e4a406164386337373536356335363935353261626463636634646362353537376164633936633866613933623332663630373865353664666232326265623766353600000000")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	require.Equal(t, "e6adcaf6b86fb5d690a3bade36011cd02f80dd364f1ecf2bb04902aa1b6bf455", tx.TxID())
+
+	tx.Inputs[0].PreviousTxSatoshis = 16
+	s, _ := hex.DecodeString("76a9140c77a935b45abdcf3e472606d3bc647c5cc0efee88ac")
+	tx.Inputs[0].PreviousTxScript = bscript.NewFromBytes(s)
+
+	tx2, err := bt.NewTxFromBytes(tx.ExtendedBytes())
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	require.Equal(t, "e6adcaf6b86fb5d690a3bade36011cd02f80dd364f1ecf2bb04902aa1b6bf455", tx2.TxID())
+
+	assert.Equal(t, uint64(16), tx2.Inputs[0].PreviousTxSatoshis)
+	assert.Equal(t, s, []byte(*tx2.Inputs[0].PreviousTxScript))
+}
+
+func TestFromNodeJS(t *testing.T) {
+	_, err := bt.NewTxFromString("010000000000000000ef01478a4ac0c8e4dae42db983bc720d95ed2099dec4c8c3f2d9eedfbeb74e18cdbb1b0100006b483045022100b05368f9855a28f21d3cb6f3e278752d3c5202f1de927862bbaaf5ef7d67adc50220728d4671cd4c34b1fa28d15d5cd2712b68166ea885522baa35c0b9e399fe9ed74121030d4ad284751daf629af387b1af30e02cf5794139c4e05836b43b1ca376624f7fffffffff10000000000000001976a9140c77a935b45abdcf3e472606d3bc647c5cc0efee88ac01000000000000000070006a0963657274696861736822314c6d763150594d70387339594a556e374d3948565473446b64626155386b514e4a406164386337373536356335363935353261626463636634646362353537376164633936633866613933623332663630373865353664666232326265623766353600000000")
+
+	require.NoError(t, err)
+}
