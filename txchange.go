@@ -32,4 +32,26 @@ func (tx *Tx) Change(s *bscript.Script, f *FeeQuote) error {
 	return nil
 }
 
-// ChangeToExistingOutput will calculate fees and add them to a
+// ChangeToExistingOutput will calculate fees and add them to an output at the index specified (0 based).
+// If an invalid index is supplied and error is returned.
+func (tx *Tx) ChangeToExistingOutput(index uint, f *FeeQuote) error {
+	if int(index) > tx.OutputCount()-1 {
+		return ErrOutputNoExist
+	}
+	available, hasChange, err := tx.change(f, nil)
+	if err != nil {
+		return err
+	}
+	if hasChange {
+		tx.Outputs[index].Satoshis += available
+	}
+	return nil
+}
+
+type changeOutput struct {
+	lockingScript *bscript.Script
+	newOutput     bool
+}
+
+// change will return the amount of satoshis to add to an input after fees are removed.
+// True will be returne
