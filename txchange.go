@@ -54,4 +54,25 @@ type changeOutput struct {
 }
 
 // change will return the amount of satoshis to add to an input after fees are removed.
-// True will be returne
+// True will be returned if change is required for this tx.
+func (tx *Tx) change(f *FeeQuote, output *changeOutput) (uint64, bool, error) {
+	inputAmount := tx.TotalInputSatoshis()
+	outputAmount := tx.TotalOutputSatoshis()
+	if inputAmount < outputAmount {
+		return 0, false, ErrInsufficientInputs
+	}
+
+	available := inputAmount - outputAmount
+	size, err := tx.EstimateSizeWithTypes()
+	if err != nil {
+		return 0, false, err
+	}
+	stdFee, err := f.Fee(FeeTypeStandard)
+	if err != nil {
+		return 0, false, err
+	}
+	dataFee, err := f.Fee(FeeTypeData)
+	if err != nil {
+		return 0, false, err
+	}
+	varIntUpper := VarInt(tx.
