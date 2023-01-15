@@ -75,4 +75,19 @@ func (tx *Tx) change(f *FeeQuote, output *changeOutput) (uint64, bool, error) {
 	if err != nil {
 		return 0, false, err
 	}
-	varIntUpper := VarInt(tx.
+	varIntUpper := VarInt(tx.OutputCount()).UpperLimitInc()
+	if varIntUpper == -1 {
+		return 0, false, nil
+	}
+	changeOutputFee := varIntUpper
+	changeP2pkhByteLen := uint64(0)
+	if output != nil && output.newOutput {
+		changeP2pkhByteLen = uint64(8 + 1 + 25)
+	}
+
+	sFees := (size.TotalStdBytes + changeP2pkhByteLen) * uint64(stdFee.MiningFee.Satoshis) / uint64(stdFee.MiningFee.Bytes)
+	dFees := size.TotalDataBytes * uint64(dataFee.MiningFee.Satoshis) / uint64(dataFee.MiningFee.Bytes)
+	txFees := sFees + dFees + uint64(changeOutputFee)
+
+	// not enough to add change, no change to add
+	if available <= txFees || available-txFees <= DustLimit {
