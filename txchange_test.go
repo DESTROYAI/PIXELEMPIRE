@@ -238,3 +238,154 @@ func TestTx_Change(t *testing.T) {
 		err := tx.From(
 			"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
 			0,
+			"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+			4000000)
+		assert.NoError(t, err)
+
+		err = tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 999995)
+		assert.NoError(t, err)
+
+		err = tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 3000000)
+		assert.NoError(t, err)
+
+		err = tx.ChangeToAddress("mwV3YgnowbJJB3LcyCuqiKpdivvNNFiK7M", bt.NewFeeQuote())
+		assert.NoError(t, err)
+
+		var wif *WIF
+		wif, err = DecodeWIF("L3MhnEn1pLWcggeYLk9jdkvA2wUK1iWwwrGkBbgQRqv6HPCdRxuw")
+		assert.NoError(t, err)
+		assert.NotNil(t, wif)
+
+		err = tx.FillAllInputs(context.Background(), &unlocker.Getter{PrivateKey: wif.PrivKey})
+		assert.NoError(t, err)
+
+		assert.Equal(t, "01000000010b94a1ef0fb352aa2adc54207ce47ba55d5a1c1609afda58fe9520e472299107000000006b483045022100fd07316603e9abf393e695192e8ce1e7f808d2735cc57039109a2210ad32d9a7022000e301e2a988b23ab3872b041df8b6eb0315238e0918944cbaf8b6abdde75cac412102c8803fdd437d902f08e3c2344cb33065c99d7c99982018ff9f7219c3dd352ff0ffffffff023b420f00000000001976a914b6aa34534d2b11e66b438c7525f819aee01e397c88acc0c62d00000000001976a914b6aa34534d2b11e66b438c7525f819aee01e397c88ac00000000", tx.String())
+
+		// todo: expected the pay-to Inputs to change based on the fee :P
+
+		assert.Equal(t, uint64(999995), tx.Outputs[0].Satoshis)
+		assert.Equal(t, uint64(3000000), tx.Outputs[1].Satoshis)
+	})
+
+	t.Run("multiple Inputs, spend all", func(t *testing.T) {
+		tx := bt.NewTx()
+		assert.NotNil(t, tx)
+
+		err := tx.From(
+			"9e88ca8eec0845e9e864c024bc5e6711e670932c9c7d929f9fccdb2c440ae28e",
+			0,
+			"76a9147824dec00be2c45dad83c9b5e9f5d7ef05ba3cf988ac",
+			5689)
+		assert.NoError(t, err)
+
+		err = tx.From(
+			"4e25b077d4cbb955b5a215feb53f963cf04688ff1777b9bea097c7ddbdf7ea42",
+			0,
+			"76a9147824dec00be2c45dad83c9b5e9f5d7ef05ba3cf988ac",
+			5689)
+		assert.NoError(t, err)
+
+		err = tx.ChangeToAddress("1BxGFoRPSFgYxoAStEncL6HuELqPkV3JVj", bt.NewFeeQuote())
+		assert.NoError(t, err)
+
+		var wif *WIF
+		wif, err = DecodeWIF("5JXAjNX7cbiWvmkdnj1EnTKPChauttKAJibXLm8tqWtDhXrRbKz")
+		assert.NoError(t, err)
+		assert.NotNil(t, wif)
+
+		err = tx.FillAllInputs(context.Background(), &unlocker.Getter{PrivateKey: wif.PrivKey})
+		assert.NoError(t, err)
+
+		assert.Equal(t, "01000000028ee20a442cdbcc9f9f927d9c2c9370e611675ebc24c064e8e94508ec8eca889e000000006b483045022100f88298f5a380244dd5b91f70be99394f8e562d2a61976ca8cf2aaeb381ee6e6a0220069243fc951061b624cf96124263b857a65a53400846080b543e4a8c16e097ce4121034aaeabc056f33fd960d1e43fc8a0672723af02f275e54c31381af66a334634caffffffff42eaf7bdddc797a0beb97717ff8846f03c963fb5fe15a2b555b9cbd477b0254e000000006b483045022100afa7a986e6e0faf725a9779fe8e61fd19b5973544dc7707fd758cdd45912332a0220760fe07fc8610d867be5281f29778e3cd1a18a6eef74470d0f1a4ede95c848924121034aaeabc056f33fd960d1e43fc8a0672723af02f275e54c31381af66a334634caffffffff01c82b0000000000001976a9147824dec00be2c45dad83c9b5e9f5d7ef05ba3cf988ac00000000", tx.String())
+	})
+}
+
+func TestTx_ChangeToOutput(t *testing.T) {
+	tests := map[string]struct {
+		tx              *bt.Tx
+		index           uint
+		fees            *bt.FeeQuote
+		expOutputTotal  uint64
+		expChangeOutput uint64
+		err             error
+	}{
+		"no change to add should return no change output": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.From(
+					"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+					0,
+					"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+					1000))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 1000))
+				return tx
+			}(),
+			index:           0,
+			fees:            bt.NewFeeQuote(),
+			expOutputTotal:  1000,
+			expChangeOutput: 1000,
+			err:             nil,
+		}, "change to add should add change to output": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.From(
+					"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+					0,
+					"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+					1000))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				return tx
+			}(),
+			index:           0,
+			fees:            bt.NewFeeQuote(),
+			expOutputTotal:  904,
+			expChangeOutput: 904,
+			err:             nil,
+		}, "change to add should add change to specified output": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.From(
+					"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+					0,
+					"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+					2500))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				return tx
+			}(),
+			index:           3,
+			fees:            bt.NewFeeQuote(),
+			expOutputTotal:  2353,
+			expChangeOutput: 853,
+			err:             nil,
+		}, "index out of range should return error": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.From(
+					"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+					0,
+					"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+					1000))
+				assert.NoError(t, tx.PayToAddress("mxAoAyZFXX6LZBWhoam3vjm6xt9NxPQ15f", 500))
+				return tx
+			}(),
+			index: 1,
+			fees:  bt.NewFeeQuote(),
+			err:   bt.ErrOutputNoExist,
+		},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			err := test.tx.ChangeToExistingOutput(test.index, test.fees)
+			if test.err != nil {
+				assert.Error(t, err)
+				assert.EqualError(t, test.err, err.Error())
+				return
+			}
+			assert.Equal(t, test.expOutputTotal, test.tx.TotalOutputSatoshis())
+			assert.Equal(t, test.expChangeOutput, test.tx.Outputs[test.index].Satoshis)
+		})
+	}
+}
