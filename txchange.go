@@ -91,3 +91,15 @@ func (tx *Tx) change(f *FeeQuote, output *changeOutput) (uint64, bool, error) {
 
 	// not enough to add change, no change to add
 	if available <= txFees || available-txFees <= DustLimit {
+		return 0, false, nil
+	}
+
+	// if we want to add to a new output, set
+	// newOutput to true, this will add the calculated change
+	// into a new output
+	available -= txFees
+	if output != nil && output.newOutput {
+		tx.AddOutput(&Output{Satoshis: available, LockingScript: output.lockingScript})
+	}
+	return available, true, nil
+}
