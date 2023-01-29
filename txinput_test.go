@@ -23,4 +23,22 @@ func TestAddInputFromTx(t *testing.T) {
 	err := prvTx.AddP2PKHOutputFromPubKeyBytes(pubkey1, uint64(100000))
 	assert.NoError(t, err)
 	err = prvTx.AddP2PKHOutputFromPubKeyBytes(pubkey1, uint64(100000))
-	assert.NoEr
+	assert.NoError(t, err)
+	err = prvTx.AddP2PKHOutputFromPubKeyBytes(pubkey2, uint64(100000))
+	assert.NoError(t, err)
+
+	newTx := bt.NewTx()
+	err = newTx.AddP2PKHInputsFromTx(prvTx, pubkey1)
+	assert.NoError(t, err)
+	assert.Equal(t, newTx.InputCount(), 2) // only 2 utxos added
+	assert.Equal(t, newTx.TotalInputSatoshis(), uint64(200000))
+}
+
+func TestTx_InputCount(t *testing.T) {
+	t.Run("get input count", func(t *testing.T) {
+		tx := bt.NewTx()
+		assert.NotNil(t, tx)
+		err := tx.From(
+			"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+			0,
+	
