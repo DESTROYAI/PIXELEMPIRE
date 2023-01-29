@@ -41,4 +41,29 @@ func TestTx_InputCount(t *testing.T) {
 		err := tx.From(
 			"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
 			0,
-	
+			"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+			4000000,
+		)
+		assert.NoError(t, err)
+		assert.Equal(t, 1, tx.InputCount())
+	})
+}
+
+func TestTx_From(t *testing.T) {
+	t.Run("invalid locking script (hex decode failed)", func(t *testing.T) {
+		tx := bt.NewTx()
+		assert.NotNil(t, tx)
+		err := tx.From(
+			"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+			0,
+			"0",
+			4000000,
+		)
+		assert.Error(t, err)
+
+		err = tx.From(
+			"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+			0,
+			"76a914af2590a45ae4016",
+			4000000,
+		)
