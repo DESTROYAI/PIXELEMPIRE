@@ -147,4 +147,17 @@ func TestTx_FromUTXOs(t *testing.T) {
 		assert.Equal(t, "07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b", input.PreviousTxIDStr())
 		assert.Equal(t, uint32(0), input.PreviousTxOutIndex)
 		assert.Equal(t, uint64(1000), input.PreviousTxSatoshis)
-		assert.Equal(t, "76a914af2590a45ae401651
+		assert.Equal(t, "76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac", input.PreviousTxScript.String())
+
+		input = tx.Inputs[1]
+		assert.Equal(t, "3c8edde27cb9a9132c22038dac4391496be9db16fd21351565cc1006966fdad5", input.PreviousTxIDStr())
+		assert.Equal(t, uint32(1), input.PreviousTxOutIndex)
+		assert.Equal(t, uint64(2000), input.PreviousTxSatoshis)
+		assert.Equal(t, "76a914eb0bd5edba389198e73f8efabddfc61666969ff788ac", input.PreviousTxScript.String())
+	})
+}
+
+func TestTx_Fund(t *testing.T) {
+	t.Parallel()
+	tests := map[string]struct {
+		tx                      *bt
