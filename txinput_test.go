@@ -99,4 +99,22 @@ func TestTx_FromUTXOs(t *testing.T) {
 		script, err := bscript.NewFromHexString("76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac")
 		assert.NoError(t, err)
 
-		txID, err := hex.DecodeString("07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa
+		txID, err := hex.DecodeString("07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b")
+		assert.NoError(t, err)
+
+		assert.NoError(t, tx.FromUTXOs(&bt.UTXO{
+			TxID:          txID,
+			LockingScript: script,
+			Vout:          0,
+			Satoshis:      1000,
+		}))
+
+		input := tx.Inputs[0]
+		assert.Equal(t, len(tx.Inputs), 1)
+		assert.Equal(t, "07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b", input.PreviousTxIDStr())
+		assert.Equal(t, uint32(0), input.PreviousTxOutIndex)
+		assert.Equal(t, uint64(1000), input.PreviousTxSatoshis)
+		assert.Equal(t, "76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac", input.PreviousTxScript.String())
+	})
+
+	t
