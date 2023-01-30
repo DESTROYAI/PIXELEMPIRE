@@ -117,4 +117,16 @@ func TestTx_FromUTXOs(t *testing.T) {
 		assert.Equal(t, "76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac", input.PreviousTxScript.String())
 	})
 
-	t
+	t.Run("multiple utxos", func(t *testing.T) {
+		tx := bt.NewTx()
+		script, err := bscript.NewFromHexString("76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac")
+		assert.NoError(t, err)
+		txID, err := hex.DecodeString("07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b")
+		assert.NoError(t, err)
+
+		script2, err := bscript.NewFromHexString("76a914eb0bd5edba389198e73f8efabddfc61666969ff788ac")
+		assert.NoError(t, err)
+		txID2, err := hex.DecodeString("3c8edde27cb9a9132c22038dac4391496be9db16fd21351565cc1006966fdad5")
+		assert.NoError(t, err)
+
+		assert.NoError(t, tx.FromUTXOs(&bt.UT
