@@ -160,4 +160,19 @@ func TestTx_FromUTXOs(t *testing.T) {
 func TestTx_Fund(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
-		tx                      *bt
+		tx                      *bt.Tx
+		utxos                   []*bt.UTXO
+		utxoGetterFuncOverrider func([]*bt.UTXO) bt.UTXOGetterFunc
+		expTotalInputs          int
+		expErr                  error
+	}{
+		"tx with exact inputs and surplus inputs is covered": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 1500))
+				return tx
+			}(),
+			utxos: func() []*bt.UTXO {
+				txid, err := hex.DecodeString("07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b")
+				assert.NoError(t, err)
+				script, err := bscript.NewFromHexString("76a914af
