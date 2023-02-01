@@ -282,4 +282,19 @@ func TestTx_Fund(t *testing.T) {
 			}(),
 			expTotalInputs: 8,
 		},
-		"tx with large amount of sa
+		"tx with large amount of satoshis is covered with needed utxos": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 5000))
+				return tx
+			}(),
+			utxoGetterFuncOverrider: func(utxos []*bt.UTXO) bt.UTXOGetterFunc {
+				utxosCopy := make([]*bt.UTXO, len(utxos))
+				copy(utxosCopy, utxos)
+				return func(ctx context.Context, sat uint64) ([]*bt.UTXO, error) {
+					defer func() { utxosCopy = utxosCopy[1:] }()
+					return utxosCopy[:1], nil
+				}
+			},
+			utxos: func() []*bt.UTXO {
+				txid, err := hex.DecodeString("07912972e42095f
