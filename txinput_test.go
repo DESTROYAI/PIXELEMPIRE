@@ -224,4 +224,21 @@ func TestTx_Fund(t *testing.T) {
 				assert.NoError(t, err)
 				return []*bt.UTXO{{
 					txid, 0, script, 1000, 0xffffff,
-			
+				}, {
+					txid, 0, script, 1000, 0xffffff,
+				}, {
+					txid, 0, script, 1000, 0xffffff,
+				}}
+			}(),
+			expTotalInputs: 2,
+		},
+		"tx with exact input satshis is covered": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 1500))
+				return tx
+			}(),
+			utxos: func() []*bt.UTXO {
+				txid, err := hex.DecodeString("07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b")
+				assert.NoError(t, err)
+				script, err := bscript.NewFromHexString("76a914af2590a45ae40
