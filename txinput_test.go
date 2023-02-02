@@ -319,4 +319,22 @@ func TestTx_Fund(t *testing.T) {
 					txid, 0, script, 650, 0xffffff,
 				}}
 			}(),
-		
+			expTotalInputs: 7,
+		},
+		"getter with no utxos error": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 1500))
+				return tx
+			}(),
+			utxos:  []*bt.UTXO{},
+			expErr: bt.ErrInsufficientFunds,
+		},
+		"getter with insufficient utxos errors": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 25400))
+				return tx
+			}(),
+			utxos: func() []*bt.UTXO {
+				txid, err := hex.DecodeString("07912972e42095fe58daaf0916
