@@ -389,4 +389,29 @@ func TestTx_Fund(t *testing.T) {
 					txid, 0, script, 500, 0xffffff,
 				}, {
 					txid, 0, script, 670, 0xffffff,
-			
+				}, {
+					txid, 0, script, 700, 0xffffff,
+				}, {
+					txid, 0, script, 1000, 0xffffff,
+				}, {
+					txid, 0, script, 1000, 0xffffff,
+				}, {
+					txid, 0, script, 1000, 0xffffff,
+				}, {
+					txid, 0, script, 1000, 0xffffff,
+				}, {
+					txid, 0, script, 650, 0xffffff,
+				}}
+			}(),
+			utxoGetterFuncOverrider: func(utxos []*bt.UTXO) bt.UTXOGetterFunc {
+				idx := 0
+				return func(context.Context, uint64) ([]*bt.UTXO, error) {
+					defer func() { idx++ }()
+					return utxos[idx : idx+1], nil
+				}
+			},
+			expTotalInputs: 7,
+		},
+	}
+
+	for name, te
