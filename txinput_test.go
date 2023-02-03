@@ -356,4 +356,22 @@ func TestTx_Fund(t *testing.T) {
 				}, {
 					txid, 0, script, 1000, 0xffffff,
 				}, {
-					txid, 0, script,
+					txid, 0, script, 650, 0xffffff,
+				}}
+			}(),
+			expErr: bt.ErrInsufficientFunds,
+		},
+		"error is returned to the user": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 100))
+				return tx
+			}(),
+			utxoGetterFuncOverrider: func([]*bt.UTXO) bt.UTXOGetterFunc {
+				return func(context.Context, uint64) ([]*bt.UTXO, error) {
+					return nil, errors.New("custom error")
+				}
+			},
+			expErr: errors.New("custom error"),
+		},
+		"tx with large amount of satoshis is covered, 
