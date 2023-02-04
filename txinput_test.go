@@ -414,4 +414,23 @@ func TestTx_Fund(t *testing.T) {
 		},
 	}
 
-	for name, te
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			iptFn := func() bt.UTXOGetterFunc {
+				idx := 0
+				return func(ctx context.Context, deficit uint64) ([]*bt.UTXO, error) {
+					if idx == len(test.utxos) {
+						return nil, bt.ErrNoUTXO
+					}
+					defer func() { idx += len(test.utxos) }()
+					return test.utxos, nil
+				}
+			}()
+			if test.utxoGetterFuncOverrider != nil {
+				iptFn = test.utxoGetterFuncOverrider(test.utxos)
+			}
+
+			err := test.tx.Fund(context.Background(), bt.NewFeeQuote(), iptFn)
+			if test.expErr != nil {
+				assert.Error(t, err)
+				assert.
