@@ -433,4 +433,29 @@ func TestTx_Fund(t *testing.T) {
 			err := test.tx.Fund(context.Background(), bt.NewFeeQuote(), iptFn)
 			if test.expErr != nil {
 				assert.Error(t, err)
-				assert.
+				assert.EqualError(t, err, test.expErr.Error())
+				return
+			}
+
+			assert.NoError(t, err)
+			assert.Equal(t, test.expTotalInputs, test.tx.InputCount())
+		})
+	}
+}
+
+func TestTx_Fund_Deficit(t *testing.T) {
+	t.Parallel()
+	tests := map[string]struct {
+		utxos       []*bt.UTXO
+		expDeficits []uint64
+		iteration   int
+		tx          *bt.Tx
+	}{
+		"1 output worth 5000, 3 utxos worth 6000": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				assert.NoError(t, tx.AddP2PKHOutputFromAddress("mtestD3vRB7AoYWK2n6kLdZmAMLbLhDsLr", 5000))
+
+				return tx
+			}(),
+			utxos: func() 
