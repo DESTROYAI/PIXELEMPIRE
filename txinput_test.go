@@ -522,4 +522,25 @@ func TestTx_Fund_Deficit(t *testing.T) {
 				}, {
 					txid, 0, script, 2000, 0xffffff,
 				}, {
-					txid, 0, script, 4000, 0x
+					txid, 0, script, 4000, 0xffffff,
+				}, {
+					txid, 0, script, 2000, 0xffffff,
+				}, {
+					txid, 0, script, 6000, 0xffffff,
+				}, {
+					txid, 0, script, 4000, 0xffffff,
+				}, {
+					txid, 0, script, 2000, 0xffffff,
+				}, {
+					txid, 0, script, 8000, 0xffffff,
+				}, {
+					txid, 0, script, 3000, 0xffffff,
+				}}
+			}(),
+			iteration:   1,
+			expDeficits: []uint64{35090, 33164, 31238, 29312, 27386, 23460, 21534, 15608, 11682, 9756, 1830},
+		},
+		"5 outputs worth 35000, 12 utxos worth 37000, iteration of 3": {
+			tx: func() *bt.Tx {
+				tx := bt.NewTx()
+				
