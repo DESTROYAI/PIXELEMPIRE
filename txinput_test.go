@@ -552,4 +552,23 @@ func TestTx_Fund_Deficit(t *testing.T) {
 				return tx
 			}(),
 			utxos: func() []*bt.UTXO {
-				txid, err := hex.DecodeString("07912972e42095fe58daaf09161c5a
+				txid, err := hex.DecodeString("07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b")
+				assert.NoError(t, err)
+				script, err := bscript.NewFromHexString("76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac")
+				assert.NoError(t, err)
+				return []*bt.UTXO{{
+					txid, 0, script, 2000, 0xffffff,
+				}, {
+					txid, 0, script, 2000, 0xffffff,
+				}, {
+					txid, 0, script, 2000, 0xffffff,
+				}, {
+					txid, 0, script, 2000, 0xffffff,
+				}, {
+					txid, 0, script, 4000, 0xffffff,
+				}, {
+					txid, 0, script, 2000, 0xffffff,
+				}, {
+					txid, 0, script, 6000, 0xffffff,
+				}, {
+					txid, 0, script, 4000, 0x
