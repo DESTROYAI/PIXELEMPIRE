@@ -592,4 +592,32 @@ func TestTx_Fund_Deficit(t *testing.T) {
 				if len(test.utxos) == 0 {
 					return nil, bt.ErrNoUTXO
 				}
-				step := int(math.Min(float64(test.iteration)
+				step := int(math.Min(float64(test.iteration), float64(len(test.utxos))))
+				defer func() {
+					test.utxos = test.utxos[step:]
+				}()
+
+				deficits = append(deficits, deficit)
+				return test.utxos[:step], nil
+			})
+
+			assert.Equal(t, test.expDeficits, deficits)
+		})
+	}
+}
+
+func TestTx_FillInput(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		inputIdx uint32
+		shf      sighash.Flag
+		unlocker bt.Unlocker
+		expHex   string
+		expErr   error
+	}{
+		"standard unlock": {
+			inputIdx: 0,
+			shf:      sighash.AllForkID,
+			unlocker: func() bt.Unlocker {
+				var wif *WI
