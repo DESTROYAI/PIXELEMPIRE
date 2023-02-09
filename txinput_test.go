@@ -571,4 +571,25 @@ func TestTx_Fund_Deficit(t *testing.T) {
 				}, {
 					txid, 0, script, 6000, 0xffffff,
 				}, {
-					txid, 0, script, 4000, 0x
+					txid, 0, script, 4000, 0xffffff,
+				}, {
+					txid, 0, script, 2000, 0xffffff,
+				}, {
+					txid, 0, script, 8000, 0xffffff,
+				}, {
+					txid, 0, script, 3000, 0xffffff,
+				}}
+			}(),
+			iteration:   3,
+			expDeficits: []uint64{35090, 29312, 21534, 9756},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			deficits := make([]uint64, 0)
+			test.tx.Fund(context.Background(), bt.NewFeeQuote(), func(ctx context.Context, deficit uint64) ([]*bt.UTXO, error) {
+				if len(test.utxos) == 0 {
+					return nil, bt.ErrNoUTXO
+				}
+				step := int(math.Min(float64(test.iteration)
