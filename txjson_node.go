@@ -178,3 +178,78 @@ func (i *nodeInputJSON) toInput() (*Input, error) {
 	if err = input.PreviousTxIDAddStr(i.TxID); err != nil {
 		return nil, err
 	}
+
+	return input, nil
+}
+
+func (i *nodeInputJSON) fromInput(input *Input) error {
+	asm, err := input.UnlockingScript.ToASM()
+	if err != nil {
+		return err
+	}
+
+	i.ScriptSig = &struct {
+		Asm string `json:"asm"`
+		Hex string `json:"hex"`
+	}{
+		Asm: asm,
+		Hex: input.UnlockingScript.String(),
+	}
+
+	i.Vout = input.PreviousTxOutIndex
+	i.Sequence = input.SequenceNumber
+	i.TxID = input.PreviousTxIDStr()
+
+	return nil
+}
+
+// MarshalJSON will marshal a transaction that has been marshalled with this library.
+func (nn nodeTxsWrapper) MarshalJSON() ([]byte, error) {
+	txs := make([]*nodeTxWrapper, len(nn))
+	for i, n := range nn {
+		txs[i] = n.NodeJSON().(*nodeTxWrapper)
+	}
+	return json.Marshal(txs)
+}
+
+// UnmarshalJSON will unmarshal a transaction that has been marshalled with this library.
+func (nn *nodeTxsWrapper) UnmarshalJSON(b []byte) error {
+	var jj []json.RawMessage
+	if err := json.Unmarshal(b, &jj); err != nil {
+		return err
+	}
+
+	*nn = make(nodeTxsWrapper, 0)
+	for _, j := range jj {
+		tx := NewTx()
+		if err := json.Unmarshal(j, tx.NodeJSON()); err != nil {
+			return err
+		}
+		*nn = append(*nn, tx)
+	}
+	return nil
+}
+
+func (n *nodeOutputWrapper) MarshalJSON() ([]byte, error) {
+	oj := &nodeOutputJSON{}
+	if err := oj.fromOutput(n.Output); err != nil {
+		return nil, err
+	}
+	return json.Marshal(oj)
+}
+
+func (n *nodeOutputWrapper) UnmarshalJSON(b []byte) error {
+	oj := &nodeOutputJSON{}
+	if err := json.Unmarshal(b, &oj); err != nil {
+		return err
+	}
+
+	o, err := oj.toOutput()
+	if err != nil {
+		return err
+	}
+
+	*n.Output = *o
+
+	return nil
+}
