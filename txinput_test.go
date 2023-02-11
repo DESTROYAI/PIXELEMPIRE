@@ -655,4 +655,29 @@ func TestTx_FillInput(t *testing.T) {
 				"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
 				4000000,
 			))
-			assert.NoError(t, tx.ChangeToAddress("mwV3YgnowbJJB3LcyCuqiK
+			assert.NoError(t, tx.ChangeToAddress("mwV3YgnowbJJB3LcyCuqiKpdivvNNFiK7M", bt.NewFeeQuote()))
+
+			err := tx.FillInput(context.Background(), test.unlocker, bt.UnlockerParams{
+				InputIdx:     test.inputIdx,
+				SigHashFlags: test.shf,
+			})
+			if test.expErr != nil {
+				assert.Error(t, err)
+				assert.EqualError(t, err, test.expErr.Error())
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, test.expHex, tx.String())
+			}
+		})
+	}
+}
+
+func TestTx_FillAllInputs(t *testing.T) {
+	t.Parallel()
+
+	t.Run("valid tx (basic)", func(t *testing.T) {
+		tx := bt.NewTx()
+		assert.NotNil(t, tx)
+
+		err := tx.From(
+			"07912972e42095fe58daaf09161c5a5da5
