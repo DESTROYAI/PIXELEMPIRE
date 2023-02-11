@@ -701,4 +701,14 @@ func TestTx_FillAllInputs(t *testing.T) {
 		assert.NotEqual(t, rawTxBefore, tx.String())
 	})
 
-	t.Run("no input or output",
+	t.Run("no input or output", func(t *testing.T) {
+		tx := bt.NewTx()
+		assert.NotNil(t, tx)
+
+		rawTxBefore := tx.String()
+
+		assert.NoError(t, tx.FillAllInputs(context.Background(), &unlocker.Getter{PrivateKey: nil}))
+
+		assert.Equal(t, rawTxBefore, tx.String())
+	})
+}
