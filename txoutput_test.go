@@ -69,4 +69,26 @@ func TestNewHashPuzzleOutput(t *testing.T) {
 		err := tx.AddHashPuzzleOutput("", "", uint64(5000))
 
 		assert.NoError(t, err)
-		asser
+		assert.Equal(t,
+			"a914b472a266d0bd89c13706a4132ccfb16f7c3b9fcb8876a90088ac",
+			tx.Outputs[0].LockingScriptHexString(),
+		)
+	})
+
+	t.Run("valid puzzle output", func(t *testing.T) {
+		addr, err := bscript.NewAddressFromString("myFhJggmsaA2S8Qe6ZQDEcVCwC4wLkvC4e")
+		assert.NoError(t, err)
+		assert.NotNil(t, addr)
+
+		tx := bt.NewTx()
+		err = tx.AddHashPuzzleOutput("secret1", addr.PublicKeyHash, uint64(5000))
+
+		assert.NoError(t, err)
+		assert.Equal(t,
+			"a914d3f9e3d971764be5838307b175ee4e08ba427b908876a914c28f832c3d539933e0c719297340b34eee0f4c3488ac",
+			tx.Outputs[0].LockingScriptHexString(),
+		)
+	})
+}
+
+func Te
