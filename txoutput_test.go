@@ -45,4 +45,28 @@ func TestNewP2PKHOutputFromPubKeyHashStr(t *testing.T) {
 		tx := bt.NewTx()
 		err := tx.AddP2PKHOutputFromPubKeyHashStr(
 			"8fe80c75c9560e8b56ed64ea3c26e18d2c52211b",
-			ui
+			uint64(5000),
+		)
+		assert.NoError(t, err)
+		assert.Equal(t,
+			"76a9148fe80c75c9560e8b56ed64ea3c26e18d2c52211b88ac",
+			tx.Outputs[0].LockingScriptHexString(),
+		)
+	})
+}
+
+func TestNewHashPuzzleOutput(t *testing.T) {
+	t.Parallel()
+
+	t.Run("invalid public key", func(t *testing.T) {
+		tx := bt.NewTx()
+		err := tx.AddHashPuzzleOutput("", "0", uint64(5000))
+		assert.Error(t, err)
+	})
+
+	t.Run("missing secret and public key", func(t *testing.T) {
+		tx := bt.NewTx()
+		err := tx.AddHashPuzzleOutput("", "", uint64(5000))
+
+		assert.NoError(t, err)
+		asser
