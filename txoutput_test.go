@@ -91,4 +91,17 @@ func TestNewHashPuzzleOutput(t *testing.T) {
 	})
 }
 
-func Te
+func TestNewOpReturnOutput(t *testing.T) {
+	t.Parallel()
+
+	data := "On February 4th, 2020 The Return to Genesis was activated to restore the Satoshi Vision for Bitcoin. " +
+		"It is locked in irrevocably by this transaction. Bitcoin can finally be Bitcoin again and the miners can " +
+		"continue to write the Chronicle of everything. Thank you and goodnight from team SV."
+	dataBytes := []byte(data)
+
+	tx := bt.NewTx()
+	err := tx.AddOpReturnOutput(dataBytes)
+	assert.NoError(t, err)
+
+	script := tx.Outputs[0].LockingScriptHexString()
+	dataLength := bt.VarInt(uint64(len
