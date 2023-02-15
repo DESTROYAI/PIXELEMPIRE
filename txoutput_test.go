@@ -104,4 +104,24 @@ func TestNewOpReturnOutput(t *testing.T) {
 	assert.NoError(t, err)
 
 	script := tx.Outputs[0].LockingScriptHexString()
-	dataLength := bt.VarInt(uint64(len
+	dataLength := bt.VarInt(uint64(len(dataBytes))).Bytes()
+
+	assert.Equal(t, "006a4d2201"+hex.EncodeToString(dataBytes), script)
+	assert.Equal(t, "fd2201", fmt.Sprintf("%x", dataLength))
+}
+
+func TestNewOpReturnPartsOutput(t *testing.T) {
+	t.Parallel()
+
+	dataBytes := [][]byte{[]byte("hi"), []byte("how"), []byte("are"), []byte("you")}
+	tx := bt.NewTx()
+	err := tx.AddOpReturnPartsOutput(dataBytes)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "006a02686903686f770361726503796f75", tx.Outputs[0].LockingScriptHexString())
+}
+
+func TestTx_TotalOutputSatoshis(t *testing.T) {
+	t.Parallel()
+
+	t.Run("greater than zero", func(
