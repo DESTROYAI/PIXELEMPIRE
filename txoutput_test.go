@@ -124,4 +124,8 @@ func TestNewOpReturnPartsOutput(t *testing.T) {
 func TestTx_TotalOutputSatoshis(t *testing.T) {
 	t.Parallel()
 
-	t.Run("greater than zero", func(
+	t.Run("greater than zero", func(t *testing.T) {
+		tx, err := bt.NewTxFromString("020000000180f1ada3ad8e861441d9ceab40b68ed98f13695b185cc516226a46697cc01f80010000006b483045022100fa3a0f8fa9fbf09c372b7a318fa6175d022c1d782f7b8bc5949a7c8f59ce3f35022005e0e84c26f26d892b484ff738d803a57626679389c8b302939460dab29a5308412103e46b62eea5db5898fb65f7dc840e8a1dbd8f08a19781a23f1f55914f9bedcd49feffffff02dec537b2000000001976a914ba11bcc46ecf8d88e0828ddbe87997bf759ca85988ac00943577000000001976a91418392a59fc1f76ad6a3c7ffcea20cfcb17bda9eb88ac6e000000")
+		assert.NoError(t, err)
+		assert.NotNil(t, tx)
+		ass
