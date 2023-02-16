@@ -149,4 +149,28 @@ func TestTx_PayToAddress(t *testing.T) {
 			4000000)
 		assert.NoError(t, err)
 
-		err = tx.PayTo
+		err = tx.PayToAddress("", 100)
+		assert.Error(t, err)
+	})
+
+	t.Run("invalid pay to address", func(t *testing.T) {
+		tx := bt.NewTx()
+		assert.NotNil(t, tx)
+		err := tx.From(
+			"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+			0,
+			"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+			4000000)
+		assert.NoError(t, err)
+
+		err = tx.PayToAddress("1234567", 100)
+		assert.Error(t, err)
+	})
+
+	t.Run("valid pay to address", func(t *testing.T) {
+		tx := bt.NewTx()
+		assert.NotNil(t, tx)
+		err := tx.From(
+			"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+			0,
+			"76a91
