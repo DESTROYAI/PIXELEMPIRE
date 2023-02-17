@@ -173,4 +173,27 @@ func TestTx_PayToAddress(t *testing.T) {
 		err := tx.From(
 			"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
 			0,
-			"76a91
+			"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+			4000000)
+		assert.NoError(t, err)
+
+		err = tx.PayToAddress("1GHMW7ABrFma2NSwiVe9b9bZxkMB7tuPZi", 100)
+		assert.NoError(t, err)
+		assert.Equal(t, 1, tx.OutputCount())
+	})
+}
+
+func TestTx_PayTo(t *testing.T) {
+	t.Parallel()
+	tests := map[string]struct {
+		script *bscript.Script
+		err    error
+	}{
+		"valid p2pkh script should create valid output": {
+			script: func() *bscript.Script {
+				s, err := bscript.NewP2PKHFromAddress("1GHMW7ABrFma2NSwiVe9b9bZxkMB7tuPZi")
+				assert.NoError(t, err)
+				return s
+			}(),
+			err: nil,
+		}, 
