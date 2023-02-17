@@ -196,4 +196,19 @@ func TestTx_PayTo(t *testing.T) {
 				return s
 			}(),
 			err: nil,
-		}, 
+		}, "empty p2pkh script should return error": {
+			script: &bscript.Script{},
+			err:    errors.New("'empty' is not a valid P2PKH script: invalid script type"),
+		}, "non p2pkh script should return error": {
+			script: bscript.NewFromBytes([]byte("test")),
+			err:    errors.New("'nonstandard' is not a valid P2PKH script: invalid script type"),
+		},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			tx := bt.NewTx()
+			assert.NotNil(t, tx)
+			err := tx.From(
+				"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
+				0,
+				"
