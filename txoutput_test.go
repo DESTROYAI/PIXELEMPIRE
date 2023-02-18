@@ -211,4 +211,27 @@ func TestTx_PayTo(t *testing.T) {
 			err := tx.From(
 				"07912972e42095fe58daaf09161c5a5da57be47c2054dc2aaa52b30fefa1940b",
 				0,
-				"
+				"76a914af2590a45ae401651fdbdf59a76ad43d1862534088ac",
+				4000000)
+			assert.NoError(t, err)
+			err = tx.PayTo(test.script, 100)
+			if test.err == nil {
+				assert.NoError(t, err)
+				assert.Equal(t, 1, tx.OutputCount())
+				return
+			}
+			assert.EqualError(t, err, test.err.Error())
+			assert.Equal(t, 0, tx.OutputCount())
+		})
+	}
+}
+
+func TestTx_AddP2PKHOutputFromBip32ExtKey(t *testing.T) {
+	t.Run("output is added", func(t *testing.T) {
+		tx := bt.NewTx()
+
+		var b [64]byte
+		_, err := rand.Read(b[:])
+		assert.NoError(t, err)
+
+		key, err := bip32.NewMaster(b[:], &chaincfg.TestNet
