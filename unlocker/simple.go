@@ -35,4 +35,16 @@ type Simple struct {
 // the `unlock.Local` struct.
 //
 // UnlockingScript generates and uses an ECDSA signature for the provided hash digest using the private key
-// as well 
+// as well as the public key corresponding to the private key used. The produced
+// signature is deterministic (same message and same key yield the same signature) and
+// canonical in accordance with RFC6979 and BIP0062.
+//
+// For example usage, see `examples/create_tx/create_tx.go`
+func (l *Simple) UnlockingScript(ctx context.Context, tx *bt.Tx, params bt.UnlockerParams) (*bscript.Script, error) {
+	if params.SigHashFlags == 0 {
+		params.SigHashFlags = sighash.AllForkID
+	}
+
+	switch tx.Inputs[params.InputIdx].PreviousTxScript.ScriptType() {
+	case bscript.ScriptTypePubKeyHash:
+		sh, err := tx.CalcI
