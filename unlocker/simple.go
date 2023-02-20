@@ -47,4 +47,26 @@ func (l *Simple) UnlockingScript(ctx context.Context, tx *bt.Tx, params bt.Unloc
 
 	switch tx.Inputs[params.InputIdx].PreviousTxScript.ScriptType() {
 	case bscript.ScriptTypePubKeyHash:
-		sh, err := tx.CalcI
+		sh, err := tx.CalcInputSignatureHash(params.InputIdx, params.SigHashFlags)
+		if err != nil {
+			return nil, err
+		}
+
+		sig, err := l.PrivateKey.Sign(sh)
+		if err != nil {
+			return nil, err
+		}
+
+		pubKey := l.PrivateKey.PubKey().SerialiseCompressed()
+		signature := sig.Serialise()
+
+		uscript, err := bscript.NewP2PKHUnlockingScript(pubKey, signature, params.SigHashFlags)
+		if err != nil {
+			return nil, err
+		}
+
+		return uscript, nil
+	}
+
+	return nil, errors.New("currently only p2pkh supported")
+}
