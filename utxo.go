@@ -36,3 +36,19 @@ func (u *UTXO) NodeJSON() interface{} {
 // Marshalling usage example:
 //  bb, err := json.Marshal(utxos.NodeJSON())
 //
+// Unmarshalling usage example:
+//  var txs bt.UTXOs
+//  if err := json.Unmarshal(bb, utxos.NodeJSON()); err != nil {}
+func (u *UTXOs) NodeJSON() interface{} {
+	return (*nodeUTXOsWrapper)(u)
+}
+
+// TxIDStr return the tx id as a string.
+func (u *UTXO) TxIDStr() string {
+	return hex.EncodeToString(u.TxID)
+}
+
+// LockingScriptHexString retur nthe locking script in hex format.
+func (u *UTXO) LockingScriptHexString() string {
+	return u.LockingScript.String()
+}
